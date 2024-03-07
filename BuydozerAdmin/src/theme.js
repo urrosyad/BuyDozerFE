@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-// Palet warna
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -14,16 +14,6 @@ const theme = createTheme({
       main: "#FFD600",  
       light: "#FFFF6B", 
       dark: "#C69400",  
-    },
-    error: {
-      main: "#FF3D00",  
-      light: "#FF8A65", 
-      dark: "#D84315",  
-    },
-    warning: {
-      main: "#FF9800",  
-      light: "#FFC947", 
-      dark: "#F57C00",  
     },
   },
   typography: {
