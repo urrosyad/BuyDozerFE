@@ -14,9 +14,10 @@ import { TransactionData } from '../Pages/TransactionData'
 
 
 const Routers = () => {
+
   return (
     <BrowserRouter>
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "auto" }}>
       <Sidenav />
       <Box
         sx={{

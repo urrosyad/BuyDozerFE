@@ -1,68 +1,84 @@
 import { useState, useEffect, useRef } from "react";
-import { Sidebar, Menu, MenuItem, } from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Button,
-  Stack,
-  Grow,
-  Paper,
-  ClickAwayListener,
-
-  Popper,
-  MenuList,
-  Divider,
-  Container,
-  Grid
-} from "@mui/material";
-import theme from "../../theme";
+import { Box, Typography } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { SpaceDashboardRounded, PeopleAltRounded, ReceiptLong, CommuteRounded, CreditCardRounded, WalletRounded } from "@mui/icons-material";
+import { SpaceDashboardRounded, PeopleAltRounded, ReceiptLong, CommuteRounded, CreditCardRounded, WalletRounded, MenuRounded, ShoppingCart, Sell } from "@mui/icons-material";
 import MenuPage from "../../Components/Moleculs/MenuPage";
 
 
 const Sidenav = () => {
   const theme = useTheme();
-  const [isSelected, setIsSelected] = useState("Dashboard")
+  const [active, setActive] = useState("/")
   
+  const menuItems = [
+    { menu: "Dashboard", icon: <SpaceDashboardRounded fontSize="small" />, link: "/", },
+    { menu: "User", icon: <PeopleAltRounded fontSize="small" />, link: "/user", },
+    { menu: "Unit", icon: <CommuteRounded fontSize="small" />, link: "/unit", },
+    { menu: "Pembelian", icon: <ShoppingCart fontSize="small" />, link: "/buy", },
+    { menu: "Penyewaan", icon: <WalletRounded fontSize="small" />, link: "/rent", },
+    { menu: "List Sewa", icon: <Sell fontSize="small" />, link: "/rentlist", },
+    { menu: "Transaksi", icon: <ReceiptLong fontSize="small" />, link: "/transaction", },
+  ];
+
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    const menuItem = menuItems.find(item => item.link === pathname);
+    if (menuItem) {
+      setActive(menuItem.link);
+    }
+  }, []);
+
   return (
     <Box
-      bgcolor={theme.palette.primary.background}
-      border={1}
-      display={"flex"}
+      bgcolor={"#F9FAFF"}
+      display={"flex"}  
       flexDirection={"column"}
       height={"100vh"}
+      color={theme.palette.primary.dark}
     >
       <Sidebar>
-        <Menu style={{height: "100%", border: 1 }}>
+        <Menu style={{ height: "100%" }}>
           <Box
             sx={{
-              padding: 3,
-              height: 30,
-              bgcolor: theme.palette.primary.background,
-              justifyContent: "center",
-              border: 1
-            }}
-          >
-            
-            <Typography variant="h6" sx={{ alignItems: "center", color: theme.palette.primary.main }}>
-              ADMIN BRDOZER
-            </Typography>
+              justifyContent: "space-between",
+              height: "80px",
+              backgroundColor: "#F9FAFF",
+              color: theme.palette.primary.dark,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-end",
+              paddingLeft: "18px"
+            }}>
+            <Box sx={{display: "flex", paddingBottom: "30px"}}>
+              <MenuRounded/>
+            </Box>
+            <Box sx={{
+              justifyContent: "flex-end",
+              color: theme.palette.primary.dark,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+            }}>
+              <Typography variant="h6" fontWeight={"bold"} padding={1} mb={-3}>
+                ADMIN
+              </Typography>
+              <Typography variant="h6" fontWeight={"bold"} padding={1}>
+                BUYDOZER
+              </Typography>
+            </Box>
           </Box>
-          <Box sx={{border:1}}>
-            <MenuPage menu={"Dashboard"} icon={<SpaceDashboardRounded fontSize="small"/>} link={"/"} seleceted={isSelected} setSelected={setIsSelected}/>
-
-            <MenuPage menu={"User"} icon={<PeopleAltRounded fontSize="small"/>} link={"/user"} seleceted={isSelected} setSelected={setIsSelected}/>
-            
-            <MenuPage menu={"Unit"} icon={<CommuteRounded fontSize="small"/>} link={"/unit"} seleceted={isSelected} setSelected={setIsSelected}/>
-            
-            <MenuPage menu={"Pembelian"} icon={<CreditCardRounded fontSize="small"/>} link={"/buy"} seleceted={isSelected} setSelected={setIsSelected}/>
-            
-            <MenuPage menu={"Penyewaan"} icon={<WalletRounded fontSize="small"/>} link={"/rent"} seleceted={isSelected} setSelected={setIsSelected}/>
-            
-            <MenuPage menu={"Transaksi"} icon={<ReceiptLong fontSize="small"/>} link={"/transaction"} seleceted={isSelected} setSelected={setIsSelected}/>
+          <Box sx={{ fontWeight:"bold", bgcolor: "#F9FAFF"}} >
+            {menuItems.map((item, index) => (
+              <MenuPage
+                key={index}
+                menu={item.menu}
+                icon={item.icon}
+                link={item.link}
+                selected={active}
+                setSelected={setActive}
+              />
+            ))}
           </Box>
         </Menu>
       </Sidebar>
