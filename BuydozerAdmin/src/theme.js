@@ -74,9 +74,22 @@ const theme = createTheme({
     styleOverrides:{
       root:{
         textTransform: "capitalize",
+        ":active": {
+          transform: "scale(0.95)",
+        },
       },
     }
   },
+  MuiTextField:{
+    styleOverrides:{
+      root:{
+        width: "100%",
+        height: "auto",
+        backgroundColor: "#EEF2FF",
+        borderRadius: "5px",
+      }
+    }
+  }
   },
   breakpoints: {
     values: {
