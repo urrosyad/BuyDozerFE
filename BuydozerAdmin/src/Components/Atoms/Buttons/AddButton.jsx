@@ -17,13 +17,13 @@ const AddButton = ({ }) => {
 
 
   const labelInput = [
-    { label: "Nama Unit", id: "unitName", type: "text" },
-    { label: "Brand Unit", id: "unitBrand", type: "text" },
-    { label: "Ketersediaan Unit", id: "qtyUnit", type: "number" },
-    { label: "Harga Beli", id: "buyPrice", type: "number" },
-    { label: "Harga Sewa", id: "sellPrice", type: "number" },
-    { label: "Foto Unit", id: "imgUnit", type:"file"},
-    { label: "Foto Brand", id: "imgBrand", type: "file"},
+    { label: "Nama Unit", id: "unitName", value:"", type: "text" },
+    { label: "Brand Unit", id: "unitBrand", value:"", type: "text" },
+    { label: "Ketersediaan Unit", id: "qtyUnit", value:"", type: "number" },
+    { label: "Harga Beli", id: "buyPrice", value:"", type: "number" },
+    { label: "Harga Sewa", id: "sellPrice", value:"", type: "number" },
+    { label: "Foto Unit", id: "imgUnit", value:"", type:"file"},
+    { label: "Foto Brand", id: "imgBrand", value:"", type: "file"},
   ]
 
   const StylingField = styled(TextField)(({ theme }) => ({

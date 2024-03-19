@@ -8,14 +8,14 @@ import {
   IconButton
 } from '@mui/material'
 import formatRupiah from '../../utils/formatRupiah';
-import { BorderColorRounded, DeleteRounded, SearchRounded, ArrowDownward, ArrowUpward, SwapVertRounded } from '@mui/icons-material';
-
+import {SwapVertRounded } from '@mui/icons-material';
+import { EditButton, DeleteButton } from '../../Components/Atoms/Buttons';
+import { useQuery } from '@tanstack/react-query';
 
 const TableUnit = ({searchValue}) => {
    const [page, setPage] = React.useState(0);
    const [rowsPerPage, setRowsPerPage] = React.useState(5);
    const [sort, setSort] = useState({ field: null, direction: 'asc' });
-   
    
    const dataTable = (fotoUnit, nameUnit, brandUnit, qtyUnit, buyPrice, sellPrice) => {
      return { fotoUnit, nameUnit, brandUnit, qtyUnit, buyPrice, sellPrice, actions: '' };
@@ -48,15 +48,9 @@ const TableUnit = ({searchValue}) => {
        render: () => (
          <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
            <Box>
-             <IconButton color='warning'>
-               <BorderColorRounded fontSize='small' />
-             </IconButton>
+              <EditButton/>
            </Box>
-           <Box>
-             <IconButton color='error'>
-               <DeleteRounded fontSize='small' />
-             </IconButton>
-           </Box>
+              <DeleteButton/>
          </Box>
        )
      },
@@ -170,7 +164,7 @@ const TableUnit = ({searchValue}) => {
            </TableBody>
          </Table>
          <TablePagination
-           rowsPerPageOptions={[5, 25, 100]}
+           rowsPerPageOptions={[5, 10, 20]}
            component="div"
            count={rows.length}
            rowsPerPage={rowsPerPage}

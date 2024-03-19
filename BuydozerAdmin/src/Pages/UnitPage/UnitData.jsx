@@ -1,18 +1,12 @@
 import React, { useState } from 'react'
 import {
-  Container, Card,
+  Card,
   Box, Typography,
-  Grid, Button,
-  Table, TableContainer,
-  TableBody, TableCell,
-  TableHead, TableRow,
-  Paper, TablePagination,
-  IconButton, InputBase
+  Grid, InputBase
 } from '@mui/material'
 import theme from '../../theme'
 import AddButton from '../../Components/Atoms/Buttons/AddButton';
-import formatRupiah from '../../utils/formatRupiah';
-import { BorderColorRounded, DeleteRounded, SearchRounded, ArrowDownward, ArrowUpward, SwapVertRounded } from '@mui/icons-material';
+import { SearchRounded } from '@mui/icons-material';
 import TableUnit from './TableUnit';
 
 
@@ -49,7 +43,7 @@ const UnitData = () => {
           </Typography>
 
           <Box gap={3} sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", border: `2px solid ${theme.palette.primary.main}`, bgcolor: theme.palette.primary.contrastText, color: theme.palette.primary.main, borderRadius: "10px", }}>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", border: `2px solid ${theme.palette.primary.main}`, bgcolor: "#F9FAFF", color: theme.palette.primary.main, borderRadius: "10px", }}>
               <SearchRounded fontSize='medium' sx={{ ml: "10px" }} />
               <InputBase sx={{ pl: "10px", color: theme.palette.primary.main, fontWeight: "medium"}}  placeholder='Cari Unit...'
                          value={searchValue} onChange={handleSearch}/>
