@@ -1,16 +1,15 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Box } from '@mui/material'
-import { Sidenav } from '../Layouts/Sidenav'
-import { Header } from '../Layouts/Header'
-import { Dashboard } from '../Pages/DashboardPage'
-import { BuyData } from '../Pages/BuyPage'
-import { RentData } from '../Pages/RentPage'
-import { UnitData } from '../Pages/UnitPage'
-import { UserData } from '../Pages/UserPage'
-import { RentListData } from '../Pages/RentListPage'
-import { TransactionData } from '../Pages/TransactionData'
-
+import { Sidenav } from '../Layouts/admin/Sidenav'
+import { Header } from '../Layouts/admin/Header'
+import { Dashboard, BuyData, RentData } from '../Pages/admin'
+// import { BuyData } from '../Pages/admin/BuyPage'
+// import { RentData } from '../Pages/admin/RentPage'
+import { UnitData } from '../Pages/admin/UnitPage'
+import { UserData } from '../Pages/admin/UserPage'
+import { RentListData } from '../Pages/admin/RentListPage'
+import { TransactionData } from '../Pages/admin/TransactionData'
 
 
 const Routers = () => {

@@ -5,7 +5,6 @@ import { ProSidebarProvider } from "react-pro-sidebar";
 import theme from "./theme";
 import { Routes } from "./Routers";
 
-
 export default function App() {
   return (
     <>

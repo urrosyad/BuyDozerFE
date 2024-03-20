@@ -1,7 +1,6 @@
 import { useState, cloneElement } from 'react';
 import { useTheme, Box, Button, Typography, Tooltip, Zoom, useScrollTrigger } from '@mui/material';
 import { SupportAgentRounded, ExitToApp, Notifications, Key } from '@mui/icons-material';
-import theme from '../../theme';
 
 
 const Header = () => {
