@@ -89,7 +89,28 @@ const theme = createTheme({
         borderRadius: "5px",
       }
     }
-  }
+  },
+  MuiTextareaAutosize: {
+    styleOverrides: {
+      root: {
+        width: '100%',
+        height: '50px',
+        padding: '8px',
+        border: '1px solid #EEF2FF',
+        borderRadius: '5px',
+        boxSizing: 'border-box',
+        '&:hover': {
+          border: '1px solid black',
+        },
+        '&:focus': {
+          border: '1px solid #2A6DD0',
+          outline: 'none',
+        },
+        resize: 'vertical',
+        fontSize: '16px',
+      },
+    },
+  },
   },
   breakpoints: {
     values: {

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Card, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Divider } from '@mui/material'
+import React, { Component, useState } from 'react'
+import { Card, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Divider, Grid } from '@mui/material'
+import { TextareaAutosize } from '@mui/base'
 import theme from '../../../../theme'
 import { AddCircleOutlineOutlined, UploadFileRounded } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
@@ -17,13 +18,14 @@ const AddButton = ({ }) => {
 
 
   const labelInput = [
-    { label: "Nama Unit", id: "unitName", value:"", type: "text" },
-    { label: "Brand Unit", id: "unitBrand", value:"", type: "text" },
-    { label: "Ketersediaan Unit", id: "qtyUnit", value:"", type: "number" },
-    { label: "Harga Beli", id: "buyPrice", value:"", type: "number" },
-    { label: "Harga Sewa", id: "sellPrice", value:"", type: "number" },
-    { label: "Foto Unit", id: "imgUnit", value:"", type:"file"},
-    { label: "Foto Brand", id: "imgBrand", value:"", type: "file"},
+    { label: "Nama Unit", id: "unitName", value: "", type: "text" },
+    { label: "Brand Unit", id: "unitBrand", value: "", type: "text" },
+    { label: "Ketersediaan Unit", id: "qtyUnit", value: "", type: "number" },
+    { label: "Deskripsi Unit", id: "descUnit", value: "", type: "textarea" },
+    { label: "Harga Beli", id: "buyPrice", value: "", type: "number" },
+    { label: "Harga Sewa", id: "sellPrice", value: "", type: "number" },
+    { label: "Foto Unit", id: "imgUnit", value: "", type: "file" },
+    { label: "Foto Brand", id: "imgBrand", value: "", type: "file" },
   ]
 
   const StylingField = styled(TextField)(({ theme }) => ({
@@ -48,7 +50,7 @@ const AddButton = ({ }) => {
     },
   }));
 
-  const StylingContent = styled(DialogContent)(({ theme }) => ({ 
+  const StylingGrid = styled(Grid)(({ theme }) => ({
     overflowY: 'auto',
     "&::-webkit-scrollbar": {
       width: "8px",
@@ -89,67 +91,118 @@ const AddButton = ({ }) => {
     },
   }));
 
-  
+  const StylingTextarea = styled(TextareaAutosize)({
+    width: '100%',
+    padding: "5px 5px 50px 5px",
+    border: '1px solid #EEF2FF',
+    borderRadius: '5px',
+    backgroundColor: theme.palette.primary.contrastText,
+    boxSizing: 'border-box',
+    fontFamily: "Rubik, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
+    '&:hover': {
+      border: '1px solid black',
+    },
+    '&:focus': {
+      border: '2px solid #2A6DD0',
+      outline: 'none',
+    },
+    resize: 'none',
+    fontSize: '16px',
+    overflowY: "auto"
+  });
 
 
   return (
     <>
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "10px",
-        borderWidth: "2px",
-        borderStyle: "solid",
-        borderColor: theme.palette.primary.main,
-        color: theme.palette.primary.main,
-        transition: "all 0.1s",
-        cursor: "pointer",
-        "&:hover": {
-          color: theme.palette.primary.contrastText,
-          backgroundColor: theme.palette.primary.main,
-        },
-        "&:active": {
-          transform: "scale(0.95)",
-        },
-      }}
-    >
-      <Button sx={{
-        width: "25vh", fontWeight: theme.typography.fontWeightMedium,
-        ":hover": {
-          color: theme.palette.primary.contrastText,
-        }
-      }}
-        startIcon={<AddCircleOutlineOutlined />}
-        onClick={handleClickOpen}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "10px",
+          borderWidth: "2px",
+          borderStyle: "solid",
+          borderColor: theme.palette.primary.main,
+          color: theme.palette.primary.main,
+          transition: "all 0.1s",
+          cursor: "pointer",
+          "&:hover": {
+            color: theme.palette.primary.contrastText,
+            backgroundColor: theme.palette.primary.main,
+          },
+          "&:active": {
+            transform: "scale(0.95)",
+          },
+        }}
       >
-        Tambah Unit
-      </Button>
-    </Box>
-      <Dialog open={open} onClose={handleClose} sx={{ "& .MuiPaper-root": { borderRadius: "20px" }, }}>
+        <Button sx={{
+          width: "25vh", fontWeight: theme.typography.fontWeightMedium,
+          ":hover": {
+            color: theme.palette.primary.contrastText,
+          }
+        }}
+          startIcon={<AddCircleOutlineOutlined />}
+          onClick={handleClickOpen}
+        >
+          Tambah Unit
+        </Button>
+      </Box>
+
+      <Dialog open={open} onClose={handleClose} sx={{ "& .MuiPaper-root": { borderRadius: "20px" } }}>
         <DialogTitle variant="h4" sx={{ width: "500px", fontWeight: "medium" }}>Tambah Unit</DialogTitle>
-        <Divider sx={{ width: "90%", alignSelf: "center" }} />
-        <StylingContent>
-          {labelInput.map((data, index) => (
-            <div key={index}>
-              <DialogContentText marginBottom="5px">
-                <Typography variant='h6'>
-                  {data.label}
-                </Typography>
-              </DialogContentText>
-              <StylingField id={data.id} type={data.type} variant="outlined" size='small' 
-              sx={{ 
-                marginBottom: "10px" }} />
-            </div>
-          ))}
-        </StylingContent>
-        <DialogActions sx={{ margin: "10px 23px", gap: "10px" }}>
+        <Divider sx={{ width: "93%", alignSelf: "center", marginBottom: "20px" }} />
+        <StylingGrid container spacing={2} sx={{ padding: "10px 20px" }}>
+          <Grid item xs={6}>
+            {labelInput.slice(0, Math.ceil(labelInput.length / 2)).map((data) => (
+              <div key={data.id}>
+                <DialogContentText>
+                  <Typography variant='h6'>
+                    {data.label}
+                  </Typography>
+                </DialogContentText>
+                {data.type === "textarea" ? (
+                  <StylingTextarea
+                    id={data.id}
+                    maxRows={1}
+                  />
+                ) : (
+                  <StylingField
+                    id={data.id}
+                    type={data.type}
+                    variant="outlined"
+                    size='small'
+                    fullWidth
+                    sx={{ marginBottom: "10px" }}
+                  />
+                )}
+              </div>
+            ))}
+          </Grid>
+          <Grid item xs={6}>
+            {labelInput.slice(Math.ceil(labelInput.length / 2)).map((data) => (
+              <div key={data.id}>
+                <DialogContentText>
+                  <Typography variant='h6'>
+                    {data.label}
+                  </Typography>
+                </DialogContentText>
+                <StylingField
+                  id={data.id}
+                  type={data.type}
+                  variant="outlined"
+                  size='small'
+                  sx={{ marginBottom: "10px" }}
+                />
+              </div>
+            ))}
+          </Grid>
+        </StylingGrid>
+        <DialogActions sx={{margin: "10px 23px", gap: "10px" }}>
           <SubmitButton type="submit" variant='outlined'>Submit</SubmitButton>
           <CancelButton onClick={handleClose}>Batal</CancelButton>
         </DialogActions>
       </Dialog>
-      </>
+    </>
   )
 }
 

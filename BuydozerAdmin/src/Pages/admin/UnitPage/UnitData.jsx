@@ -51,7 +51,7 @@ const UnitData = () => {
             <AddButton />
           </Box>
         </Box>
-        <TableUnit searchValue={searchValue} />  
+        <TableUnit/>  
       </Card>
     </Grid>
   )

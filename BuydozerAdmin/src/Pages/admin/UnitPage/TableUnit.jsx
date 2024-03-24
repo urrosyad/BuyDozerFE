@@ -5,205 +5,253 @@ import {
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
-  IconButton, Collapse
+  IconButton, Collapse,
+  Slide
 } from '@mui/material'
 import formatRupiah from '../../../utils/formatRupiah';
 import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { EditButton, DeleteButton } from '../../../Components/admin/Atoms/Buttons';
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios'
+import theme from '../../../theme';
 
-// const GetApi = () => {
 
-// }
+const UNIT_DATA = [
+  {
+    nameUnit: "Electric drive mining truck",
+    typeUnit: "Komatsu 830e-S",
+    descUnit: "lorem ipsum dolor sit amet indonesia raya bhineka tunggal ika",
+    imgUnit: <img src='' alt='foto unit' style={{width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71"}}></img>,
+    imgBrand: <img src='' alt='logo brand' style={{width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71"}}></img>,
+    priceBuy: "14520000000",
+    priceRent: "35000000",
+    qtyUnit: "20",
+  },
+  {
+    nameUnit: "Bulldozer Extrahot",
+    typeUnit: "CAT 8DTAA",
+    descUnit: "Ini adalah bulldozer extrahot",
+    imgUnit: <img src='' alt='foto unit'></img>,
+    imgBrand: <img src='' alt='logo brand'></img>,
+    priceBuy: "14520000000",
+    priceRent: "35000000",
+    qtyUnit: "20",
+  },
+  {
+    nameUnit: "Electric drive mining truck",
+    typeUnit: "Komatsu 830e-S",
+    descUnit: "lorem ipsum dolor sit amet indonesia raya bhineka tunggal ika",
+    imgUnit: <img src='' alt='foto unit'></img>,
+    imgBrand: <img src='' alt='logo brand'></img>,
+    priceBuy: "14520000000",
+    priceRent: "35000000",
+    qtyUnit: "20",
+  },
+  {
+    nameUnit: "Bulldozer Extrahot",
+    typeUnit: "CAT 8DTAA",
+    descUnit: "Ini adalah bulldozer extrahot",
+    imgUnit: <img src='' alt='foto unit'></img>,
+    imgBrand: <img src='' alt='logo brand'></img>,
+    priceBuy: "14520000000",
+    priceRent: "35000000",
+    qtyUnit: "20",
+  },
+]
 
-const TableUnit = ({ searchValue }) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [sort, setSort] = useState({ field: null, direction: 'asc' });
-  const [isCollapse, SetIsCollapse] = useState(false)
+const BASE_URL_LOGIN = 'https://localhost:5001/api/Users/login';
+const BASE_URL_HEAVYUNIT = 'https://localhost:5001/api/HeavyUnits?ParameterUnit=%25%25&PriceRent=true&PriceBuy=false&PageNumber=1&PageSize=1';
 
-  // const { data, isPending, error, isFetching } = useQuery({
-  //   queryKey: ["unit"],
-  //   queryFn: getAPI
-  // })
 
-  const dataTable = (fotoUnit, nameUnit, typeUnit, qtyUnit, buyPrice, sellPrice) => {
-    return { fotoUnit, nameUnit, typeUnit, qtyUnit, buyPrice, sellPrice, actions: '' };
-  }
-
-  const columnStyle = {
-    align: 'center',
-    bgcolor: "#8BB9FF",
-    color: "#EEF2FF"
+const POST_LOGIN = async () => {
+  const loginData = {
+    email: 'administrator@localhost',
+    password: 'Administrator1!',
+    twoFactorCode: 'string',
+    twoFactorRecoveryCode: 'string'
   };
 
-  const columns = [
-    { id: 'no', label: ' No', width: "2%", ...columnStyle },
-    {
-      id: 'fotoUnit', label: 'Foto Unit', width: "10%", ...columnStyle,
-      render: (row) => (
-        <img
-          src={`${row.fotoUnit}`}
-          alt={row.nameUnit}
-          style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71" }} />
-      )
-    },
-    { id: 'nameUnit', label: 'Nama Unit', width: "10%", ...columnStyle },
-    { id: 'typeUnit', label: 'Tipe Unit', width: "10%", ...columnStyle },
-    { id: 'qtyUnit', label: 'Ketersediaan Unit', width: "10%", ...columnStyle, sortable: true },
-    { id: 'buyPrice', label: 'Harga Jual', width: "10%", ...columnStyle, sortable: true },
-    { id: 'sellPrice', label: 'Harga Sewa', width: "10%", ...columnStyle, sortable: true },
-    {
-      id: 'descUnit', label: '', width: "1%", ...columnStyle,
-      render: () => (
-        <>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => SetIsCollapse(!isCollapse)}
-          >
-            {isCollapse ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          </IconButton>
-        </>
+  try {
+    const response = await axios.post(BASE_URL_LOGIN, loginData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const { accessToken } = response.data;
+    // console.log(`Post login Bearer ${accessToken}`); 
+    
+    return accessToken;
 
-      )
+  } catch (error) {
+    console.error('Error while login:', error);
+    throw error;
+  }
+};
+
+const getAccessToken = async () => {
+  try {
+    const accessToken = await POST_LOGIN();
+    // console.log(accessToken);
+    return accessToken;
+  } catch (error) {
+    console.error('Error getting accessToken:', error);
+    throw error;
+  }
+};
+
+const GET_UNIT = async () => {
+
+  const accessToken = await getAccessToken(); // Menunggu getAccessToken diselesaikan
+  console.log("Bearer", accessToken);
+
+  try {
+    const response = await axios.get(BASE_URL_HEAVYUNIT, {
+      headers: {
+        'Authorization': `Bearer ${getAccessToken()}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUnit = response.data
+
+    console.log(dataUnit)
+
+    return dataUnit;
+
+  } catch (error) {
+    console.error('Error fetching Unit:', error);
+    // throw error;
+  }
+};
+
+
+
+
+const TableUnit = () => {
+  const [data, setData] = useState(UNIT_DATA);
+  const [openDesc, setOpenDesc] = useState(null);
+
+  const handleCollapseToggle = (rowId) => {
+    setOpenDesc(openDesc === rowId ? null : rowId);
+  };
+
+  const skipAccessorKeys = ["imgUnit", "imgBrand"];
+
+  const columns = [
+    { accessorKey: "no", header: "No", width: "1%", cell: (props) => <Typography>{props.row.index + 1}</Typography> },
+    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
+    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
+    { accessorKey: "nameUnit", header: "Nama Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
+    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
+    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
+    { accessorKey: "priceBuy", header: "Harga Beli", width: "5%", cell: (props) => <Typography>{formatRupiah(props.getValue())}</Typography> },
+    { accessorKey: "priceRent", header: "Harga Sewa", width: "5%", cell: (props) => <Typography>{formatRupiah(props.getValue())}</Typography> },
+    {
+      accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
+        const rowId = props.row.id;
+        const isOpen = openDesc === rowId;
+        return (
+          <>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => handleCollapseToggle(rowId)}>
+              {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            </IconButton>
+          </>
+        )
+      }
     },
     {
-      id: 'actions', label: 'Aksi', width: "2%", ...columnStyle,
-      render: () => (
+      accessorKey: "actions", header: "Aksi", width: "2%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <Box>
             <EditButton />
           </Box>
-          <DeleteButton />
+          <Box>
+            <DeleteButton />
+          </Box>
         </Box>
       )
     },
   ]
 
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel()
+  })
 
-  const rows = [
-    dataTable('truck.jpeg', 'Excavator', 'Komatsu', 20, `${formatRupiah(300000000)}/unit`, `${formatRupiah(5000000)}/bulan`),
-    dataTable('truck.jpeg', 'Bulldozer', 'Caterpillar', 15, `${formatRupiah(400000000)}/unit`, `${formatRupiah(6000000)}/bulan`),
-    dataTable('truck.jpeg', 'Crane', 'Liebherr', 10, `${formatRupiah(500000000)}/unit`, `${formatRupiah(7000000)}/bulan`),
-    dataTable('truck.jpeg', 'Dump Truck', 'Volvo', 25, `${formatRupiah(350000000)}/unit`, `${formatRupiah(5500000)}/bulan`),
-    dataTable('truck.jpeg', 'Excavator', 'Komatsu', 20, `${formatRupiah(300000000)}/unit`, `${formatRupiah(5000000)}/bulan`),
-    dataTable('truck.jpeg', 'Bulldozer', 'Caterpillar', 15, `${formatRupiah(400000000)}/unit`, `${formatRupiah(6000000)}/bulan`),
-    dataTable('truck.jpeg', 'Crane', 'Liebherr', 10, `${formatRupiah(500000000)}/unit`, `${formatRupiah(7000000)}/bulan`),
-    dataTable('truck.jpeg', 'Dump Truck', 'Volvo', 25, `${formatRupiah(350000000)}/unit`, `${formatRupiah(5500000)}/bulan`),
-    dataTable('truck.jpeg', 'Excavator', 'Komatsu', 20, `${formatRupiah(300000000)}/unit`, `${formatRupiah(5000000)}/bulan`),
-    dataTable('truck.jpeg', 'Bulldozer', 'Caterpillar', 15, `${formatRupiah(400000000)}/unit`, `${formatRupiah(6000000)}/bulan`),
-    dataTable('truck.jpeg', 'Crane', 'Liebherr', 10, `${formatRupiah(500000000)}/unit`, `${formatRupiah(7000000)}/bulan`),
-    dataTable('truck.jpeg', 'Dump Truck', 'Volvo', 25, `${formatRupiah(350000000)}/unit`, `${formatRupiah(5500000)}/bulan`),
-    dataTable('truck.jpeg', 'Excavator', 'Komatsu', 20, `${formatRupiah(300000000)}/unit`, `${formatRupiah(5000000)}/bulan`),
-    dataTable('truck.jpeg', 'Bulldozer', 'Caterpillar', 15, `${formatRupiah(400000000)}/unit`, `${formatRupiah(6000000)}/bulan`),
-    dataTable('truck.jpeg', 'Crane', 'Liebherr', 10, `${formatRupiah(500000000)}/unit`, `${formatRupiah(7000000)}/bulan`),
-    dataTable('truck.jpeg', 'Dump Truck', 'Volvo', 25, `${formatRupiah(350000000)}/unit`, `${formatRupiah(5500000)}/bulan`),
+  GET_UNIT();
 
-  ];
+  // console.log(table.getHeaderGroups());
+  // console.log(table.getRowModel());
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleSort = (field) => {
-    const isAsc = sort.field === field && sort.direction === 'asc';
-    setSort({ field, direction: isAsc ? 'desc' : 'asc' });
-  };
-
-  const filterRows = () => {
-    const compare = (a, b) => {
-      if (a[sort.field] < b[sort.field]) {
-        return sort.direction === 'asc' ? -1 : 1;
-      }
-      if (a[sort.field] > b[sort.field]) {
-        return sort.direction === 'asc' ? 1 : -1;
-      }
-      return 0;
-    };
-
-    return rows
-      .filter(row =>
-        row.nameUnit.toLowerCase().includes(searchValue.toLowerCase()) ||
-        row.typeUnit.toLowerCase().includes(searchValue.toLowerCase())
-      )
-      .sort(compare);
-  };
-
-  const filteredRows = filterRows().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
-    <div>
-      <TableContainer component={Paper} sx={{ borderRadius: "15px" }}>
-        <Table sx={{ minWidth: 700 }}>
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  onClick={() => column.sortable ? handleSort(column.id) : null}
-                  style={{ width: column.width, backgroundColor: column.bgcolor, color: column.color }}
-                >
-                  {column.id === 'buyPrice' || column.id === 'sellPrice' ? (
-                    <IconButton sx={{ fontSize: 'medium', color: "#F8FAFF" }} onClick={() => handleSort(column.id)}>
-                      <SwapVertRounded />
-                    </IconButton>
-                  ) : ""}
-
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} align="center">
-                  <Typography variant="subtitle1" color="#2A6DD0" fontWeight="medium" >Unit tidak tersedia</Typography>
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredRows
-                .map((row, index) => {
-                  const rowIndex = page * rowsPerPage + index + 1;
-                  const rowStyle = { backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F8FAFF' };
-
+    <TableContainer component={Paper} sx={{ borderRadius: "15px" }}>
+      <Table sx={{ minWidth: 700 }}>
+        <TableHead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                if (!skipAccessorKeys.includes(header.column.columnDef.accessorKey)) {
                   return (
-                    <TableRow key={index} style={rowStyle}>
-                      {columns.map((column) => (
-                        <TableCell key={column.id} align={column.align} sx={{ fontWeight: 'medium', color: "#2A6DD0" }}>
-                          {column.id === 'no' ? rowIndex :
-                            (column.id === 'actions' ? column.render(row) :
-                              column.id === 'fotoUnit' ? column.render(row) :
-                                column.id === 'descUnit' ? column.render(row) : row[column.id])}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-
+                    <TableCell key={header.id} align='center' sx={{ bgcolor: "#8BB9FF", color: "#EEF2FF", width: header.column.columnDef.width }}>
+                      {header.column.columnDef.header}
+                    </TableCell>
                   );
-                }))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 20]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
-
-    </div>
+                }
+              })}
+            </TableRow>
+          ))}
+        </TableHead>
+        <TableBody>
+          {table.getRowModel().rows.map((row, index) => {
+            const rowStyle = { backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F8FAFF' };
+            return (
+              <>
+                <TableRow key={row.id} style={rowStyle}>
+                  {row.getVisibleCells().map((cell) => {
+                    if (!skipAccessorKeys.includes(cell.column.columnDef.accessorKey)) {
+                      return (
+                        <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium" }}>
+                          <Typography>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </Typography>
+                        </TableCell>
+                      );
+                    }
+                  })}
+                </TableRow>
+                <TableRow sx={{ border: "none" }} style={rowStyle}>
+                  <TableCell colSpan={columns.length} align='left' >
+                    <Collapse in={openDesc === row.id} timeout="auto" unmountOnExit>
+                      <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-start"}>
+                        <Box display={"flex"} flexDirection={"row"} gap={"5px"}>
+                          {row.original.imgUnit}
+                          <br />
+                          {row.original.imgBrand}
+                        </Box>
+                        <Box marginLeft={"20px"} >
+                          <Typography variant='h6' sx={{ color: theme.palette.primary.main, fontWeight: "medium" }}>
+                            Deskripsi
+                          </Typography>
+                          <Typography variant='subtitle' sx={{ color: theme.palette.primary.main, }}>
+                            {row.original.descUnit}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Collapse>
+                  </TableCell>
+                </TableRow>
+              </>
+            )
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
-
 
 export default TableUnit
