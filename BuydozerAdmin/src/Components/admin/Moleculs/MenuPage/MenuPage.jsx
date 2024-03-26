@@ -14,7 +14,7 @@ const MenuPage = ({ menu, icon, link, selected, setSelected }) => {
   }
 
   const menuItemStyle = {
-    width: selected === link ? "235px" : !isHover ? "auto" : "auto",
+    width: selected === link ? "200px " : !isHover ? "auto" : "auto",
     padding: '30px 20px',
     marginLeft: selected === link ? "8px" : 0,
     margin: "2px 0px",
@@ -22,7 +22,7 @@ const MenuPage = ({ menu, icon, link, selected, setSelected }) => {
     backgroundColor: selected === link ? "#FFFFFF" : !isHover ? "#FDFDFF" : "#F9FAFF",
     color: selected === link ? theme.palette.primary.light : theme.palette.primary.dark,
     borderRadius: selected === link ? '10px' : '0',
-  
+    fontSize: "14px"
   };
 
   return (
@@ -36,7 +36,7 @@ const MenuPage = ({ menu, icon, link, selected, setSelected }) => {
       <Box sx={{
         display: "flex",
         borderWidth: 1,
-        gap: 3
+        gap: 2
       }}>
         {icon}
         {menu}

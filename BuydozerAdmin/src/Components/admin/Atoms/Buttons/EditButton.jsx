@@ -4,6 +4,7 @@ import {
   Dialog, DialogTitle, DialogContent,
   DialogContentText, DialogActions,
   Divider, TextField, Button,
+  Grid, TextareaAutosize
 } from '@mui/material'
 import { BorderColorRounded } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
@@ -20,13 +21,14 @@ const EditButton = () => {
     setOpen(false);
   };
   const labelInput = [
-    { label: "Nama Unit", id: "unitName", type: "text" },
-    { label: "Brand Unit", id: "unitBrand", type: "text" },
-    { label: "Ketersediaan Unit", id: "qtyUnit", type: "number" },
-    { label: "Harga Beli", id: "buyPrice", type: "number" },
-    { label: "Harga Sewa", id: "sellPrice", type: "number" },
-    { label: "Foto Unit", id: "imgUnit", type:"file",},
-    { label: "Foto Brand", id: "imgBrand", type: "file"},
+    { label: "Nama Unit", id: "unitName", value: "", type: "text" },
+    { label: "Brand Unit", id: "unitBrand", value: "", type: "text" },
+    { label: "Ketersediaan Unit", id: "qtyUnit", value: "", type: "number" },
+    { label: "Deskripsi Unit", id: "descUnit", value: "", type: "textarea" },
+    { label: "Harga Beli", id: "buyPrice", value: "", type: "number" },
+    { label: "Harga Sewa", id: "sellPrice", value: "", type: "number" },
+    { label: "Foto Unit", id: "imgUnit", value: "", type: "file" },
+    { label: "Foto Brand", id: "imgBrand", value: "", type: "file" },
   ]
 
 
@@ -52,7 +54,8 @@ const EditButton = () => {
     },
   }));
 
-  const StylingContent = styled(DialogContent)(({ theme }) => ({
+
+  const StylingGrid = styled(Grid)(({ theme }) => ({
     overflowY: 'auto',
     "&::-webkit-scrollbar": {
       width: "8px",
@@ -67,72 +70,116 @@ const EditButton = () => {
     },
   }));
 
+  const StylingTextarea = styled(TextareaAutosize)({
+    width: '100%',
+    padding: "5px 5px 50px 5px",
+    border: '1px solid #EEF2FF',
+    borderRadius: '5px',
+    backgroundColor: theme.palette.primary.contrastText,
+    boxSizing: 'border-box',
+    fontFamily: "Rubik, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
+    '&:hover': {
+      border: '1px solid black',
+    },
+    '&:focus': {
+      border: '2px solid #2A6DD0',
+      outline: 'none',
+    },
+    resize: 'none',
+    fontSize: '16px',
+    overflowY: "auto"
+  });
+
   const SubmitButton = styled(Button)(({ theme }) => ({
+    width: "30%",
+    height: "30px",
     color: theme.palette.primary.main,
-    borderColor: theme.palette.primary.main,
-    border: "2px solid",
+    border: `2px solid ${theme.palette.primary.main}`,
     padding: "  5px 40px",
     borderRadius: "10px",
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
-      border: "2px solid",
+      border: `2px solid ${theme.palette.primary.main}`
     },
   }));
 
   const CancelButton = styled(Button)(({ theme }) => ({
+    width: "30%",
+    height: "30px",
     color: theme.palette.error.main,
     borderColor: theme.palette.error.main,
     border: "2px solid",
-    padding: "  5px 4px",
+    padding: "  5px 40px",
     borderRadius: "10px",
     "&:hover": {
       backgroundColor: theme.palette.error.main,
       color: theme.palette.primary.contrastText,
-      border: "2px solid",
+      border: `2px solid ${theme.palette.error.main}`
     },
   }));
+
 
   return (
     <>
       <Box>
         <IconButton color='warning' onClick={handleClickOpen}>
-          <BorderColorRounded fontSize='small' />
+          <BorderColorRounded style={{fontSize: "16px"}} />
         </IconButton>
       </Box>
 
-      <Dialog open={open} onClose={handleClose} sx={{ "& .MuiPaper-root": { borderRadius: "20px", width: "500px"}}}>
-        <DialogTitle variant="h4" sx={{ fontWeight: "medium" }}>Edit Unit</DialogTitle>
-        <Divider sx={{ width: "90%", alignSelf: "center" }} />
-        <StylingContent>
-          {labelInput.map((data, index) => (
-            <div key={index}>
-              <DialogContentText marginBottom="5px">
-                <Typography variant='h6'>
-                  {data.label}
-                </Typography>
-              </DialogContentText>
-              { data.type === "file" ? (
-                <>
-                <img src="" alt={`ini nanti ${data.label}`}
-                style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71", margin:"5px 0px" }} 
+
+      <Dialog open={open} onClose={handleClose} sx={{ "& .MuiPaper-root": { width: "450px", height: "480px", borderRadius: "20px"}}}>
+        <DialogTitle variant="h5" sx={{ width: "100%", fontWeight: "medium" }}>Edit Unit</DialogTitle>
+        <Divider sx={{ width: "90%", alignSelf: "center", marginBottom: "20px" }} />
+        <StylingGrid container spacing={2} sx={{ padding: "10px 20px" }}>
+          <Grid item xs={6}>
+            {labelInput.slice(0, Math.ceil(labelInput.length / 2)).map((data) => (
+              <div key={data.id}>
+                <DialogContentText>
+                  <Typography sx={{ fontSize: "14px", fontWeight: "medium" }}>
+                    {data.label}
+                  </Typography>
+                </DialogContentText>
+                {data.type === "textarea" ? (
+                  <StylingTextarea
+                    id={data.id}
+                    maxRows={1}
+                  />
+                ) : (
+                  <StylingField
+                    id={data.id}
+                    type={data.type}
+                    variant="outlined"
+                    size='small'
+                    fullWidth
+                    sx={{ marginBottom: "10px" }}
+                  />
+                )}
+              </div>
+            ))}
+          </Grid>
+          <Grid item xs={6}>
+            {labelInput.slice(Math.ceil(labelInput.length / 2)).map((data) => (
+              <div key={data.id}>
+                <DialogContentText>
+                  <Typography sx={{ fontSize: "14px", fontWeight: "medium" }}>
+                    {data.label}
+                  </Typography>
+                </DialogContentText>
+                <StylingField
+                  id={data.id}
+                  type={data.type}
+                  variant="outlined"
+                  size='small'
+                  style={{ fontSize: "14px", marginBottom: "10px" }}
                 />
-                <StylingField id={data.id} type={data.type} variant="outlined" size='small'
-                sx={{
-                  marginBottom: "10px"
-                }} />
-                </>
-              ) : (
-              <StylingField id={data.id} type={data.type} variant="outlined" size='small'
-                sx={{
-                  marginBottom: "10px"
-                }} />
-              )}
-              
-            </div>
-          ))}
-        </StylingContent>
-        <DialogActions sx={{ margin: "10px 23px", gap: "10px" }}>
+              </div>
+            ))}
+          </Grid>
+        </StylingGrid>
+        <Divider sx={{ width: "93%", alignSelf: "center", marginTop: "20px" }} />
+        <DialogActions sx={{ margin: "10px 23px", gap: "2px" }}>
           <SubmitButton type="submit" variant='outlined'>Submit</SubmitButton>
           <CancelButton onClick={handleClose}>Batal</CancelButton>
         </DialogActions>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Sidebar, Menu} from "react-pro-sidebar";
-import { Box, Typography } from "@mui/material";
+import { Sidebar, Menu } from "react-pro-sidebar";
+import { Box, Typography, Link } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { SpaceDashboardRounded, PeopleAltRounded, ReceiptLong, CommuteRounded, CreditCardRounded, WalletRounded, MenuRounded, ShoppingCart, Sell } from "@mui/icons-material";
 import { MenuPage } from "../../../Components/admin/Moleculs/MenuPage";
@@ -8,15 +8,15 @@ import { MenuPage } from "../../../Components/admin/Moleculs/MenuPage";
 const Sidenav = () => {
   const theme = useTheme();
   const [active, setActive] = useState("/")
-  
+
   const menuItems = [
-    { menu: "Dashboard", icon: <SpaceDashboardRounded fontSize="small" />, link: "/", },
-    { menu: "User", icon: <PeopleAltRounded fontSize="small" />, link: "/user", },
-    { menu: "Unit", icon: <CommuteRounded fontSize="small" />, link: "/unit", },
-    { menu: "Pembelian", icon: <ShoppingCart fontSize="small" />, link: "/buy", },
-    { menu: "Penyewaan", icon: <WalletRounded fontSize="small" />, link: "/rent", },
-    { menu: "List Sewa", icon: <Sell fontSize="small" />, link: "/rentlist", },
-    { menu: "Transaksi", icon: <ReceiptLong fontSize="small" />, link: "/transaction", },
+    { menu: "Dashboard", icon: <SpaceDashboardRounded style={{ fontSize: "16px" }} />, link: "/admin/dashboard", },
+    { menu: "User", icon: <PeopleAltRounded style={{ fontSize: "16px" }} />, link: "/admin/user", },
+    { menu: "Unit", icon: <CommuteRounded style={{ fontSize: "16px" }} />, link: "/admin/unit", },
+    { menu: "Pembelian", icon: <ShoppingCart style={{ fontSize: "16px" }} />, link: "/admin/buy", },
+    { menu: "Penyewaan", icon: <WalletRounded style={{ fontSize: "16px" }} />, link: "/admin/rent", },
+    { menu: "List Sewa", icon: <Sell style={{ fontSize: "16px" }} />, link: "/admin/rentlist", },
+    { menu: "Transaksi", icon: <ReceiptLong style={{ fontSize: "16px" }} />, link: "/admin/transaction", },
   ];
 
   useEffect(() => {
@@ -30,26 +30,26 @@ const Sidenav = () => {
   return (
     <Box
       bgcolor={"#F9FAFF"}
-      display={"flex"}  
+      display={"flex"}
       flexDirection={"column"}
       height={"100vh"}
       color={theme.palette.primary.dark}
     >
-      <Sidebar>
+      <Sidebar width="220px">
         <Menu style={{ height: "100%" }}>
           <Box
             sx={{
               justifyContent: "space-between",
-              height: "80px",
+              height: "60px",
               backgroundColor: "#F9FAFF",
               color: theme.palette.primary.dark,
               display: "flex",
               flexDirection: "row",
               alignItems: "flex-end",
-              paddingLeft: "18px"
+              paddingLeft: "20px",
             }}>
-            <Box sx={{display: "flex", paddingBottom: "30px"}}>
-              <MenuRounded/>
+            <Box sx={{ display: "flex", paddingBottom: "30px" }}>
+              <MenuRounded style={{ fontSize: "16px" }} />
             </Box>
             <Box sx={{
               justifyContent: "flex-end",
@@ -58,15 +58,17 @@ const Sidenav = () => {
               flexDirection: "column",
               alignItems: "flex-end",
             }}>
-              <Typography variant="h6" fontWeight={"bold"} padding={1} mb={-3}>
-                ADMIN
-              </Typography>
-              <Typography variant="h6" fontWeight={"bold"} padding={1}>
-                BUYDOZER
-              </Typography>
+              <Link href="/admin/dashboard" underline="none">
+                <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1, mb: -3 }} >
+                  ADMIN
+                </Typography>
+                <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1 }}>
+                  BUYDOZER
+                </Typography>
+              </Link>
             </Box>
           </Box>
-          <Box sx={{ fontWeight:"bold", bgcolor: "#F9FAFF"}} >
+          <Box sx={{ fontWeight: "bold", bgcolor: "#F9FAFF" }} >
             {menuItems.map((item, index) => (
               <MenuPage
                 key={index}

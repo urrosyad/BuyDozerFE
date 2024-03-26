@@ -13,7 +13,7 @@ import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-
 import { EditButton, DeleteButton } from '../../../Components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios'
+import axios from 'axios';
 import theme from '../../../theme';
 
 
@@ -62,67 +62,92 @@ const UNIT_DATA = [
 
 const BASE_URL_LOGIN = 'https://localhost:5001/api/Users/login';
 const BASE_URL_HEAVYUNIT = 'https://localhost:5001/api/HeavyUnits?ParameterUnit=%25%25&PriceRent=true&PriceBuy=false&PageNumber=1&PageSize=1';
+const BASE_URL_REGISTER = "https://localhost:5001/api/Users/register"
 
-
-const POST_LOGIN = async () => {
-  const loginData = {
-    email: 'administrator@localhost',
-    password: 'Administrator1!',
-    twoFactorCode: 'string',
-    twoFactorRecoveryCode: 'string'
-  };
-
-  try {
-    const response = await axios.post(BASE_URL_LOGIN, loginData, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const { accessToken } = response.data;
-    // console.log(`Post login Bearer ${accessToken}`); 
-    
-    return accessToken;
-
-  } catch (error) {
-    console.error('Error while login:', error);
-    throw error;
+const POST_REGISTER = async () => {
+  const registData = {
+    email: 'test5@gmail.com',
+    password: 'Testingkelima12345.'
   }
-};
-
-const getAccessToken = async () => {
-  try {
-    const accessToken = await POST_LOGIN();
-    // console.log(accessToken);
-    return accessToken;
-  } catch (error) {
-    console.error('Error getting accessToken:', error);
-    throw error;
-  }
-};
-
-const GET_UNIT = async () => {
-
-  const accessToken = await getAccessToken(); // Menunggu getAccessToken diselesaikan
-  console.log("Bearer", accessToken);
 
   try {
-    const response = await axios.get(BASE_URL_HEAVYUNIT, {
-      headers: {
-        'Authorization': `Bearer ${getAccessToken()}`,
+    const response = await axios.post(BASE_URL_REGISTER, registData, {
+      headers:{
         'Content-Type': 'application/json',
       }
-    });
-    const dataUnit = response.data
+      
+    })
 
-    console.log(dataUnit)
+    const result = await response.data
+    console.log(result);
 
-    return dataUnit;
-
+    return result;
   } catch (error) {
-    console.error('Error fetching Unit:', error);
-    // throw error;
+    console.error("Terjadi error: ", error.result);
+    throw error;
   }
-};
+}
+
+
+// const POST_LOGIN = async () => {
+//   const loginData = {
+//     email: 'administrator@localhost',
+//     password: 'Administrator1!',
+//     twoFactorCode: 'string',
+//     twoFactorRecoveryCode: 'string'
+//   };
+
+//   try {
+//     const response = await axios.post(BASE_URL_LOGIN, loginData, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     const { accessToken } = response.data;
+//     // console.log(`Post login Bearer ${accessToken}`); 
+    
+//     return accessToken;
+
+//   } catch (error) {
+//     console.error('Error while login:', error);
+//     throw error;
+//   }
+// };
+
+// const getAccessToken = async () => {
+//   try {
+//     const accessToken = await POST_LOGIN();
+//     // console.log(accessToken);
+//     return accessToken;
+//   } catch (error) {
+//     console.error('Error getting accessToken:', error);
+//     throw error;
+//   }
+// };
+
+// const GET_UNIT = async () => {
+
+//   const accessToken = await getAccessToken(); // Menunggu getAccessToken diselesaikan
+//   console.log("Bearer", accessToken);
+
+//   try {
+//     const response = await axios.get(BASE_URL_HEAVYUNIT, {
+//       headers: {
+//         'Authorization': `Bearer ${getAccessToken()}`,
+//         'Content-Type': 'application/json',
+//       }
+//     });
+//     const dataUnit = response.data
+
+//     console.log(dataUnit)
+
+//     return dataUnit;
+
+//   } catch (error) {
+//     console.error('Error fetching Unit:', error);
+//     // throw error;
+//   }
+// };
 
 
 
@@ -138,14 +163,14 @@ const TableUnit = () => {
   const skipAccessorKeys = ["imgUnit", "imgBrand"];
 
   const columns = [
-    { accessorKey: "no", header: "No", width: "1%", cell: (props) => <Typography>{props.row.index + 1}</Typography> },
-    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
-    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
-    { accessorKey: "nameUnit", header: "Nama Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
-    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
-    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "5%", cell: (props) => <Typography>{props.getValue()}</Typography> },
-    { accessorKey: "priceBuy", header: "Harga Beli", width: "5%", cell: (props) => <Typography>{formatRupiah(props.getValue())}</Typography> },
-    { accessorKey: "priceRent", header: "Harga Sewa", width: "5%", cell: (props) => <Typography>{formatRupiah(props.getValue())}</Typography> },
+    { accessorKey: "no", header: "No", width: "1%", cell: (props) => <p>{props.row.index + 1}</p> },
+    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "nameUnit", header: "Nama Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "qtyUnit", header: "Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "priceBuy", header: "Harga Beli", width: "5%", cell: (props) => <p>{formatRupiah(props.getValue())}</p> },
+    { accessorKey: "priceRent", header: "Harga Sewa", width: "5%", cell: (props) => <p>{formatRupiah(props.getValue())}</p> },
     {
       accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
         const rowId = props.row.id;
@@ -156,14 +181,14 @@ const TableUnit = () => {
               aria-label="expand row"
               size="small"
               onClick={() => handleCollapseToggle(rowId)}>
-              {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              {isOpen ? <KeyboardArrowUp style={{fontSize: "16px"}} /> : <KeyboardArrowDown style={{fontSize: "16px"}} />}
             </IconButton>
           </>
         )
       }
     },
     {
-      accessorKey: "actions", header: "Aksi", width: "2%", cell: (props) => (
+      accessorKey: "actions", header: "Aksi", width: "0%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <Box>
             <EditButton />
@@ -182,23 +207,26 @@ const TableUnit = () => {
     getCoreRowModel: getCoreRowModel()
   })
 
-  GET_UNIT();
-
+  // GET_UNIT();
+  // POST_LOGIN();
+  POST_REGISTER()
   // console.log(table.getHeaderGroups());
   // console.log(table.getRowModel());
 
 
   return (
-    <TableContainer component={Paper} sx={{ borderRadius: "15px" }}>
-      <Table sx={{ minWidth: 700 }}>
-        <TableHead>
+    <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%" }}>
+      <Table sx={{ minWidth: 700}}>
+        <TableHead style={{height: "1px"}}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 if (!skipAccessorKeys.includes(header.column.columnDef.accessorKey)) {
                   return (
-                    <TableCell key={header.id} align='center' sx={{ bgcolor: "#8BB9FF", color: "#EEF2FF", width: header.column.columnDef.width }}>
+                    <TableCell key={header.id} align='center' sx={{bgcolor: "#8BB9FF" }}>
+                      <Typography sx={{fontSize: "14px", color: "#EEF2FF", fontWeight: "medium"}}>
                       {header.column.columnDef.header}
+                      </Typography>
                     </TableCell>
                   );
                 }
@@ -208,15 +236,16 @@ const TableUnit = () => {
         </TableHead>
         <TableBody>
           {table.getRowModel().rows.map((row, index) => {
-            const rowStyle = { backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F8FAFF' };
+            const rowStyle = { backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F8FAFF'};
+            
             return (
               <>
                 <TableRow key={row.id} style={rowStyle}>
                   {row.getVisibleCells().map((cell) => {
                     if (!skipAccessorKeys.includes(cell.column.columnDef.accessorKey)) {
                       return (
-                        <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium" }}>
-                          <Typography>
+                        <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium"}}>
+                          <Typography sx={{fontSize: "14px",}}>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </Typography>
                         </TableCell>
@@ -234,10 +263,10 @@ const TableUnit = () => {
                           {row.original.imgBrand}
                         </Box>
                         <Box marginLeft={"20px"} >
-                          <Typography variant='h6' sx={{ color: theme.palette.primary.main, fontWeight: "medium" }}>
+                          <Typography sx={{ fontSize: "14px", color: theme.palette.primary.main, fontWeight: "medium" }}>
                             Deskripsi
                           </Typography>
-                          <Typography variant='subtitle' sx={{ color: theme.palette.primary.main, }}>
+                          <Typography sx={{ fontSize: "14px", color: theme.palette.primary.main, }}>
                             {row.original.descUnit}
                           </Typography>
                         </Box>

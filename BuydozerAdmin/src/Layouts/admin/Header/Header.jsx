@@ -9,9 +9,9 @@ const Header = () => {
   const [isHover, setIsHover] = useState(null)
   
   const headerIcon = [
-    { icon: <SupportAgentRounded  fontSize='small' sx={{ color: theme.palette.primary.dark }} />, tooltip: "Admin" },
-    { icon: <Notifications fontSize='small' sx={{ color: theme.palette.primary.dark }} />, tooltip: "Notifications" },
-    { icon: <ExitToApp fontSize='small' sx={{ color: theme.palette.primary.dark }} />, tooltip: "Logout" },
+    { icon: <SupportAgentRounded fontSize='small' sx={{fontSize: "16px" ,color: theme.palette.primary.dark }} />, tooltip: "Switch to Customer" },
+    { icon: <Notifications fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Notifications" },
+    { icon: <ExitToApp fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Logout" },
   ]
 
 
@@ -23,17 +23,17 @@ const Header = () => {
         alignItems: "center",
         padding: "30px",
         width: "auto",
-        height: "80px",
+        height: "50px",
         backgroundColor: "#F9FAFF",
-        // boxShadow: 1,
+        boxShadow: 1,
       }}
 
     >
-      <Box sx={{ color: theme.palette.primary.dark, mr: "10px" }}>
-        <Typography variant="h6" sx={{ fontWeight: theme.typography.fontWeightRegular, display: "block", mb: -1, textAlign: 'right' }}>
+      <Box sx={{ color: theme.palette.primary.dark, mr: "5px" }}>
+        <Typography sx={{ fontSize: "16px",fontWeight: theme.typography.fontWeightRegular, mb: -1, textAlign: 'right' }}>
           Hi!
         </Typography>
-        <Typography variant="h5" sx={{ fontWeight: "bold", display: "block" }}>
+        <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
           Ulur Rosyad
         </Typography>
       </Box>
@@ -44,16 +44,17 @@ const Header = () => {
             onMouseEnter={() => setIsHover(index)}
             onMouseLeave={() => setIsHover(null)}
             sx={{
-              width: "30px",
-              height: "30px",
+              width: "25px",
+              height: "25px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: "13px",
+              borderRadius: "10px",
               border: `2px solid ${theme.palette.primary.dark}`,
               backgroundColor: isHover === index ? theme.palette.primary.dark : "initial",
               color: isHover === index ? "F9FAFF" : theme.palette.primary.dark,
               margin: "0px 5px",
+              fontSize: "10px"
             }}
           >
             {cloneElement(item.icon, {
