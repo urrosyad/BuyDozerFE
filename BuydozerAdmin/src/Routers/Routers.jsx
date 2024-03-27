@@ -10,22 +10,29 @@ const Routers = () => {
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    // Ambil peran pengguna dari localStorage saat aplikasi dimuat
-    const role = localStorage.getItem('userRole');
+    const role = localStorage.getItem('UserRole');
+    
     if (role) {
       setUserRole(role);
     }
   }, []);
 
+  const handleLoginSuccess = (role) => {
+    setUserRole(role);
+  }
   
+  const handleLogoutSuccess = (role) => {
+    setUserRole(role)
+  }
+
   return (
     <BrowserRouter>
     <Box sx={{ display: "flex", height: "auto" }}>
       {/* <Sidenav /> */}
-      {/* {userRole === 'admin' && <Sidenav />} */}
+      {userRole === 'admin' && <Sidenav />}
       <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1}}>
         {/* <Header /> */}
-        {/* {userRole === 'admin' && <Header />} */}
+        {userRole === 'admin' && <Header onLogoutSuccess={handleLogoutSuccess}/>}
         <Routes>
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/buy" element={<BuyData/>} />
@@ -37,7 +44,7 @@ const Routers = () => {
           <Route path="/" exact element={<HomePage/>} />
           <Route path="/unit" element={<UnitPage/>} />
           <Route path="/transaction" element={<TransactionPage/>} />
-          <Route path="/login" element={<LoginPage/>} />
+          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess}/>} />
         </Routes>
       </Box>
     </Box>
@@ -45,4 +52,4 @@ const Routers = () => {
   )
 }
 
-export default Routers
+export default Routers;
