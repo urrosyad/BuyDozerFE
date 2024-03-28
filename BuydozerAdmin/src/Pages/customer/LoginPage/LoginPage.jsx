@@ -21,7 +21,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const formik = useFormik({
-    initialValues:{
+    initialValues: {
       email: "",
       password: "",
     }
@@ -72,68 +72,68 @@ const LoginPage = () => {
             <Typography sx={{ fontSize: "16px", color: '#193D71' }}>Heavy Unit Heavy Profit</Typography>
           </Box>
           <form action={POST_LOGIN} method="post">
-          <Box sx={{ margin: "10px 20px"}}>
-            <FormControl sx={{width:"100%" }}>
-              <Typography sx={{ fontSize: "18px", color: '#193D71' }}>Email</Typography>
-              <Box sx={{ 
-                height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
-              }}>
-                <InputBase 
-                type='text' name='email' 
-                sx={{ 
-                  width:"100%", height:"100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl:'10px'
-                }}
-                onChange={handleLogin} 
-                />
-              </Box>
-            </FormControl>
-            <FormControl sx={{width:"100%",marginTop: "10px" }}>
-              <Typography sx={{ fontSize: 18, color: '#193D71' }}>Password</Typography>
-              <Box sx={{ 
-                height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
-              }}>
-                <InputBase 
-                type={showPassword ? 'text' : 'password'} name='email'
-                sx={{ 
-                  width:"100%", height:"100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl:'10px'
-                }}
-                onChange={handleLogin} />
-                <IconButton size='small' sx={{color: "#2A6DD0"}} onClick={handleClickShowPassword}>
-                {showPassword ? <VisibilityOff fontSize='small' /> : <Visibility fontSize='small' />}
-                </IconButton>
-              </Box>
-
-
-
-              <Box sx={{ margin: "5px" }}>
-                <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung setidaknya 8 character</Typography>
-                <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung campuran huruf dan angka</Typography>
-                <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung 1 huruf kapital</Typography>
-              </Box>
-            </FormControl>
-            <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <Button type='submit'
-                sx={{
-                  width: "150px",
-                  borderRadius: "10px",
-                  color: "#D9D630",
-                  border: "2px solid #D9D630",
-                  fontWeight: "bold",
-                  fontSize: "16px",
-                  ":hover": {
-                    backgroundColor: "#D9D630",
-                    color: "#193D71",
-                    border: "2px solid #D9D630"
-                  }
+            <Box sx={{ margin: "10px 20px" }}>
+              <FormControl sx={{ width: "100%" }}>
+                <Typography sx={{ fontSize: "18px", color: '#193D71' }}>Email</Typography>
+                <Box sx={{
+                  height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
                 }}>
-                Login
-              </Button>
-              <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>
-                Tidak punya akun?
-                <a href="#" style={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', fontWeight: theme.typography.fontWeightMedium }}> daftar disini! </a>
-              </Typography>
+                  <InputBase
+                    type='text' name='email'
+                    sx={{
+                      width: "100%", height: "100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl: '10px'
+                    }}
+                    onChange={handleLogin}
+                  />
+                </Box>
+              </FormControl>
+              <FormControl sx={{ width: "100%", marginTop: "10px" }}>
+                <Typography sx={{ fontSize: 18, color: '#193D71' }}>Password</Typography>
+                <Box sx={{
+                  height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
+                }}>
+                  <InputBase
+                    type={showPassword ? 'text' : 'password'} name='email'
+                    sx={{
+                      width: "100%", height: "100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl: '10px'
+                    }}
+                    onChange={handleLogin} />
+                  <IconButton size='small' sx={{ color: "#2A6DD0" }} onClick={handleClickShowPassword}>
+                    {showPassword ? <VisibilityOff fontSize='small' /> : <Visibility fontSize='small' />}
+                  </IconButton>
+                </Box>
+
+
+
+                <Box sx={{ margin: "5px" }}>
+                  <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung setidaknya 8 character</Typography>
+                  <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung campuran huruf dan angka</Typography>
+                  <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung 1 huruf kapital</Typography>
+                </Box>
+              </FormControl>
+              <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                <Button type='submit'
+                  sx={{
+                    width: "150px",
+                    borderRadius: "10px",
+                    color: "#D9D630",
+                    border: "2px solid #D9D630",
+                    fontWeight: "bold",
+                    fontSize: "16px",
+                    ":hover": {
+                      backgroundColor: "#D9D630",
+                      color: "#193D71",
+                      border: "2px solid #D9D630"
+                    }
+                  }}>
+                  Login
+                </Button>
+                <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>
+                  Tidak punya akun?
+                  <a href="/register" style={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', fontWeight: theme.typography.fontWeightMedium }}> daftar disini! </a>
+                </Typography>
+              </Box>
             </Box>
-          </Box>
           </form>
         </Paper>
       </Box>
