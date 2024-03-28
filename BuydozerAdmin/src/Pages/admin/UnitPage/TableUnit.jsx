@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box, Typography,
   Table, TableContainer,
@@ -16,52 +16,6 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import theme from '../../../theme';
 
-
-const UNIT_DATA = [
-  {
-    nameUnit: "Electric drive mining truck",
-    typeUnit: "Komatsu 830e-S",
-    descUnit: "lorem ipsum dolor sit amet indonesia raya bhineka tunggal ika",
-    imgUnit: <img src='' alt='foto unit' style={{width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71"}}></img>,
-    imgBrand: <img src='' alt='logo brand' style={{width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71"}}></img>,
-    priceBuy: "14520000000",
-    priceRent: "35000000",
-    qtyUnit: "20",
-  },
-  {
-    nameUnit: "Bulldozer Extrahot",
-    typeUnit: "CAT 8DTAA",
-    descUnit: "Ini adalah bulldozer extrahot",
-    imgUnit: <img src='' alt='foto unit'></img>,
-    imgBrand: <img src='' alt='logo brand'></img>,
-    priceBuy: "14520000000",
-    priceRent: "35000000",
-    qtyUnit: "20",
-  },
-  {
-    nameUnit: "Electric drive mining truck",
-    typeUnit: "Komatsu 830e-S",
-    descUnit: "lorem ipsum dolor sit amet indonesia raya bhineka tunggal ika",
-    imgUnit: <img src='' alt='foto unit'></img>,
-    imgBrand: <img src='' alt='logo brand'></img>,
-    priceBuy: "14520000000",
-    priceRent: "35000000",
-    qtyUnit: "20",
-  },
-  {
-    nameUnit: "Bulldozer Extrahot",
-    typeUnit: "CAT 8DTAA",
-    descUnit: "Ini adalah bulldozer extrahot",
-    imgUnit: <img src='' alt='foto unit'></img>,
-    imgBrand: <img src='' alt='logo brand'></img>,
-    priceBuy: "14520000000",
-    priceRent: "35000000",
-    qtyUnit: "20",
-  },
-]
-
-const BASE_URL_LOGIN = 'https://localhost:5001/api/Users/login';
-const BASE_URL_HEAVYUNIT = 'https://localhost:5001/api/HeavyUnits?ParameterUnit=%25%25&PriceRent=true&PriceBuy=false&PageNumber=1&PageSize=1';
 const BASE_URL_REGISTER = "https://localhost:5001/api/Users/register"
 
 const POST_REGISTER = async () => {
@@ -72,10 +26,10 @@ const POST_REGISTER = async () => {
 
   try {
     const response = await axios.post(BASE_URL_REGISTER, registData, {
-      headers:{
+      headers: {
         'Content-Type': 'application/json',
       }
-      
+
     })
 
     const result = await response.data
@@ -89,88 +43,99 @@ const POST_REGISTER = async () => {
 }
 
 
-// const POST_LOGIN = async () => {
-//   const loginData = {
-//     email: 'administrator@localhost',
-//     password: 'Administrator1!',
-//     twoFactorCode: 'string',
-//     twoFactorRecoveryCode: 'string'
-//   };
 
-//   try {
-//     const response = await axios.post(BASE_URL_LOGIN, loginData, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     const { accessToken } = response.data;
-//     // console.log(`Post login Bearer ${accessToken}`); 
-    
-//     return accessToken;
+const GET_UNIT = async (props) => {
+  const { SearchValue, PageNumber, PageSize, RentSort, BuySort } = props
+  console.log(RentSort, BuySort);
 
-//   } catch (error) {
-//     console.error('Error while login:', error);
-//     throw error;
-//   }
-// };
+  // False = Desc && True = Asc
+  const BASE_URL_HEAVYUNIT = `https://localhost:5001/api/HeavyUnits?ParameterUnit=%25${SearchValue}%25&PriceRent=${RentSort}&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const accessToken = localStorage.getItem('AccessToken');
+  try {
+    const response = await axios.get(BASE_URL_HEAVYUNIT, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUnit = response.data.items
+    console.log(dataUnit);
+    return dataUnit;
 
-// const getAccessToken = async () => {
-//   try {
-//     const accessToken = await POST_LOGIN();
-//     // console.log(accessToken);
-//     return accessToken;
-//   } catch (error) {
-//     console.error('Error getting accessToken:', error);
-//     throw error;
-//   }
-// };
-
-// const GET_UNIT = async () => {
-
-//   const accessToken = await getAccessToken(); // Menunggu getAccessToken diselesaikan
-//   console.log("Bearer", accessToken);
-
-//   try {
-//     const response = await axios.get(BASE_URL_HEAVYUNIT, {
-//       headers: {
-//         'Authorization': `Bearer ${getAccessToken()}`,
-//         'Content-Type': 'application/json',
-//       }
-//     });
-//     const dataUnit = response.data
-
-//     console.log(dataUnit)
-
-//     return dataUnit;
-
-//   } catch (error) {
-//     console.error('Error fetching Unit:', error);
-//     // throw error;
-//   }
-// };
+  } catch (error) {
+    console.error('Error fetching Unit:', error);
+    // throw error;
+  }
+};
 
 
 
 
-const TableUnit = () => {
-  const [data, setData] = useState(UNIT_DATA);
+const TableUnit = (props) => {
+  const { SearchValue, PageNumber, PageSize, RentSort, BuySort } = props
+  const [data, setData] = useState([]);
   const [openDesc, setOpenDesc] = useState(null);
+  const [page, setPage] = useState(1); // Halaman ke
+  const [rowsPerPage, setRowsPerPage] = useState(4); // Jumlah data setiap halaman 
+  const [buySort, setBuySort] = useState(false)
+  const [rentSort, setRentSort] = useState(false)
+
+  const fetchData = async () => {
+    const unitData = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort, RentSort: rentSort });
+    if (unitData) {
+      const formattedData = unitData.map(data => ({
+        nameUnit: data.nameUnit,
+        typeUnit: data.typeUnit,
+        descUnit: data.descUnit,
+        imgUnit: <img src={data.imgUnit} alt='foto unit' style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71" }}></img>,
+        imgBrand: <img src={data.imgBrand} alt='logo brand' style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71" }}></img>,
+        priceBuy: formatRupiah(data.priceBuyUnit),
+        priceRent: formatRupiah(data.priceRentUnit),
+        qtyUnit: data.qtyUnit,
+      }));
+      setData(formattedData);
+      return formattedData;
+    }
+  };
+
+  // const { data, isPending, error, isFetching } = useQuery({
+  //   queryKey:["unit"],
+  //   queryFn: fetchData() 
+  // })
 
   const handleCollapseToggle = (rowId) => {
     setOpenDesc(openDesc === rowId ? null : rowId);
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+  const handleSortBuy = () => {
+    setBuySort(!buySort)
+  }
+  const handleSortRent = () => {
+    setRentSort(!rentSort)
+  }
+
+
+
+  useEffect(() => {
+    fetchData();
+  }, [SearchValue, page, rowsPerPage, buySort, rentSort]);
 
   const skipAccessorKeys = ["imgUnit", "imgBrand"];
-
   const columns = [
-    { accessorKey: "no", header: "No", width: "1%", cell: (props) => <p>{props.row.index + 1}</p> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
     { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "nameUnit", header: "Nama Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "qtyUnit", header: "Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceBuy", header: "Harga Beli", width: "5%", cell: (props) => <p>{formatRupiah(props.getValue())}</p> },
-    { accessorKey: "priceRent", header: "Harga Sewa", width: "5%", cell: (props) => <p>{formatRupiah(props.getValue())}</p> },
+    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "priceBuy", header: "Harga Beli", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "priceRent", header: "Harga Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     {
       accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
         const rowId = props.row.id;
@@ -181,14 +146,14 @@ const TableUnit = () => {
               aria-label="expand row"
               size="small"
               onClick={() => handleCollapseToggle(rowId)}>
-              {isOpen ? <KeyboardArrowUp style={{fontSize: "16px"}} /> : <KeyboardArrowDown style={{fontSize: "16px"}} />}
+              {isOpen ? <KeyboardArrowUp style={{ fontSize: "16px" }} /> : <KeyboardArrowDown style={{ fontSize: "16px" }} />}
             </IconButton>
           </>
         )
       }
     },
     {
-      accessorKey: "actions", header: "Aksi", width: "0%", cell: (props) => (
+      accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <Box>
             <EditButton />
@@ -207,25 +172,28 @@ const TableUnit = () => {
     getCoreRowModel: getCoreRowModel()
   })
 
-  // GET_UNIT();
-  // POST_LOGIN();
-  POST_REGISTER()
-  // console.log(table.getHeaderGroups());
-  // console.log(table.getRowModel());
-
-
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%" }}>
-      <Table sx={{ minWidth: 700}}>
-        <TableHead style={{height: "1px"}}>
+      <Table sx={{ minWidth: 700 }}>
+        <TableHead style={{ height: "1px" }}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 if (!skipAccessorKeys.includes(header.column.columnDef.accessorKey)) {
                   return (
-                    <TableCell key={header.id} align='center' sx={{bgcolor: "#8BB9FF" }}>
-                      <Typography sx={{fontSize: "14px", color: "#EEF2FF", fontWeight: "medium"}}>
-                      {header.column.columnDef.header}
+                    <TableCell key={header.id} align='center' sx={{ bgcolor: "#8BB9FF", width: header.column.columnDef.width }}>
+                      <Typography sx={{ fontSize: "14px", color: "#EEF2FF", fontWeight: "medium" }}>
+                        {header.column.columnDef.header}
+                        {(header.column.columnDef.accessorKey === "priceBuy") ? (
+                          <IconButton sx={{ fontSize: 'small', color: "#F8FAFF" }} onClick={handleSortBuy}>
+                            <SwapVertRounded />
+                          </IconButton>
+                        ) : null}
+                        {(header.column.columnDef.accessorKey === "priceRent") ? (
+                          <IconButton sx={{ fontSize: 'small', color: "#F8FAFF" }} onClick={handleSortRent}>
+                            <SwapVertRounded />
+                          </IconButton>
+                        ) : null}
                       </Typography>
                     </TableCell>
                   );
@@ -234,51 +202,70 @@ const TableUnit = () => {
             </TableRow>
           ))}
         </TableHead>
-        <TableBody>
-          {table.getRowModel().rows.map((row, index) => {
-            const rowStyle = { backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F8FAFF'};
-            
-            return (
-              <>
-                <TableRow key={row.id} style={rowStyle}>
-                  {row.getVisibleCells().map((cell) => {
-                    if (!skipAccessorKeys.includes(cell.column.columnDef.accessorKey)) {
-                      return (
-                        <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium"}}>
-                          <Typography sx={{fontSize: "14px",}}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </Typography>
-                        </TableCell>
-                      );
-                    }
-                  })}
-                </TableRow>
-                <TableRow sx={{ border: "none" }} style={rowStyle}>
-                  <TableCell colSpan={columns.length} align='left' >
-                    <Collapse in={openDesc === row.id} timeout="auto" unmountOnExit>
-                      <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-start"}>
-                        <Box display={"flex"} flexDirection={"row"} gap={"5px"}>
-                          {row.original.imgUnit}
-                          <br />
-                          {row.original.imgBrand}
+        <TableBody key={columns}>
+          {data.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} align='center' sx={{ color: "#2A6DD0" }}>
+                <Typography sx={{ fontSize: "16px", fontWeight: "medium" }}>
+                  Tidak Ada Unit
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ) : (
+            table.getRowModel().rows.map((row, index) => {
+              const rowStyle = { backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F8FAFF' };
+              return (
+                <>
+                  <TableRow key={row.id} style={rowStyle}>
+                    {row.getVisibleCells().map((cell) => {
+                      if (!skipAccessorKeys.includes(cell.column.columnDef.accessorKey)) {
+                        return (
+                          <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium" }}>
+                            <Typography sx={{ fontSize: "14px", }}>
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </Typography>
+                          </TableCell>
+                        );
+                      }
+                    })}
+                  </TableRow>
+                  <TableRow sx={{ border: "none" }} style={rowStyle}>
+                    <TableCell colSpan={columns.length} align='left' >
+                      <Collapse in={openDesc === row.id} timeout="auto" unmountOnExit>
+                        <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-start"} gap={10}>
+                          <Box display={"flex"} flexDirection={"row"} gap={"5px"}>
+                            {row.original.imgUnit}
+                            <br />
+                            {row.original.imgBrand}
+                          </Box>
+                          <Box sx={{ marginLeft: "20px", padding: 1, border: "2px solid #8BB9FF", borderRadius: "10px" }} >
+                            <Typography sx={{ fontSize: "16px", color: theme.palette.primary.main, fontWeight: "medium" }}>
+                              Deskripsi
+                            </Typography>
+                            <Typography sx={{ fontSize: "14px", color: theme.palette.primary.main, }}>
+                              {row.original.descUnit}
+                            </Typography>
+                          </Box>
                         </Box>
-                        <Box marginLeft={"20px"} >
-                          <Typography sx={{ fontSize: "14px", color: theme.palette.primary.main, fontWeight: "medium" }}>
-                            Deskripsi
-                          </Typography>
-                          <Typography sx={{ fontSize: "14px", color: theme.palette.primary.main, }}>
-                            {row.original.descUnit}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Collapse>
-                  </TableCell>
-                </TableRow>
-              </>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </>
+              )
+            }
             )
-          })}
+          )}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 20]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </TableContainer>
   )
 }

@@ -10,13 +10,12 @@ const Routers = () => {
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    // Ambil peran pengguna dari localStorage saat aplikasi dimuat
-    const role = localStorage.getItem('userRole');
+    const role = localStorage.getItem('UserRole');
+    
     if (role) {
       setUserRole(role);
     }
   }, []);
-
 
   return (
     <BrowserRouter>
@@ -41,9 +40,39 @@ const Routers = () => {
             <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </Box>
+
+  const handleLoginSuccess = (role) => {
+    setUserRole(role);
+  }
+  
+  const handleLogoutSuccess = (role) => {
+    setUserRole(role)
+  }
+
+  return (
+    <BrowserRouter>
+    <Box sx={{ display: "flex", height: "auto" }}>
+      {/* <Sidenav /> */}
+      {userRole === 'admin' && <Sidenav />}
+      <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1}}>
+        {/* <Header /> */}
+        {userRole === 'admin' && <Header onLogoutSuccess={handleLogoutSuccess}/>}
+        <Routes>
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/buy" element={<BuyData/>} />
+          <Route path="/admin/rent" element={<RentData/>} />
+          <Route path="/admin/unit" element={<UnitData/>} />
+          <Route path="/admin/user" element={<UserData/>} />
+          <Route path="/admin/rentlist" element={<RentListData/>} />
+          <Route path="/admin/transaction" element={<TransactionData/>} />
+          <Route path="/" exact element={<HomePage/>} />
+          <Route path="/unit" element={<UnitPage/>} />
+          <Route path="/transaction" element={<TransactionPage/>} />
+          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess}/>} />
+        </Routes>
       </Box>
     </BrowserRouter>
   )
 }
 
-export default Routers
+export default Routers;

@@ -1,17 +1,23 @@
 import { useState, cloneElement } from 'react';
 import { useTheme, Box, Button, Typography, Tooltip, Zoom, useScrollTrigger } from '@mui/material';
 import { SupportAgentRounded, ExitToApp, Notifications, Key } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-
-const Header = () => {
+const Header = ({ onLogoutSuccess}) => {
   const theme = useTheme();
-  
+  const navigate = useNavigate()
   const [isHover, setIsHover] = useState(null)
-  
+
+  const handleLogout = () => {
+    localStorage.removeItem('UserRole');
+    localStorage.removeItem('AccessToken');
+    onLogoutSuccess('')
+    navigate("/login")
+  }
   const headerIcon = [
     { icon: <SupportAgentRounded fontSize='small' sx={{fontSize: "16px" ,color: theme.palette.primary.dark }} />, tooltip: "Switch to Customer" },
     { icon: <Notifications fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Notifications" },
-    { icon: <ExitToApp fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Logout" },
+    { icon: <ExitToApp fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Logout", onclick: handleLogout },
   ]
 
 
@@ -56,6 +62,7 @@ const Header = () => {
               margin: "0px 5px",
               fontSize: "10px"
             }}
+            onClick={item.onclick}
           >
             {cloneElement(item.icon, {
               sx: {
@@ -63,6 +70,7 @@ const Header = () => {
                 
               },
             })}
+            
           </Box>
         </Tooltip>
       ))}
