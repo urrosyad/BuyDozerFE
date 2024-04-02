@@ -7,7 +7,7 @@ import {
   Paper, TablePagination,
   IconButton, Collapse
 } from '@mui/material'
-import formatRupiah from '../../../utils/formatRupiah';
+import formatRupiah from '../../../Utils/formatRupiah';
 import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { EditButton, DeleteButton } from '../../../Components/admin/Atoms/Buttons';
 import { useQuery } from '@tanstack/react-query';

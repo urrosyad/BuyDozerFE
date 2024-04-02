@@ -3,7 +3,7 @@ import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import theme from "./theme";
-import { Routes } from "./Routers";
+import Routers from "./Routers/Routes/Routers";
 
 export default function App() {
   return (
@@ -11,7 +11,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <ProSidebarProvider>
         <CssBaseline/>
-          <Routes />
+          <Routers />
         </ProSidebarProvider>
       </ThemeProvider>
     </>

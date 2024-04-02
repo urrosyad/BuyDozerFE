@@ -2,24 +2,29 @@ import { useState, cloneElement } from 'react';
 import { useTheme, Box, Button, Typography, Tooltip, Zoom, useScrollTrigger } from '@mui/material';
 import { SupportAgentRounded, ExitToApp, Notifications, Key } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '@hooks/useAuth';
 
-const Header = ({ onLogoutSuccess}) => {
+const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate()
   const [isHover, setIsHover] = useState(null)
+  const userName = localStorage.getItem('UserName')
+  const { logoutAuth } = useAuth()
 
-  const handleLogout = () => {
-    localStorage.removeItem('UserRole');
-    localStorage.removeItem('AccessToken');
-    onLogoutSuccess('')
-    navigate("/login")
+  const handleLogout = () => { 
+    const accessToken = localStorage.getItem('AccessToken');
+    const userName = localStorage.getItem('UserName');
+    const userRole = localStorage.getItem('UserRole');
+    logoutAuth(accessToken, userRole, userName)
+    navigate("/")
   }
+
+
   const headerIcon = [
     { icon: <SupportAgentRounded fontSize='small' sx={{fontSize: "16px" ,color: theme.palette.primary.dark }} />, tooltip: "Switch to Customer" },
     { icon: <Notifications fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Notifications" },
     { icon: <ExitToApp fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Logout", onclick: handleLogout },
   ]
-
 
   return (
     <Box
@@ -40,7 +45,7 @@ const Header = ({ onLogoutSuccess}) => {
           Hi!
         </Typography>
         <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
-          Ulur Rosyad
+          {userName}
         </Typography>
       </Box>
 

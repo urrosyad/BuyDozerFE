@@ -3,7 +3,8 @@ import { Sidebar, Menu } from "react-pro-sidebar";
 import { Box, Typography, Link } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { SpaceDashboardRounded, PeopleAltRounded, ReceiptLong, CommuteRounded, CreditCardRounded, WalletRounded, MenuRounded, ShoppingCart, Sell } from "@mui/icons-material";
-import { MenuPage } from "../../../Components/admin/Moleculs/MenuPage";
+import { MenuPage } from "@components/admin/Moleculs/MenuPage";
+
 
 const Sidenav = () => {
   const theme = useTheme();

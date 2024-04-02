@@ -1,24 +1,23 @@
 import React, { useState } from 'react'
-import image from '../../../assets/bgLogin.png'
-import { Container, Paper, Box, Typography, TextField, Button, styled, FormControl, InputAdornment, IconButton, Input, InputBase } from '@mui/material'
+import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import theme from '../../../theme'
-import axios from 'axios'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
-import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import image from '@assets/bgLogin.png'
+import theme from '@src/theme.js'
+import useAuth from '@hooks/useAuth'
 
-
-const BASE_URL_LOGIN = "https://localhost:5001/api/Users/login"
+const BASE_URL_LOGIN = "https://localhost:5001/api/UserEntitys/Login"
 const BASE_URL_USER = "https://localhost:5001/api/UserEntitys?ParameterName=%25%25&PageNumber=1&PageSize=1"
 
-const LoginPage = ({ onLoginSuccess }) => {
+const LoginPage = () => {
+  const {auth, loginAuth } = useAuth()
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues:{
       email: "",
       password: "", 
-      twoFactorCode: 'string',
-      twoFactorRecoveryCode: 'string'
     }
   })
 
@@ -30,15 +29,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     formik.setFieldValue(target.name, target.value)
   }
 
-  const sessionExpired = () => {
-    const expiresIn = localStorage.getItem('') 
-    setTimeout(() => {
-    localStorage.removeItem('AccessToken');
-    localStorage.removeItem('AgeToken');
-    navigate('/login')
-    }, 3600000);
-  }
-
   const POST_LOGIN = async () => {
     try {
       const response = await axios.post(BASE_URL_LOGIN, formik.values, {
@@ -46,14 +36,24 @@ const LoginPage = ({ onLoginSuccess }) => {
           'Content-Type': 'application/json',
         }
       });
-      const { accessToken, expiresIn } = response.data;
-      localStorage.setItem('UserRole', 'admin');
-      localStorage.setItem('AccessToken', accessToken);
-      localStorage.setItem('AgeToken', expiresIn);
-      localStorage.setItem('UserName', formik.values.email)
-      onLoginSuccess('admin')
-      sessionExpired()
-      navigate('/admin/dashboard');
+      const { 
+        UserName,
+        accessToken,
+        IsAdmin
+      } = response.data;
+
+      // IsAdmin ? localStorage.setItem('UserRole', 'admin') : localStorage.setItem('UserRole', 'customer')
+      // localStorage.setItem('AccessToken', accessToken);
+      // localStorage.setItem('ExpireTime', new Date().getTime() + expiresIn);
+      // localStorage.setItem('UserName', UserName)
+
+      loginAuth(
+        accessToken, 
+        IsAdmin ? "admin" : "customer", 
+        UserName
+      );
+
+
       
       return accessToken;
     } catch (error) {
@@ -140,7 +140,7 @@ const LoginPage = ({ onLoginSuccess }) => {
               </Button>
               <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>
                 Tidak punya akun?
-                <a href="#" style={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', fontWeight: theme.typography.fontWeightMedium }}> daftar disini! </a>
+                <a href="/register" style={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', fontWeight: theme.typography.fontWeightMedium }}> daftar disini! </a>
               </Typography>
             </Box>
           </Box>
