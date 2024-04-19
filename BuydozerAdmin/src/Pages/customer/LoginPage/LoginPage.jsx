@@ -9,10 +9,9 @@ import theme from '@src/theme.js'
 import useAuth from '@hooks/useAuth'
 
 const BASE_URL_LOGIN = "https://localhost:5001/api/UserEntitys/Login"
-const BASE_URL_USER = "https://localhost:5001/api/UserEntitys?ParameterName=%25%25&PageNumber=1&PageSize=1"
 
 const LoginPage = () => {
-  const {auth, loginAuth } = useAuth()
+  const {loginAuth } = useAuth()
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues:{
@@ -39,22 +38,15 @@ const LoginPage = () => {
       const { 
         UserName,
         accessToken,
-        IsAdmin
+        IsAdmin,
       } = response.data;
-
-      // IsAdmin ? localStorage.setItem('UserRole', 'admin') : localStorage.setItem('UserRole', 'customer')
-      // localStorage.setItem('AccessToken', accessToken);
-      // localStorage.setItem('ExpireTime', new Date().getTime() + expiresIn);
-      // localStorage.setItem('UserName', UserName)
 
       loginAuth(
         accessToken, 
-        IsAdmin ? "admin" : "customer", 
+        IsAdmin ? 1999 : 2000, 
         UserName
       );
 
-
-      
       return accessToken;
     } catch (error) {
       console.error('Error while login:', error);

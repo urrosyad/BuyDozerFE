@@ -6,20 +6,21 @@ import { HomePage, UnitPage, TransactionPage, LoginPage, RegisterPage } from '@p
 import { PrivateRoutes } from '@routers/PrivateRoutes';
 import { AdminLayout } from '@layouts/admin/AdminLayout';
 import { AuthProvider } from '@context/AuthProvider';
-
+import CustomerLayout from '@layouts/customer/CustomerLayout/CustomerLayout';
 
 const Routers = () => {
   const [userRole, setUserRole] = useState('');
-  
+
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
           <Route path="/" exact element={<LoginPage />} />
           <Route path="/register" exact element={<RegisterPage />} />
+          <Route path="*" element={<Box justifyContent={'center'}>Page Not Found</Box>} />
 
           <Route path="/admin/*" element={<AdminLayout />}>
-            <Route element={<PrivateRoutes />}>
+            <Route element={<PrivateRoutes allowedRoles={[1999]} />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="buy" element={<BuyData />} />
               <Route path="rent" element={<RentData />} />
@@ -30,10 +31,14 @@ const Routers = () => {
             </Route>
           </Route>
 
-          <Route path="/beranda" element={<HomePage />} />
-          <Route path="/unit" element={<UnitPage />} />
-          <Route path="/transaksi" element={<TransactionPage />} />
-          <Route path="*" element={<Box>Page Not Found</Box>} />
+
+          <Route path="/buydozer/*" element={<CustomerLayout />} >
+            <Route element={<PrivateRoutes allowedRoles={[1999, 2000]} />}>
+              <Route path="beranda" element={<HomePage />} />
+              <Route path="unit" element={<UnitPage />} />
+              <Route path="transaksi" element={<TransactionPage />} />
+            </Route>
+          </Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

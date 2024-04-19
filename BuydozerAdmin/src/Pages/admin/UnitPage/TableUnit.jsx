@@ -7,6 +7,7 @@ import {
   Paper, TablePagination,
   IconButton, Collapse,
   CircularProgress,
+  Alert,
 } from '@mui/material'
 import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
@@ -15,53 +16,28 @@ import { useQuery } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
 import theme from '@src/theme';
-
-const BASE_URL_REGISTER = "https://localhost:5001/api/Users/register"
-
-const POST_REGISTER = async () => {
-  const registData = {
-    email: 'test5@gmail.com',
-    password: 'Testingkelima12345.'
-  }
-
-  try {
-    const response = await axios.post(BASE_URL_REGISTER, registData, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-
-    })
-
-    const result = await response.data
-    console.log(result);
-
-    return result;
-  } catch (error) {
-    console.error("Terjadi error: ", error.result);
-    throw error;
-  }
-}
-
+import UnitData from './UnitData';
 
 
 const GET_UNIT = async (props) => {
-  const { SearchValue, PageNumber, PageSize, RentSort, BuySort } = props
-  console.log(RentSort, BuySort);
+  const { SearchValue, PageNumber, PageSize, BuySort } = props
   
   // False = Desc && True = Asc
-  const BASE_URL_HEAVYUNIT = `https://localhost:5001/api/HeavyUnits?ParameterUnit=%25${SearchValue}%25&PriceRent=${RentSort}&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+
   const accessToken = localStorage.getItem('AccessToken');
   try {
-    const response = await axios.get(BASE_URL_HEAVYUNIT, {
+    const response = await axios.get(BASE_URL_GET_UNIT, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       }
     });
+    
     const dataUnit = response.data.items
-    return dataUnit;
-
-  } catch (error) {
+    const totalCount = response.data.totalCount
+    return {dataUnit, totalCount};
+  } catch (error) {   
     console.error('Error fetching Unit:', error);
     // throw error;
   }
@@ -69,21 +45,27 @@ const GET_UNIT = async (props) => {
 
 
 const TableUnit = (props) => {
-  const { SearchValue, PageNumber, PageSize, RentSort, BuySort } = props
+  const { SearchValue, PageNumber, PageSize, BuySort} = props
+
   const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
+  const [totalData, setTotalData] = useState(0)
   const [buySort, setBuySort] = useState(false)
-  const [rentSort, setRentSort] = useState(false)
+  const [isModalDeleteOpen, SetIsModalDeleteOpen] = useState(false)
+
+
 
   const fetchData = async () => {
-    const unitData = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort, RentSort: rentSort });
-    // console.log("fetch data", unitData); sudah selalu bisa
-    if (!unitData) {
+    const {dataUnit, totalCount} = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort});
+    setTotalData(totalCount)
+    console.table(dataUnit);
+    if (!dataUnit) {
       throw new Error("Failed to fetch data");
     };
     
-    const formattedData = unitData.map(data => ({
+    const formattedData = dataUnit.map(data => ({
+      id: data.id,
       nameUnit: data.nameUnit,
       typeUnit: data.typeUnit,
       descUnit: data.descUnit,
@@ -97,13 +79,14 @@ const TableUnit = (props) => {
       alt='logo brand' 
       style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71" }}>
               </img>,
-      priceBuy: formatRupiah(data.priceBuyUnit),
-      priceRent: formatRupiah(data.priceRentUnit),
+      priceBuyUnit: formatRupiah(data.priceBuyUnit),
+      priceRentUnit: formatRupiah(data.priceRentUnit),
       qtyUnit: data.qtyUnit,
     }));
     return formattedData;
   };
   
+
   const {
     data, 
     isPending, 
@@ -120,26 +103,42 @@ const TableUnit = (props) => {
     setOpenDesc(openDesc === rowId ? null : rowId);
   };
 
+  // handle when move to the next page
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    setPage(newPage + 1);
   };
 
+  // handle row per page in pagination 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
-    setPage(0);
+    setPage(1);
   };
 
+  // sorting buy column function
   const handleSortBuy = () => {
     setBuySort(!buySort)
   }
   
-  const handleSortRent = () => {
-    setRentSort(!rentSort)
+  const handleEditOnClick = (index) => {
+    const clickedData = data[index].nameUnit;
+    console.log('Data yang diklik:', clickedData);
+
+    // to send data nameUnit to parent Component
+    props.onSelectRow(clickedData);
+  }
+
+  const handleDelOnClick = (index) => {
+    const idRow = data[index].id;
+    const nameUnitRow = data[index].nameUnit;
+    console.log('Data yang diklik:', idRow, nameUnitRow);
+
+    // to send data nameUnit to parent Component
+    props.onSelectRowId(idRow, nameUnitRow);
   }
 
   useEffect(() => {
     refetch()
-  }, [SearchValue, page, rowsPerPage, buySort, rentSort, refetch]);
+  }, [SearchValue, page, rowsPerPage, buySort, refetch]);
 
   const skipAccessorKeys = ["imgUnit", "imgBrand"];
   const columns = [
@@ -149,19 +148,19 @@ const TableUnit = (props) => {
     { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceBuy", header: "Harga Beli", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceRent", header: "Harga Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "priceBuyUnit", header: "Harga Beli", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "priceRentUnit", header: "Harga Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     {
       accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
         const rowId = props.row.id;
-        const isOpen = openDesc === rowId;
+        const isCollapse = openDesc === rowId;
         return (
           <>
             <IconButton
               aria-label="expand row"
               size="small"
               onClick={() => handleCollapseToggle(rowId)}>
-              {isOpen ? <KeyboardArrowUp style={{ fontSize: "16px" }} /> : <KeyboardArrowDown style={{ fontSize: "16px" }} />}
+              {isCollapse ? <KeyboardArrowUp style={{ fontSize: "16px" }} /> : <KeyboardArrowDown style={{ fontSize: "16px" }} />}
             </IconButton>
           </>
         )
@@ -171,10 +170,10 @@ const TableUnit = (props) => {
       accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <Box>
-            <EditButton />
+            <EditButton onClick={()=>handleEditOnClick(props.row.index)} />
           </Box>
           <Box>
-            <DeleteButton />
+            <DeleteButton onClick={()=>handleDelOnClick(props.row.index)}/>
           </Box>
         </Box>
       )
@@ -187,20 +186,22 @@ const TableUnit = (props) => {
     getCoreRowModel: getCoreRowModel()
   })
 
-  if ( data === undefined) {
+  if ( data === undefined ) {
     return (
       <div>
       <CircularProgress size={50} sx={{
         position: "absolute",
         color: "#8BB9FF", 
         marginTop:20,
-        marginLeft: 68,
+        marginLeft: 80,
         }}
       />
       </div>
     )
   }
 
+  // console.table(data);
+  // console.table({page, rowsPerPage});
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>
@@ -213,7 +214,7 @@ const TableUnit = (props) => {
                     <TableCell key={header.id} align='center' sx={{ bgcolor: "#8BB9FF", width: header.column.columnDef.width }}>
                       <Typography sx={{ fontSize: "14px", color: "#EEF2FF", fontWeight: "medium" }}>
                         {header.column.columnDef.header}
-                        {(header.column.columnDef.accessorKey === "priceBuy") ? (
+                        {(header.column.columnDef.accessorKey === "priceBuyUnit") ? (
                           <IconButton sx={{ fontSize: 'small', color: "#F8FAFF" }} onClick={handleSortBuy}>
                             <SwapVertRounded />
                           </IconButton>
@@ -288,9 +289,9 @@ const TableUnit = (props) => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 20]}
         component="div"
-        count={data.length}
+        count={totalData}
         rowsPerPage={rowsPerPage}
-        page={page}
+        page={page - 1}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

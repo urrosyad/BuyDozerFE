@@ -10,14 +10,14 @@ const MenuPage = ({ menu, icon, link, selected, setSelected }) => {
 
   const handleActive = () => {
     setSelected(link)
-    console.log(`Menu: ${menu}, Link: ${link}, Active: ${selected}`);
   }
 
   const menuItemStyle = {
     width: selected === link ? "200px " : !isHover ? "auto" : "auto",
     padding: '30px 20px',
     marginLeft: selected === link ? "8px" : 0,
-    margin: "2px 0px",
+    marginTop: "2px",
+    marginBottom: "2px",
     position: 'relative',
     backgroundColor: selected === link ? "#FFFFFF" : !isHover ? "#FDFDFF" : "#F9FAFF",
     color: selected === link ? theme.palette.primary.light : theme.palette.primary.dark,

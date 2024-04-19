@@ -15,6 +15,8 @@ export default defineConfig({
       '@routers': '/src/Routers',
       '@utils': '/src/Utils',
       '@layouts': '/src/Layouts',
+      '@auth': '/src/auth',
+      '@schemas': '/src/Schemas',
     },
   },
 })

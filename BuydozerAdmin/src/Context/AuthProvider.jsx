@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
       const loginAuth = (accessToken, userRole, userName) => {
         localStorage.setItem("AccessToken", accessToken);
-        localStorage.setItem("UserRole", userRole);
+        localStorage.setItem("UserRole", userRole); 
         localStorage.setItem("UserName", userName);
     
         setAuth({
@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
           userRole: userRole,
           userName: userName,
         });
-        console.log(auth);
       };
 
       useEffect(() => {

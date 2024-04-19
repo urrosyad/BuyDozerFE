@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 
 // For set accessToken to localStorage
 export const setToken = (accessToken, expiresIn) => {

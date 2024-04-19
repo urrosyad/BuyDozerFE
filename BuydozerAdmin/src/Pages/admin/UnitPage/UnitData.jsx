@@ -2,24 +2,267 @@ import React, { useState } from 'react'
 import {
   Card,
   Box, Typography,
-  Grid, InputBase
+  Grid, InputBase, Alert
 } from '@mui/material'
 import { SearchRounded } from '@mui/icons-material';
-import theme from '../../../theme';
+import { useFormik } from 'formik';
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { unitSchema } from '@schemas';
+import axios from 'axios';
+import theme from '@src/theme';
 import TableUnit from './TableUnit';
-import AddButton from '../../../Components/admin/Atoms/Buttons/AddButton';
-import ModalAdd from '../../../Components/admin/Atoms/Modal/ModalAdd';
+import AddButton from '@components/admin/Atoms/Buttons/AddButton';
+import ModalUnit from '@components/admin/Atoms/Modal/ModalUnit';
+import ModalDelete from '@components/admin/Atoms/Modal/ModalDelete';
+import ModalEdit from '@components/admin/Atoms/Modal/ModalEdit';
+import imgConvert from '@utils/imgConvert';
+import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
+import * as yup from 'yup';
+import formatRupiah from '@utils/formatRupiah';
 
+
+
+const initialValues = {
+  id:"",
+  nameUnit: "",
+  typeUnit: "",
+  descUnit: "",
+  imgUnit: "",
+  imgBrand: "",
+  priceBuyUnit: null,
+  priceRentUnit: null,
+  qtyUnit: null,
+}
+
+
+const POST_UNIT = async ({ unitValues }) => {
+  const BASE_URL_POST_UNIT = "https://localhost:5001/api/HeavyUnits"
+  const accessToken = localStorage.getItem('AccessToken')
+  try {
+    const response = await axios.post(BASE_URL_POST_UNIT, unitValues, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUnit = response.data
+    return dataUnit;
+  } catch (error) {
+    console.error('Error while Post Unit:', error);
+    throw error
+  }
+};
+
+const GET_UNIT_BYNAME = async ({ nameUnit }) => {
+  console.log('nama unit: ', nameUnit);
+
+  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
+
+  const accessToken = localStorage.getItem('AccessToken');
+  try {
+    const response = await axios.get(BASE_URL_GET_UNIT, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUnit = response.data.items
+    // console.log('log data unit dari api: ', dataUnit);
+    return dataUnit
+    
+  } catch (error) {   
+    throw error;
+  }
+};
+
+const PUT_UNIT = async ({id, unitValues}) => {
+  console.table(id, unitValues);
+
+  const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/${id}`
+  const accessToken = localStorage.getItem('AccessToken')
+  try {
+    const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUnit = response.data
+    return dataUnit;
+  } catch (error) {
+    console.error('Error while Put Unit:', error);
+    throw error
+  }
+}
+const DELETE_UNIT = async ({id}) => {
+  console.log("id yang diterima oleh function DELET_UNIT",id);
+  const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/${id}`
+  const accessToken = localStorage.getItem('AccessToken')
+  try {
+    const response = await axios.delete(BASE_URL_DELETE_UNIT, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUnit = response.data
+    console.log("Berhasil delete DATA");
+    return dataUnit;
+  } catch (error) {
+    console.error('Error while Delete Unit:', error);
+    throw error
+  }
+}
 
 const UnitData = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [isModalAddOpen, setIsModalAppOpen] = useState(false)
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  const [isModalDelOpen, setIsModalDelOpen] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const [isDel, setIsDel] = useState(false)
+  const queryClient = useQueryClient()
+  console.log(isDel);
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: unitSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: (values) => {
+      {isEdit 
+        ?  putUnit({ id: values.id, unitValues: values })
+        :  postUnit({ unitValues: values })
+      }
+    }
+  })
+  // console.log('log data unit dari formik values: ', formik.values);
 
-  const handleSearch = (event) => {
-    setSearchValue(event.target.value);
-    console.log(searchValue);
+
+  // Function for post data
+  const { mutate: postUnit, error: postError, isSuccess: postIsSuccess } = useMutation({
+    mutationFn: POST_UNIT,
+    onSuccess: (data) => {
+      console.log("Data successfully POSTED", data)
+      setIsModalAddOpen(false)
+      console.log("Hasil submitan add", formik.values);
+      formik.handleReset(formik.values)
+      queryClient.invalidateQueries(['Unit'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat menambahkan data:", error);
+    },
+  })
+
+  const { mutate: putUnit, error: putError, isSuccess: putIsSuccess } = useMutation({
+    mutationFn: PUT_UNIT,
+    onSuccess: (data) => {
+      console.log("Data successfully UPDATE", data)
+      setIsModalEditOpen(false)
+      console.log("Hasil submitan update", formik.values);
+      // formik.handleReset(formik.values)
+      queryClient.invalidateQueries(['Unit'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat mengedit data:", error);
+    },
+  })
+
+  const { mutate: delUnit, error: delError, isSuccess: delIsSuccess } = useMutation({
+    mutationFn: DELETE_UNIT,
+    onSuccess: (data) => {
+      console.log("Data successfully DELETE", data)
+      setIsModalDelOpen(false)
+      queryClient.invalidateQueries(['Unit'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat menghapus data:", error);
+    },
+  })
+
+
+
+  const handlePostChange = async (event) => {
+    const { name, value, files } = event.target;
+    
+    if (files && files.length > 0) {
+      const base64String = await imgConvert(files[0]);
+      formik.setValues({
+        ...formik.values,
+        [name]: base64String,
+      });
+    } else {
+      formik.setValues({
+        ...formik.values,
+        [name]: name === "qtyUnit" || name === "priceBuyUnit" || name === "priceRentUnit" ? (parseInt(value) || null) : value,
+      });
+    }
+    // console.table(formik.values);
   };
 
+
+  const handlePostSubmit = async () => {
+    formik.handleSubmit()
+  }
+
+  const handlePutSubmit = async () => {
+    formik.handleSubmit()
+  }
+
+  const handleDelSubmit = async () => {
+    delUnit({ id: formik.values.id })
+  }
+
+  const handleCancelForm = () => {
+    setIsModalAddOpen(false);
+    setIsModalEditOpen(false);
+    setIsModalDelOpen(false);
+    setIsEdit(false);
+    setIsDel(false);
+    formik.handleReset(formik.values);
+  }
+
+
+  const handleSelectRow = async (nameUnit) => {
+    setIsEdit(true)
+    setIsModalEditOpen(true)
+    console.log(`data yang dikirimkan ${nameUnit}`);
+
+    const fetchData = await GET_UNIT_BYNAME({ nameUnit: nameUnit })
+    {!fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching")}
+    formik.setValues({
+      ...formik.values,
+      ...fetchData[0],
+    });
+  };
+
+  const handleSelectRowId = async (id, nameUnit) => {
+    setIsDel(true)
+    setIsModalDelOpen(true)
+    console.log(`data yang diterima UnitData`,id, nameUnit);
+
+    formik.setValues({
+      id: id,
+      nameUnit: nameUnit
+    });
+  };
+  
+  
+    const handleSearch = (event) => {
+      setSearchValue(event.target.value);
+      console.log(searchValue);
+    };
+
+
+  const labelInput = [
+    { label: "Nama Unit", name: "nameUnit", value: formik.values.nameUnit, type: "text" },
+    { label: "Tipe Unit", name: "typeUnit", value: formik.values.typeUnit, type: "text" },
+    { label: "Foto Unit", name: "imgUnit", value: formik.values.imgUnit, type: "file" },
+    { label: "Foto Brand", name: "imgBrand", value: formik.values.imgBrand, type: "file" },
+    { label: "Ketersediaan Unit", name: "qtyUnit", value: formik.values.qtyUnit, type: "number" },
+    { label: "Harga Beli", name: "priceBuyUnit", value: formik.values.priceBuyUnit, type: "number" },
+    { label: "Harga Sewa", name: "priceRentUnit", value: formik.values.priceRentUnit, type: "number" },
+    { label: "Deskripsi Unit", name: "descUnit", value: formik.values.descUnit, type: "textarea" },
+  ]
 
   return (
     <Grid sx={{
@@ -43,34 +286,63 @@ const UnitData = () => {
             Data Unit
           </Typography>
 
-          <Box gap={1} sx={{ display: "flex", justifyContent: "space-between"}}>
-            
+          <Box gap={1} sx={{ display: "flex", justifyContent: "space-between" }}>
+
             <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", border: `2px solid ${theme.palette.primary.main}`, bgcolor: "#F9FAFF", color: theme.palette.primary.main, borderRadius: "10px", }}>
               <SearchRounded sx={{ fontSize: "16px", ml: "10px" }} />
-              <InputBase sx={{ pl: "10px", color: theme.palette.primary.main, fontWeight: "medium", fontSize: "14px"
-            }} placeholder='Cari Unit...'
-              value={searchValue} onChange={handleSearch}/>
+              <InputBase sx={{
+                pl: "10px", color: theme.palette.primary.main, fontWeight: "medium", fontSize: "14px"
+              }} placeholder='Cari Unit...'
+                value={searchValue} onChange={handleSearch} />
             </Box>
 
-            <AddButton onClick={() => setIsModalAppOpen(true)}/>
-            <ModalAdd 
-              isOpen={isModalAddOpen} 
-              onClose={() => setIsModalAppOpen(false)}
-              labelInput={[
-                { label: "Nama Unit", id: "unitName", value: "", type: "text" },
-                { label: "Brand Unit", id: "unitBrand", value: "", type: "text" },
-                { label: "Ketersediaan Unit", id: "qtyUnit", value: "", type: "number" },
-                { label: "Deskripsi Unit", id: "descUnit", value: "", type: "textarea" },
-                { label: "Harga Beli", id: "buyPrice", value: "", type: "number" },
-                { label: "Harga Sewa", id: "sellPrice", value: "", type: "number" },
-                { label: "Foto Unit", id: "imgUnit", value: "", type: "file" },
-                { label: "Foto Brand", id: "imgBrand", value: "", type: "file" },
-              ]}/>
+            <AddButton onClick={() => setIsModalAddOpen(true)} />
+            <ModalUnit
+              typeModal={"Tambah Unit"}
+              formik={formik}
+              isOpen={isModalAddOpen}
+              labelInput={labelInput}
+              onChange={handlePostChange}
+              onSubmit={handlePostSubmit}
+              onClose={handleCancelForm}
+            /> 
+            <ModalUnit
+              typeModal={"Edit Unit"}
+              formik={formik}
+              isOpen={isModalEditOpen}
+              labelInput={labelInput}
+              onChange={handlePostChange}
+              onSubmit={handlePutSubmit}
+              onClose={handleCancelForm}
+            />
+            <ModalDelete
+              isOpen={isModalDelOpen}
+              onSubmit={handleDelSubmit}
+              onClose={handleCancelForm}
+              nameUnit={formik.values.nameUnit}
+            />
+
           </Box>
         </Box>
-        <TableUnit SearchValue={searchValue}/>  
+        {delIsSuccess && (
+          <SeverityAlert severity={"success"}>
+            "Data Unit Berhasil Diedit"
+          </SeverityAlert>
+        )}
+        {delError && (
+          <SeverityAlert severity={"error"}>
+            {postError ? `Gagal Menambahkan Data: ${postError}` : `Gagal Mengedit Data: ${putError}`}
+          </SeverityAlert>
+        )}
+        
+        <TableUnit 
+        SearchValue={searchValue}
+        onSelectRow={handleSelectRow}
+        onSelectRowId={handleSelectRowId}
+        />
       </Card>
     </Grid>
+
   )
 }
 
