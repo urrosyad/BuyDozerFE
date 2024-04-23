@@ -6,6 +6,7 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const location = useLocation()
     const navigate = useNavigate()
+
     const [auth, setAuth] = useState({
         isLoggedIn: !!localStorage.getItem("AccessToken"),
         accessToken: localStorage.getItem("AccessToken") || null,
@@ -17,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("AccessToken", accessToken);
         localStorage.setItem("UserRole", userRole); 
         localStorage.setItem("UserName", userName);
-    
+        
         setAuth({
           isLoggedIn: true,
           accessToken: accessToken,
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
         });
       };
 
+      
       useEffect(() => {
         const from = location.state?.from?.pathname || "/";
         // Jika sudah login, maka navigasi langsung ke dashboard
@@ -33,12 +35,14 @@ export const AuthProvider = ({ children }) => {
           navigate('/admin/dashboard', { replace: true });
         // Jika belum login, maka navigasi sesuai dengan 'from'
         } else {
-          navigate(from, { replace: true });
+          if (from === "/register") {
+            navigate('/', { replace: true });
+          }
         }
-      }, [auth.isLoggedIn]);
+      }, [auth.isLoggedIn, location.state]);
 
 
-      const logoutAuth = (accessToken, userRole, userName) => {
+      const logoutAuth = () => {
         localStorage.removeItem("AccessToken");
         localStorage.removeItem("UserRole");
         localStorage.removeItem("UserName");

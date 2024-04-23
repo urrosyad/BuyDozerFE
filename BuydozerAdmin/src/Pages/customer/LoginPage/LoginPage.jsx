@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import * as yup from 'yup';
 import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -8,22 +9,55 @@ import image from '@assets/bgLogin.png'
 import theme from '@src/theme.js'
 import useAuth from '@hooks/useAuth'
 
-const BASE_URL_LOGIN = "https://localhost:5001/api/UserEntitys/Login"
+
+const BASE_URL_LOGIN = "https://localhost:5001/api/LoginRegisters/Login"
+
+const styleButton = { 
+  width: "150px",
+  borderRadius: "10px",
+  color: "#D9D630",
+  border: "2px solid #D9D630",
+  fontWeight: "bold",
+  fontSize: "16px",
+  ":hover": {
+    backgroundColor: "#D9D630",
+    color: "#193D71",
+    border: "2px solid #D9D630"
+}}
 
 const LoginPage = () => {
   const {loginAuth } = useAuth()
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues:{
-      email: "",
+      username:"",
       password: "", 
+    },
+    validationSchema: yup.object().shape({
+      username: yup.string().required('required!'),
+      password: yup.string().required('required!'),
+    }),
+    onSubmit: async () => {
+      try {
+        const {Data} = await POST_LOGIN()
+        console.log(Data);
+        
+        const userError = Data.toLowerCase().includes('username');
+
+        {userError 
+          ? formik.setFieldError('username', Data) 
+          : formik.setFieldError('password', Data) 
+        }
+      } catch (error) {
+        throw error
+      }
     }
   })
 
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleLogin = (e) => {
+  const handleOnChangeLogin = (e) => {
     const { target } = e
     formik.setFieldValue(target.name, target.value)
   }
@@ -35,36 +69,18 @@ const LoginPage = () => {
           'Content-Type': 'application/json',
         }
       });
-      const { 
-        UserName,
-        accessToken,
-        IsAdmin,
-      } = response.data;
+      console.log(response);
+      const { UserName,accessToken,IsAdmin,Status,Data} = response.data;
 
-      loginAuth(
-        accessToken, 
-        IsAdmin ? 1999 : 2000, 
-        UserName
-      );
+      if (!Status) {        
+        loginAuth(accessToken, IsAdmin ? 1999 : 2000, UserName);
+      }
 
-      return accessToken;
+      return {accessToken, Data};
     } catch (error) {
       console.error('Error while login:', error);
       throw error;
     }}
-
-  const styleButton = { 
-    width: "150px",
-    borderRadius: "10px",
-    color: "#D9D630",
-    border: "2px solid #D9D630",
-    fontWeight: "bold",
-    fontSize: "16px",
-    ":hover": {
-      backgroundColor: "#D9D630",
-      color: "#193D71",
-      border: "2px solid #D9D630"
-  }}
 
   return (
     <Box>
@@ -88,18 +104,31 @@ const LoginPage = () => {
 
           <Box sx={{ margin: "10px 20px"}}>
             <FormControl sx={{width:"100%" }}>
-              <Typography sx={{ fontSize: "18px", color: '#193D71' }}>Email</Typography>
+              <Typography sx={{ fontSize: "18px", color: '#193D71' }}>Username</Typography>
               <Box sx={{ 
                 height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
               }}>
                 <InputBase 
-                type='text' name='email' value={formik.values.email}
+                type='text' name='username' value={formik.values.username}
                 sx={{ 
                   width:"100%", height:"100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl:'10px'
                 }}  
-                onChange={handleLogin} 
+                onChange={handleOnChangeLogin} 
                 />
               </Box>
+
+              {/* validation */}
+              {formik.errors.username && (
+              <Box sx={{ 
+                height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"
+              }}>
+
+                <Typography sx={{ fontSize: 12, color: "#EC3535", ml: "10px" }}>
+                  {formik.errors.username}
+                </Typography>
+              </Box>
+              )} 
+
             </FormControl>
             <FormControl sx={{width:"100%",marginTop: "10px" }}>
               <Typography sx={{ fontSize: 18, color: '#193D71' }}>Password</Typography>
@@ -111,22 +140,27 @@ const LoginPage = () => {
                 sx={{ 
                   width:"100%", height:"100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl:'10px'
                 }}
-                onChange={handleLogin} />
+                onChange={handleOnChangeLogin} />
                 <IconButton size='small' sx={{color: "#2A6DD0", mr: 2}} onClick={handleClickShowPassword}>
                 {showPassword ? <VisibilityOff fontSize='small' /> : <Visibility fontSize='small' />}
                 </IconButton>
               </Box>
 
+              {/* validation */}
+              {formik.errors.password && (
+              <Box sx={{ 
+                height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"
+              }}>
 
-              <Box sx={{ margin: "2px" }}>
-                <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung setidaknya 8 character</Typography>
-                <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung campuran huruf dan angka</Typography>
-                <Typography sx={{ fontSize: 8, color: '#193D71' }}>- password harus mengandung 1 huruf kapital</Typography>
+                <Typography sx={{ fontSize: 12, color: "#EC3535", ml: "10px" }}>
+                  {formik.errors.password}
+                </Typography>
               </Box>
+              )}
 
             </FormControl>
             <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <Button type='button' onClick={POST_LOGIN}
+              <Button type='button' onClick={formik.handleSubmit}
                 sx={styleButton}>
                 Login
               </Button>

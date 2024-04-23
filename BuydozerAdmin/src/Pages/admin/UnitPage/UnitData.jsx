@@ -36,7 +36,9 @@ const initialValues = {
 
 
 const POST_UNIT = async ({ unitValues }) => {
-  const BASE_URL_POST_UNIT = "https://localhost:5001/api/HeavyUnits"
+
+  const BASE_URL_POST_UNIT = "https://localhost:5001/api/HeavyUnits/CreateHeavyUnit"
+
   const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.post(BASE_URL_POST_UNIT, unitValues, {
@@ -56,7 +58,7 @@ const POST_UNIT = async ({ unitValues }) => {
 const GET_UNIT_BYNAME = async ({ nameUnit }) => {
   console.log('nama unit: ', nameUnit);
 
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -78,7 +80,7 @@ const GET_UNIT_BYNAME = async ({ nameUnit }) => {
 const PUT_UNIT = async ({id, unitValues}) => {
   console.table(id, unitValues);
 
-  const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/${id}`
+  const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
   const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
@@ -94,9 +96,11 @@ const PUT_UNIT = async ({id, unitValues}) => {
     throw error
   }
 }
+
 const DELETE_UNIT = async ({id}) => {
   console.log("id yang diterima oleh function DELET_UNIT",id);
-  const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/${id}`
+
+  const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/DeleteHeavyUnit/${id}`
   const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.delete(BASE_URL_DELETE_UNIT, {
@@ -122,7 +126,6 @@ const UnitData = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [isDel, setIsDel] = useState(false)
   const queryClient = useQueryClient()
-  console.log(isDel);
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: unitSchema,
@@ -135,10 +138,10 @@ const UnitData = () => {
       }
     }
   })
-  // console.log('log data unit dari formik values: ', formik.values);
+  console.log('log data unit dari formik values: ', formik.values);
 
 
-  // Function for post data
+  // Function for create data
   const { mutate: postUnit, error: postError, isSuccess: postIsSuccess } = useMutation({
     mutationFn: POST_UNIT,
     onSuccess: (data) => {
@@ -153,6 +156,7 @@ const UnitData = () => {
     },
   })
 
+  // Function for update data
   const { mutate: putUnit, error: putError, isSuccess: putIsSuccess } = useMutation({
     mutationFn: PUT_UNIT,
     onSuccess: (data) => {
@@ -167,6 +171,7 @@ const UnitData = () => {
     },
   })
 
+  // Function for delete data
   const { mutate: delUnit, error: delError, isSuccess: delIsSuccess } = useMutation({
     mutationFn: DELETE_UNIT,
     onSuccess: (data) => {
@@ -324,16 +329,12 @@ const UnitData = () => {
 
           </Box>
         </Box>
-        {delIsSuccess && (
-          <SeverityAlert severity={"success"}>
-            "Data Unit Berhasil Diedit"
-          </SeverityAlert>
-        )}
-        {delError && (
-          <SeverityAlert severity={"error"}>
-            {postError ? `Gagal Menambahkan Data: ${postError}` : `Gagal Mengedit Data: ${putError}`}
-          </SeverityAlert>
-        )}
+        {postIsSuccess && <Alert type="success" message="Data Unit Berhasil Ditambahkan" />}
+        {putIsSuccess && <Alert type="success" message="Data Unit Berhasil Diedit" />}
+        {delIsSuccess && <Alert type="success" message="Data Unit Berhasil Dihapus" />}
+        {postError && <Alert type="error" message={`Gagal Menambahkan Data: ${postError}`} />}
+        {putError && <Alert type="error" message={`Gagal Mengedit Data: ${putError}`} />}
+        {delError && <Alert type="error" message={`Gagal Menghapus Data: ${delError}`} />}
         
         <TableUnit 
         SearchValue={searchValue}

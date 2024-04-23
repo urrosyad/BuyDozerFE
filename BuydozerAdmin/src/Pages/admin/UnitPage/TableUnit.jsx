@@ -23,7 +23,7 @@ const GET_UNIT = async (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
   
   // False = Desc && True = Asc
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {

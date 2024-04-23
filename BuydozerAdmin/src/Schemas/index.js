@@ -11,6 +11,21 @@ export const unitSchema = yup.object().shape({
         qtyUnit: yup.number().required('Required!').min(0, 'Ketersediaan Unit tidak boleh negatif'),
         })
 
-
-
-
+export const registerSchema = yup.object().shape({
+        email: yup.string().email('email tidak valid').required('required!'),
+        username: yup.string()
+          .matches(/^[a-zA-Z0-9]+$/, { message: 'tidak boleh mengandung spasi', excludeEmptyString: true })
+          .required('required!'),
+        password: yup.string()
+          .min(6, 'minimal 6 characters')
+          .matches(/[A-Z]/, 'harus mengandung huruf uppercase')
+          .matches(/[a-z]/, 'harus mengandung huruf lowecase')
+          .matches(/[0-9]/, 'harus mengandung angka (0-9)')
+          .matches(/[^a-zA-Z0-9]/, 'harus mengandung character simbol')
+          .required('required!'),
+        confirmPassword: yup.string()
+          .oneOf([yup.ref('password'), null], 'Passwords tidak cocok')
+          .required('required!'),
+        companyUser: yup.string().required('required!'),
+        positionUser: yup.string().required('required!'),
+});
