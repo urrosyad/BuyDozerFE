@@ -33,6 +33,7 @@ const LoginPage = () => {
       username:"",
       password: "", 
     },
+    validateOnChange: false,
     validationSchema: yup.object().shape({
       username: yup.string().required('required!'),
       password: yup.string().required('required!'),

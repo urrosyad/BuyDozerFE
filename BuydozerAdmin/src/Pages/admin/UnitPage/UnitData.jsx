@@ -13,8 +13,7 @@ import theme from '@src/theme';
 import TableUnit from './TableUnit';
 import AddButton from '@components/admin/Atoms/Buttons/AddButton';
 import ModalUnit from '@components/admin/Atoms/Modal/ModalUnit';
-import ModalDelete from '@components/admin/Atoms/Modal/ModalDelete';
-import ModalEdit from '@components/admin/Atoms/Modal/ModalEdit';
+import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
 import imgConvert from '@utils/imgConvert';
 import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
 import * as yup from 'yup';
@@ -23,7 +22,7 @@ import formatRupiah from '@utils/formatRupiah';
 
 
 const initialValues = {
-  id:"",
+  id: "",
   nameUnit: "",
   typeUnit: "",
   descUnit: "",
@@ -71,13 +70,13 @@ const GET_UNIT_BYNAME = async ({ nameUnit }) => {
     const dataUnit = response.data.items
     // console.log('log data unit dari api: ', dataUnit);
     return dataUnit
-    
-  } catch (error) {   
+
+  } catch (error) {
     throw error;
   }
 };
 
-const PUT_UNIT = async ({id, unitValues}) => {
+const PUT_UNIT = async ({ id, unitValues }) => {
   console.table(id, unitValues);
 
   const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
@@ -97,8 +96,8 @@ const PUT_UNIT = async ({id, unitValues}) => {
   }
 }
 
-const DELETE_UNIT = async ({id}) => {
-  console.log("id yang diterima oleh function DELET_UNIT",id);
+const DELETE_UNIT = async ({ id }) => {
+  console.log("id yang diterima oleh function DELETE_UNIT", id);
 
   const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/DeleteHeavyUnit/${id}`
   const accessToken = localStorage.getItem('AccessToken')
@@ -132,9 +131,10 @@ const UnitData = () => {
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: (values) => {
-      {isEdit 
-        ?  putUnit({ id: values.id, unitValues: values })
-        :  postUnit({ unitValues: values })
+      {
+        isEdit
+          ? putUnit({ id: values.id, unitValues: values })
+          : postUnit({ unitValues: values })
       }
     }
   })
@@ -188,7 +188,7 @@ const UnitData = () => {
 
   const handlePostChange = async (event) => {
     const { name, value, files } = event.target;
-    
+
     if (files && files.length > 0) {
       const base64String = await imgConvert(files[0]);
       formik.setValues({
@@ -233,7 +233,7 @@ const UnitData = () => {
     console.log(`data yang dikirimkan ${nameUnit}`);
 
     const fetchData = await GET_UNIT_BYNAME({ nameUnit: nameUnit })
-    {!fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching")}
+    { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
     formik.setValues({
       ...formik.values,
       ...fetchData[0],
@@ -243,19 +243,19 @@ const UnitData = () => {
   const handleSelectRowId = async (id, nameUnit) => {
     setIsDel(true)
     setIsModalDelOpen(true)
-    console.log(`data yang diterima UnitData`,id, nameUnit);
+    console.log(`data yang diterima UnitData`, id, nameUnit);
 
     formik.setValues({
       id: id,
       nameUnit: nameUnit
     });
   };
-  
-  
-    const handleSearch = (event) => {
-      setSearchValue(event.target.value);
-      console.log(searchValue);
-    };
+
+
+  const handleSearch = (event) => {
+    setSearchValue(event.target.value);
+    console.log(searchValue);
+  };
 
 
   const labelInput = [
@@ -310,7 +310,7 @@ const UnitData = () => {
               onChange={handlePostChange}
               onSubmit={handlePostSubmit}
               onClose={handleCancelForm}
-            /> 
+            />
             <ModalUnit
               typeModal={"Edit Unit"}
               formik={formik}
@@ -320,7 +320,7 @@ const UnitData = () => {
               onSubmit={handlePutSubmit}
               onClose={handleCancelForm}
             />
-            <ModalDelete
+            <ModalConfirm
               isOpen={isModalDelOpen}
               onSubmit={handleDelSubmit}
               onClose={handleCancelForm}
@@ -335,11 +335,11 @@ const UnitData = () => {
         {postError && <Alert type="error" message={`Gagal Menambahkan Data: ${postError}`} />}
         {putError && <Alert type="error" message={`Gagal Mengedit Data: ${putError}`} />}
         {delError && <Alert type="error" message={`Gagal Menghapus Data: ${delError}`} />}
-        
-        <TableUnit 
-        SearchValue={searchValue}
-        onSelectRow={handleSelectRow}
-        onSelectRowId={handleSelectRowId}
+
+        <TableUnit
+          SearchValue={searchValue}
+          onSelectRow={handleSelectRow}
+          onSelectRowId={handleSelectRowId}
         />
       </Card>
     </Grid>

@@ -31,11 +31,12 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
 
   return (
     <Dialog open={isOpen} onClose={onClose} sx={{
-      "& .MuiPaper-root": { borderRadius: "20px"}}}>
+      "& .MuiPaper-root": { borderRadius: "20px" }
+    }}>
       <DialogTitle variant="h5" sx={{ width: "100%", fontWeight: "medium" }}>{typeModal}</DialogTitle>
       <Divider sx={{ width: "90%", alignSelf: "center", marginBottom: "20px" }} />
       <DialogContent>
-        <Grid   >
+        <Grid container>
           <Grid item xs={6}>
             <FormControl sx={{ width: "95%", marginLeft: "5px" }}>
               {labelInput.slice(0, Math.ceil(labelInput.length / 2)).map((data, index) => (
@@ -95,7 +96,7 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
             </FormControl>
           </Grid>
         </Grid>
-      </DialogContent> 
+      </DialogContent>
       <Divider sx={{ width: "93%", alignSelf: "center", marginTop: "20px" }} />
       <DialogActions sx={{ margin: "10px 20px", gap: "2px" }}>
         <SubmitButton onSubmit={onSubmit} />

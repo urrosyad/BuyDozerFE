@@ -3,7 +3,7 @@ import theme from '@src/theme';
 import styled from '@emotion/styled';
 import { Button, Dialog, DialogActions, DialogContent, Divider, Typography, DialogTitle } from '@mui/material';
 
-const ModalDelete = ({isOpen, onClose, onSubmit, nameUnit }) => {
+const ModalConfirm = ({ isOpen, onClose, onSubmit, nameUnit, titleModal, messageAsk, messageConfirm, submitText  }) => {
 
   const CancelButton = styled(Button)(({ theme }) => ({
     width: "20%",
@@ -37,24 +37,24 @@ const ModalDelete = ({isOpen, onClose, onSubmit, nameUnit }) => {
   return (
           <Dialog open={isOpen} onClose={onClose} sx={{ "& .MuiPaper-root": { width: "450px", height: "300px", borderRadius: "20px" }}}> 
           <DialogTitle variant="h5" sx={{width: "100%", fontWeight: "medium" }}>
-              Hapus Unit
+              {titleModal}
           </DialogTitle> 
           <Divider sx={{ width: "90%", alignSelf: "center" }} />
           <DialogContent sx={{display: "flex", flexDirection: 'column', gap: "20px", overflowY:"hidden"}}>
             <Typography sx={{ fontSize: "16px", fontWeight: "medium", color: theme.palette.primary.main }} >
-              Apakah anda yakin untuk menghapus Unit <b>{nameUnit}</b>?
+              {messageAsk} <b>{nameUnit}?</b>
             </Typography>
             <Typography sx={{ fontSize: "16px", fontWeight: "medium", color: theme.palette.error.main}} >
-              Hapus unit akan mengakibatkan hilangnya data transaksi!
+              {messageConfirm}
             </Typography>
           </DialogContent>
           <Divider sx={{ width: "90%", alignSelf: "center" }} />
             <DialogActions sx={{ margin: "10px 23px", gap: "2px" }}>
-              <DelButton type="button" onClick={onSubmit}>Hapus</DelButton>
+              <DelButton type="button" onClick={onSubmit}>{submitText}</DelButton>
               <CancelButton onClick={onClose}>Batal</CancelButton>
             </DialogActions>
           </Dialog>
   )
 }
 
-export default ModalDelete
+export default ModalConfirm
