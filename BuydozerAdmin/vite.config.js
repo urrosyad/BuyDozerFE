@@ -17,6 +17,7 @@ export default defineConfig({
       '@layouts': '/src/Layouts',
       '@auth': '/src/auth',
       '@schemas': '/src/Schemas',
+      '@themes': '/src/Themes',
     },
   },
 })

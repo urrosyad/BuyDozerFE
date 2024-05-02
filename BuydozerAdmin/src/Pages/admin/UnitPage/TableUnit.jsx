@@ -15,13 +15,13 @@ import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-tabl
 import { useQuery } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
-import theme from '@src/theme';
+import theme from '../../../Themes/theme';
 import UnitData from './UnitData';
 
 
 const GET_UNIT = async (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
-  
+
   // False = Desc && True = Asc
   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
 
@@ -33,11 +33,11 @@ const GET_UNIT = async (props) => {
         'Content-Type': 'application/json',
       }
     });
-    
+
     const dataUnit = response.data.items
     const totalCount = response.data.totalCount
-    return {dataUnit, totalCount};
-  } catch (error) {   
+    return { dataUnit, totalCount };
+  } catch (error) {
     console.error('Error fetching Unit:', error);
     // throw error;
   }
@@ -45,7 +45,7 @@ const GET_UNIT = async (props) => {
 
 
 const TableUnit = (props) => {
-  const { SearchValue, PageNumber, PageSize, BuySort} = props
+  const { SearchValue, PageNumber, PageSize, BuySort } = props
 
   const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
@@ -57,48 +57,42 @@ const TableUnit = (props) => {
 
 
   const fetchData = async () => {
-    const {dataUnit, totalCount} = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort});
+    const { dataUnit, totalCount } = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
     setTotalData(totalCount)
     console.table(dataUnit);
     if (!dataUnit) {
       throw new Error("Failed to fetch data");
     };
-    
+
     const formattedData = dataUnit.map(data => ({
       id: data.id,
       nameUnit: data.nameUnit,
       typeUnit: data.typeUnit,
       descUnit: data.descUnit,
-      imgUnit: <img 
-      src={data.imgUnit} 
-      alt='foto unit' 
-      style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71" }}>
-              </img>,
-      imgBrand: <img 
-      src={data.imgBrand} 
-      alt='logo brand' 
-      style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71" }}>
-              </img>,
+      imgUnit: <img
+        src={data.imgUnit}
+        alt='foto unit'
+        style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71" }}>
+      </img>,
+      imgBrand: <img
+        src={data.imgBrand}
+        alt='logo brand'
+        style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71" }}>
+      </img>,
       priceBuyUnit: formatRupiah(data.priceBuyUnit),
       priceRentUnit: formatRupiah(data.priceRentUnit),
       qtyUnit: data.qtyUnit,
     }));
     return formattedData;
   };
-  
 
-  const {
-    data, 
-    isPending, 
-    isFetching, 
-    isLoading,
-    error,
-    refetch } = useQuery
-    ({
-    queryKey:["Unit"],
-    queryFn: fetchData,
+
+  const { data, isPending, isFetching, isLoading, error, refetch } = useQuery({
+      queryKey: ["Unit"],
+      queryFn: fetchData,
     })
 
+  // handle open collapse decs uniit
   const handleCollapseToggle = (rowId) => {
     setOpenDesc(openDesc === rowId ? null : rowId);
   };
@@ -118,21 +112,21 @@ const TableUnit = (props) => {
   const handleSortBuy = () => {
     setBuySort(!buySort)
   }
-  
+
+  // to send data nameUnit to parent Component
   const handleEditOnClick = (index) => {
     const clickedData = data[index].nameUnit;
     console.log('Data yang diklik:', clickedData);
 
-    // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
   }
 
+   // to send data idUnit to parent Component
   const handleDelOnClick = (index) => {
     const idRow = data[index].id;
     const nameUnitRow = data[index].nameUnit;
     console.log('Data yang diklik:', idRow, nameUnitRow);
 
-    // to send data nameUnit to parent Component
     props.onSelectRowId(idRow, nameUnitRow);
   }
 
@@ -170,10 +164,10 @@ const TableUnit = (props) => {
       accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <Box>
-            <EditButton onClick={()=>handleEditOnClick(props.row.index)} />
+            <EditButton onClick={() => handleEditOnClick(props.row.index)} />
           </Box>
           <Box>
-            <DeleteButton onClick={()=>handleDelOnClick(props.row.index)}/>
+            <DeleteButton onClick={() => handleDelOnClick(props.row.index)} />
           </Box>
         </Box>
       )
@@ -186,26 +180,27 @@ const TableUnit = (props) => {
     getCoreRowModel: getCoreRowModel()
   })
 
-  if ( data === undefined ) {
+  if (data === undefined) {
     return (
       <div>
-      <CircularProgress size={50} sx={{
-        position: "absolute",
-        color: "#8BB9FF", 
-        marginTop:20,
-        marginLeft: 80,
+        <CircularProgress size={50} sx={{
+          position: "absolute",
+          color: "#8BB9FF",
+          marginTop: 20,
+          marginLeft: 80,
         }}
-      />
+        />
       </div>
     )
   }
 
   // console.table(data);
   // console.table({page, rowsPerPage});
+  
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>
-        <TableHead style={{ height: "1px" }}>
+        <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -218,7 +213,7 @@ const TableUnit = (props) => {
                           <IconButton sx={{ fontSize: 'small', color: "#F8FAFF" }} onClick={handleSortBuy}>
                             <SwapVertRounded />
                           </IconButton>
-                        ) : null }
+                        ) : null}
                       </Typography>
                     </TableCell>
                   );
@@ -228,14 +223,14 @@ const TableUnit = (props) => {
           ))}
         </TableHead>
         <TableBody key={columns}>
-          { data.length === 0 ? (
+          {data.length === 0 ? (
             <TableRow>
               <TableCell colSpan={columns.length} align='center' sx={{ color: "#2A6DD0" }}>
                 <Typography sx={{ fontSize: "16px", fontWeight: "medium" }}>
                   {isPending || isFetching ? (
-                    <CircularProgress sx={{color: "#2A6DD0"}} />
+                    <CircularProgress sx={{ color: "#2A6DD0" }} />
                   ) : (
-                  "Unit tidak ditemukan"
+                    "Unit tidak ditemukan"
                   )}
                 </Typography>
               </TableCell>

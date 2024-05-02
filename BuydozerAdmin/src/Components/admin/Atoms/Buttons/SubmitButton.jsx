@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
-import theme from '@src/theme'
+import theme from '@themes/theme'
 import React from 'react'
 
 const SubmitButton = ({onSubmit}) => {

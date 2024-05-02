@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { unitSchema } from '@schemas';
 import axios from 'axios';
-import theme from '@src/theme';
+import theme from '../../../Themes/theme';
 import TableUnit from './TableUnit';
 import AddButton from '@components/admin/Atoms/Buttons/AddButton';
 import ModalUnit from '@components/admin/Atoms/Modal/ModalUnit';
@@ -271,7 +271,7 @@ const UnitData = () => {
 
   return (
     <Grid sx={{
-      bgcolor: "#EEF2FF", weight: "100vh", height: "100vh", overflowY: "auto", overflowX: "hidden",
+      bgcolor: "#EEF2FF", weight: "100vh", height: "100vh", overflowY: "scroll",
       '&::-webkit-scrollbar': {
         width: '8px',
         boxShadow: "10px"
@@ -284,7 +284,7 @@ const UnitData = () => {
         backgroundColor: "#FFFFFF",
       },
     }}>
-      <Card sx={{ p: "10px 20px 50px 20px", m: "30px 15px", bgcolor: "#F9FAFF", borderRadius: "20px" }} >
+      <Card sx={{height: "auto", p: "10px 20px 50px 20px", m: "30px 15px", bgcolor: "#F9FAFF", borderRadius: "20px"}} >
         <Box sx={{ justifyContent: "space-between", display: "flex", flexDirection: "row", rowGap: 10, m: "15px" }}>
 
           <Typography variant='h5' sx={{ position: 'relative', display: "flex", fontWeight: "medium", color: theme.palette.primary.dark, borderRadius: "5px" }}>

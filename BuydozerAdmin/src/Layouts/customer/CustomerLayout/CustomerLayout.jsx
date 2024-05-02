@@ -1,12 +1,15 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet, Route } from 'react-router-dom'
+import Navbar from '@layouts/customer/Navbar/Navbar'
+import Footer from '@layouts/customer/Footer/Footer'
 
 const CustomerLayout = () => {
   return (
-      <Box display={"flex"} justifyContent={'center'} alignContent={"center"} flex={1}>
-         <Outlet />
-      </Box>
+      <>
+
+        <Outlet />
+      </>
   )
 }
 

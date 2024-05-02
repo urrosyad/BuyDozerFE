@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react'
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Divider, Grid } from '@mui/material'
 import { TextareaAutosize } from '@mui/base'
-import theme from '../../../../theme'
+import theme from '@themes/theme'
 import { AddCircleOutlineOutlined, UploadFileRounded } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
 

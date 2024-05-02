@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react'
 import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
 import { TextareaAutosize } from '@mui/base'
-import theme from '@src/theme'
+import theme from '@themes/theme'
 import SubmitButton from '../Buttons/SubmitButton'
 import CancelButton from '../Buttons/CancelButton'
 
@@ -35,7 +35,7 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
       <DialogTitle variant="h5" sx={{ width: "100%", fontWeight: "medium" }}>{typeModal}</DialogTitle>
       <Divider sx={{ width: "90%", alignSelf: "center", marginBottom: "20px" }} />
       <DialogContent>
-        <Grid   >
+        <Grid container >
           <Grid item xs={6}>
             <FormControl sx={{ width: "95%", marginLeft: "5px" }}>
               {labelInput.slice(0, Math.ceil(labelInput.length / 2)).map((data, index) => (

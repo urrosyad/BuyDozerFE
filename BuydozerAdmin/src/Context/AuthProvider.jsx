@@ -14,10 +14,12 @@ export const AuthProvider = ({ children }) => {
         userName: localStorage.getItem("UserName") || null,
       });
 
-      const loginAuth = (accessToken, userRole, userName) => {
+      const loginAuth = (accessToken, userRole, userName,) => {
+        const expiresIn = new Date().getTime() / 1000 + 3600;
         localStorage.setItem("AccessToken", accessToken);
         localStorage.setItem("UserRole", userRole); 
         localStorage.setItem("UserName", userName);
+        localStorage.setItem("ExpiresIn", expiresIn);
         
         setAuth({
           isLoggedIn: true,
@@ -27,19 +29,33 @@ export const AuthProvider = ({ children }) => {
         });
       };
 
+      useEffect(() => {
+        const expiresIn = localStorage.getItem("ExpiresIn");
+        const currentTime = new Date().getTime() / 1000;
+        const isLoggedIn = currentTime < expiresIn;
+        
+        setAuth(prevAuth => ({ ...prevAuth, isLoggedIn }));
+      }, []);
+
       
       useEffect(() => {
-        const from = location.state?.from?.pathname || "/";
+        const from = location.state?.from?.pathname || "/login";
         // Jika sudah login, maka navigasi langsung ke dashboard
+
         if (auth.isLoggedIn) {
-          navigate('/admin/dashboard', { replace: true });
+          if (auth.userRole === 1999) {
+            navigate('/admin/dashboard', { replace: true });
+        } else if (auth.userRole === 2000) {
+            navigate('/', { replace: true });
+        }
         // Jika belum login, maka navigasi sesuai dengan 'from'
+
         } else {
           if (from === "/register") {
-            navigate('/', { replace: true });
+            navigate('/login', { replace: true });
           }
         }
-      }, [auth.isLoggedIn, location.state]);
+      }, [auth.isLoggedIn, auth.userRole, location.state]);
 
 
       const logoutAuth = () => {

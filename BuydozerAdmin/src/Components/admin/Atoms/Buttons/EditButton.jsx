@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { BorderColorRounded } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
-import theme from '@src/theme'
+import theme from '@themes/theme'
 import SubmitButton from './SubmitButton'
 import CancelButton from './CancelButton'
 

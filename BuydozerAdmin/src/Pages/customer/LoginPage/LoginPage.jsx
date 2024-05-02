@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import * as yup from 'yup';
 import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase } from '@mui/material'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { LocalActivity, Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import axios from 'axios'
 import image from '@assets/bgLogin.png'
-import theme from '@src/theme.js'
+import theme from '../../../Themes/theme';
 import useAuth from '@hooks/useAuth'
 
 
@@ -33,6 +33,7 @@ const LoginPage = () => {
       username:"",
       password: "", 
     },
+    validateOnChange: false,
     validationSchema: yup.object().shape({
       username: yup.string().required('required!'),
       password: yup.string().required('required!'),
@@ -40,14 +41,15 @@ const LoginPage = () => {
     onSubmit: async () => {
       try {
         const {Data} = await POST_LOGIN()
-        console.log(Data);
         
-        const userError = Data.toLowerCase().includes('username');
-
-        {userError 
-          ? formik.setFieldError('username', Data) 
-          : formik.setFieldError('password', Data) 
+        if (Data) {
+          const userError = Data.toLowerCase().includes('username');
+          {userError 
+            ? formik.setFieldError('username', Data) 
+            : formik.setFieldError('password', Data) 
+          }
         }
+
       } catch (error) {
         throw error
       }
@@ -70,7 +72,8 @@ const LoginPage = () => {
         }
       });
       console.log(response);
-      const { UserName,accessToken,IsAdmin,Status,Data} = response.data;
+      const { UserName,accessToken,IsAdmin,Status,Data, expiresIn} = response.data;
+      localStorage.setItem('ExpiresIn', expiresIn)
 
       if (!Status) {        
         loginAuth(accessToken, IsAdmin ? 1999 : 2000, UserName);

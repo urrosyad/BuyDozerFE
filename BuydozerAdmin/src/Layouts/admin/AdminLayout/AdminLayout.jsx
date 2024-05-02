@@ -7,7 +7,18 @@ import { PrivateRoutes } from '@routers/PrivateRoutes'
 
 const AdminLayout = () => {
   return (
-          <Box sx={{ display: "flex", height: "auto" }}>
+          <Box sx={{ display: "flex", height: "auto",  overflowY: "auto", overflowX: "hidden",
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            boxShadow: "10px"
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: "#8BB9FF",
+            borderRadius: '5px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: "#FFFFFF",
+          },}}>
            <Sidenav />
             <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1}}>
              <Header />

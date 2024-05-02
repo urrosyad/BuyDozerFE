@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import image from '../../../assets/bgLogin.png'
 import { Grid, Paper, Box, Typography, Button, FormControl, IconButton, InputBase, Snackbar, Alert } from '@mui/material'
 import { Description, Visibility, VisibilityOff } from '@mui/icons-material'
-import theme from '../../../theme'
+import theme from '../../../Themes/theme'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import * as yup from 'yup';
@@ -103,7 +103,7 @@ const RegisterPage = () => {
         if (openSnack) {
             const timer = setTimeout(() => {
                 setOpenSnack(false);
-                navigate("/");
+                navigate("/login");
             }, 1500); // Waktu penutupan snackbar
             return () => clearTimeout(timer);
         }
@@ -251,7 +251,7 @@ const RegisterPage = () => {
                         </Button>
                         <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>
                             Sudah punya akun?
-                            <a href="/" style={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', fontWeight: theme.typography.fontWeightMedium }}> login disini! </a>
+                            <a href="/login" style={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', fontWeight: theme.typography.fontWeightMedium }}> login disini! </a>
                         </Typography>
                     </Box>
                 </Paper>

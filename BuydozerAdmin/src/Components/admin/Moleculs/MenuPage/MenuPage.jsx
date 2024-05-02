@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MenuItem } from "react-pro-sidebar";
 import { Link } from 'react-router-dom';
 import { Divider, Box } from '@mui/material';
-import theme from '../../../../theme';
+import theme from '@themes/theme'
 
 const MenuPage = ({ menu, icon, link, selected, setSelected }) => {
   const [isHover, setIsHover] = useState(true)

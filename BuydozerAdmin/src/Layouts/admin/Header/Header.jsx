@@ -16,11 +16,11 @@ const Header = () => {
     const userName = localStorage.getItem('UserName');
     const userRole = localStorage.getItem('UserRole');
     logoutAuth(accessToken, userRole, userName)
-    navigate("/")
+    navigate("/login")
   }
 
   const handleSwitch = () => {
-  navigate('/buydozer/beranda')
+  navigate('/')
   }
 
   const headerIcon = [
@@ -36,12 +36,10 @@ const Header = () => {
         justifyContent: "flex-end",
         alignItems: "center",
         padding: "30px",
-        width: "auto",
         height: "50px",
         backgroundColor: "#F9FAFF",
         boxShadow: 1,
       }}
-
     >
       <Box sx={{ color: theme.palette.primary.dark, mr: "5px" }}>
         <Typography sx={{ fontSize: "16px",fontWeight: theme.typography.fontWeightRegular, mb: -1, textAlign: 'right' }}>

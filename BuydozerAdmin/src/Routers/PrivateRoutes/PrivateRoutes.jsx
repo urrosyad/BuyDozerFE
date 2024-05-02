@@ -5,38 +5,28 @@ import useAuth from '@hooks/useAuth';
 const PrivateRoutes = ({ allowedRoles }) => {
 const { auth } = useAuth()
 const location = useLocation()
-const userRole = auth.userRole
-// console.log(userRole);
-
-// const roleAuthorized = () => {
-//   if (!userRole) return false; // Jika userRole belum di-set, tidak diizinkan masuk
-//   if (allowedRoles.includes(userRole)) return true; // Jika userRole termasuk dalam allowedRoles, diizinkan
-//   return false; // Jika userRole tidak termasuk dalam allowedRoles, tidak diizinkan
-// };
-
-// return (
-//   roleAuthorized()
-//     ? <Outlet />
-//     : userRole === "admin"
-//       ? <Navigate to="*" state={{ from: location }} replace />
-//       : <Navigate to="/" state={{ from: location }} replace />
-// );
+const userRole = auth?.userRole
+console.log(userRole);
 
 
-// return(
-// userRole && allowedRoles.includes(userRole)
-// ? <Outlet/> 
-// : userRole === 1999 
-//   ? <Navigate to="*" state={{ from: location }} replace/> //ini seharusnya halaman unuthorized
-//   : <Navigate to="/" state={{ from: location }} replace/>
-// )
-  
-
-  return (
-    auth?.isLoggedIn
-    ? <Outlet/>
-    : <Navigate to="/" state={{ from: location }} replace/>
-  ) 
-
+if (auth?.isLoggedIn) {
+  // Cek apakah user memiliki role yang diizinkan
+  if (allowedRoles.includes(userRole)) {
+    // Jika role diizinkan, render halaman yang diminta
+    return <Outlet />;
+  } else {
+    // Jika role tidak diizinkan, arahkan ke halaman yang sesuai
+    if (userRole === 1999) {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else if (userRole === 2000) {
+      return <Navigate to="/" replace />;
+    }
+  }
+} else {
+  // Jika pengguna belum masuk, arahkan ke halaman login
+  return <Navigate to="/login" state={{ from: location }} replace />;
 }
+};
+
+
 export default PrivateRoutes

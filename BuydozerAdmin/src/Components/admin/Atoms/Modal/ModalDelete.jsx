@@ -1,5 +1,5 @@
 import React from 'react'
-import theme from '@src/theme';
+import theme from '@themes/theme'
 import styled from '@emotion/styled';
 import { Button, Dialog, DialogActions, DialogContent, Divider, Typography, DialogTitle } from '@mui/material';
 

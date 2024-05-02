@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, styled } from '@mui/material';
-import theme from '@src/theme';
+import theme from '@themes/theme'
 
 const CancelButton = ({ onClose }) => {
       const CancelButton = styled(Button)(({ theme }) => ({
@@ -9,7 +9,7 @@ const CancelButton = ({ onClose }) => {
           color: theme.palette.error.main,
           borderColor: theme.palette.error.main,
           border: "2px solid",
-          padding: "  5px 40px",
+          padding: "5px 40px",
           borderRadius: "10px",
           "&:hover": {
             backgroundColor: theme.palette.error.main,

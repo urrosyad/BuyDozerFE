@@ -1,3 +1,5 @@
+<!-- @format -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,15 +12,32 @@
       rel="stylesheet"
     />
     <style>
-      body {
-        overflow-y: hidden;
+       body {
+        /* overflow-y: auto; */
         overflow-x: hidden;
-        background-color: #F9FAFF;
-      }
+        background-color: #f9faff;
+
+        &::-webkit-scrollbar {
+          width: 8px;
+          box-shadow: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: #FFFFFF;
+          border-radius: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: #ffffff;
+        }
+      } 
     </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      const userRole = localStorage.getItem("UserRole") 
+    </script>
   </body>
 </html>

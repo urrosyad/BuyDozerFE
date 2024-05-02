@@ -7,7 +7,6 @@ import {
        } from '@mui/material'
 import { DeleteRounded } from '@mui/icons-material'
 import { styled } from '@mui/material'
-import theme from '../../../../theme'
 
 const DeleteButton = ({onClick}) => {
   return (

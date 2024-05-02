@@ -8,7 +8,7 @@ import { MenuPage } from "@components/admin/Moleculs/MenuPage";
 
 const Sidenav = () => {
   const theme = useTheme();
-  const [active, setActive] = useState("/")
+  const [active, setActive] = useState("/admin/dasboard")
 
   const menuItems = [
     { menu: "Dashboard", icon: <SpaceDashboardRounded style={{ fontSize: "16px" }} />, link: "/admin/dashboard", },
@@ -33,7 +33,7 @@ const Sidenav = () => {
       bgcolor={"#F9FAFF"}
       display={"flex"}
       flexDirection={"column"}
-      height={"100vh"}
+      height={"100vh  "}
       color={theme.palette.primary.dark}
     >
       <Sidebar width="220px">
@@ -59,11 +59,11 @@ const Sidenav = () => {
               flexDirection: "column",
               alignItems: "flex-end",
             }}>
-              <Link href="/admin/dashboard" underline="none">
-                <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1, mb: -3 }} >
+              <Link href="/admin/dashboard">
+                <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1, mb: -3 , color: '#193D71'}} >
                   ADMIN
                 </Typography>
-                <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1 }}>
+                <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1, color: '#193D71' }}>
                   BUYDOZER
                 </Typography>
               </Link>

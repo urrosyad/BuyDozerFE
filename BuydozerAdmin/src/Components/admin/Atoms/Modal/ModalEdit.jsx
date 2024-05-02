@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react'
 import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
 import { TextareaAutosize } from '@mui/base'
-import theme from '@src/theme'
+import theme from '@themes/theme'
 import SubmitButton from '../Buttons/SubmitButton'
 import CancelButton from '../Buttons/CancelButton'
 
