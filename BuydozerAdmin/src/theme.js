@@ -30,8 +30,11 @@ const theme = createTheme({
     disabled: {
       main: "#C4C4C4",
     },
-    hitam: {
+    primaryDark: {
       main: "#193D71",
+    },
+    primaryLight: {
+      main: "#8BB9FF",
     },
   },
   typography: {

@@ -13,14 +13,15 @@ import { EditButton, DeleteButton, KeyButton } from '@components/admin/Atoms/But
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useQuery } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
+import { formatDate, formatDateTime } from '@utils/formatDate';
 import axios from 'axios';
 import theme from '@src/theme';
 
-const GET_TRANSACTION = async (props) => {
+const GET_TRANSACTION_BUY = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
 
   // False = Desc && True = Asc
-  const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=${SearchValue}&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_TRANSACTION, {
@@ -40,18 +41,22 @@ const GET_TRANSACTION = async (props) => {
 };
 
 
-const TableTransaction = (props) => {
-  const { SearchValue, PageNumber, PageSize, ParameterName } = props
+const TableTransactionDetailBuy = (props) => {
+  const { SearchValue, sortDate, PageNumber, PageSize, ParameterName, statusConfig } = props
+
   const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
-  const [sortDate, setSortDate] = useState(false)
+  // const [sortDate, setSortDate] = useState(false)
 
   const fetchData = async () => {
-    const { dataTransaksi, totalCount } = await GET_TRANSACTION({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortDate: sortDate });
+    const { dataTransaksi, totalCount } = await GET_TRANSACTION_BUY({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortDate: sortDate });
     setTotalData(totalCount);
     // console.log("fetch data", dataTransaksi); sudah selalu bisa
+
+    console.log("ini adalah data tanggal", dataTransaksi);
+
     if (!dataTransaksi) {
       throw new Error("Failed to fetch data");
     };
@@ -66,8 +71,9 @@ const TableTransaction = (props) => {
       receiverHp: data.receiverHp,
       receiverAddress: data.receiverAddress,
       qtyTransaction: data.qtyTransaction,
-      dateTransaction: data.dateTransaction,
+      dateTransaction: formatDate(data.dateTransaction),
       statusTransaction: data.statusTransaction,
+      created: formatDateTime(data.created),
     }));
     return formattedData;
   };
@@ -83,6 +89,7 @@ const TableTransaction = (props) => {
         queryKey: ["TransactionRent"],
         queryFn: fetchData,
       })
+
 
   const handleCollapseToggle = (rowId) => {
     setOpenDesc(openDesc === rowId ? null : rowId);
@@ -101,21 +108,12 @@ const TableTransaction = (props) => {
     setSortDate(!sortDate)
   }
 
-  const handleEditOnClick = (index) => {
-    const clickedData = data[index].userName;
+  const handleDetailOnClick = (index) => {
+    const clickedData = data[index].transactionNum;
     console.log('Data yang diklik:', clickedData);
 
     // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
-  }
-
-  const handleDelOnClick = (index) => {
-    const idRow = data[index].id;
-    const userNameRow = data[index].userName;
-    console.log('Data yang diklik:', idRow, userNameRow);
-
-    // to send data nameUnit to parent Component
-    props.onSelectRowId(idRow, userNameRow);
   }
 
   const handleKeyOnClick = (index) => {
@@ -131,14 +129,6 @@ const TableTransaction = (props) => {
     refetch()
   }, [SearchValue, page, rowsPerPage, sortDate, refetch]);
 
-  const statusConfig = {
-    0: { content: "Reject", color: "#EC3535" },
-    1: { content: "Ongoing", color: "#C4C4C4" },
-    2: { content: "Confirm", color: "#193D71" },
-    3: { content: "Finnished", color: "#28D156" },
-    // tambahkan status lain jika diperlukan
-  };
-
 
   // const skipAccessorKeys = ["imgUnit", "imgBrand"];
   const columns = [
@@ -148,24 +138,33 @@ const TableTransaction = (props) => {
     { accessorKey: "priceRentUnit", header: "Harga Sewa Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "qtyTransaction", header: "Kuantitas Barang", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "userName", header: "Nama Pengguna", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    // { accessorKey: "receiverName", header: "Nama Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    // { accessorKey: "receiverHp", header: "Telepon Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    // { accessorKey: "receiverAddress", header: "Alamat Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "dateTransaction", header: "Tanggal Transaksi", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "created", header: "Tanggal Dibuat", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     {
       accessorKey: "statusTransaction", header: "Status", width: "5%", cell: (props) => {
-        const status = statusConfig[props.getValue()] || { content: "Unknown", color: "default" };
+        const status = statusConfig[props.getValue()] || { content: "Unknown", color: "" };
+        console.log(data);
         return (
-          <Button variant="contained" color='disabled' sx={{ color: "white", borderRadius: "10px", boxShadow: 'unset' }}>
+          <Button variant="contained" sx={{
+            width: "100px", color: "white", bgcolor: status.color, borderRadius: "10px", boxShadow: 'unset', ":hover": {
+              bgcolor: status.color
+            }
+          }}>
             {status.content}
           </Button>
         );
 
       }
-      // <Button variant="contained" color="success" sx={{ color: "white", borderRadius: "10px" }}>
-      //   Finnish
-      // </Button>
+    },
+    {
+      accessorKey: "action", header: "Aksi", width: "5%", cell: (props) => {
+        return (
+          <Button variant="contained" color='primaryLight' sx={{ color: "white", borderRadius: "10px", boxShadow: 'unset' }} onClick={() => { handleDetailOnClick(props.row.index) }}>
+            Detail
+          </Button>
+        );
+
+      }
     },
   ]
 
@@ -174,7 +173,6 @@ const TableTransaction = (props) => {
     columns,
     getCoreRowModel: getCoreRowModel()
   })
-
 
   if (data === undefined) {
     return (
@@ -202,11 +200,6 @@ const TableTransaction = (props) => {
                   <TableCell key={header.id} align='center' sx={{ bgcolor: "#8BB9FF", width: header.column.columnDef.width }}>
                     <Typography sx={{ fontSize: "14px", color: "#EEF2FF", fontWeight: "medium" }}>
                       {header.column.columnDef.header}
-                      {(header.column.columnDef.accessorKey === "created") ? (
-                        <IconButton sx={{ fontSize: 'small', color: "#F8FAFF" }} onClick={handleSortDate}>
-                          <SwapVertRounded />
-                        </IconButton>
-                      ) : null}
                     </Typography>
                   </TableCell>
                 );
@@ -222,7 +215,7 @@ const TableTransaction = (props) => {
                   {isPending || isFetching ? (
                     <CircularProgress sx={{ color: "#2A6DD0" }} />
                   ) : (
-                    "Transaksi Sewa tidak ditemukan"
+                    "Transaksi pembelian tidak ditemukan"
                   )}
                 </Typography>
               </TableCell>
@@ -265,4 +258,4 @@ const TableTransaction = (props) => {
   )
 }
 
-export default TableTransaction
+export default TableTransactionDetailBuy
