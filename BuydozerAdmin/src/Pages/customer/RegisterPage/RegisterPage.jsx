@@ -106,7 +106,7 @@ const RegisterPage = () => {
                 navigate("/login");
             }, 1500); // Waktu penutupan snackbar
             return () => clearTimeout(timer);
-        }
+        }   
     }, [openSnack, navigate]);
 
     // useEffect(() => {

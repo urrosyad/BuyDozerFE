@@ -27,6 +27,9 @@ const theme = createTheme({
     info: {
       main: "#35ECAC",
     },
+    primaryDark: {
+      main: "#193D71",
+    },
   },
   typography: {
     fontFamily: "Rubik, sans-serif",

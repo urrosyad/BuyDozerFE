@@ -18,6 +18,7 @@ export default defineConfig({
       '@auth': '/src/auth',
       '@schemas': '/src/Schemas',
       '@themes': '/src/Themes',
+      '@api': '/src/api',
     },
   },
 })

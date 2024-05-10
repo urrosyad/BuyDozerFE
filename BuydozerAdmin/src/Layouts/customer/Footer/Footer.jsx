@@ -1,6 +1,6 @@
 import React from 'react'
 import footerGradient from '@assets/customer/footerGradient.png'
-import { Box, Divider, Grid, IconButton, Link, Typography } from '@mui/material'
+import { Box, Button, Divider, Grid, IconButton, Link, Typography } from '@mui/material'
 import theme from '@themes/theme'
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
@@ -66,47 +66,47 @@ const Footer = () => {
           </Grid>
 
           <Grid item xs={2} sx={{ ...flexStart, flexDirection: "column", pt: "20px", color: "#FFFFFF" }}>
-            <Box height={100}>
-              <Typography sx={{ fontSize: "18px", color: "#FFFFFF" }}>
+            <Box height={100} sx={{ display: "flex",justifyContent: "flex-start", flexDirection: "column" }}>
+              <Typography sx={{ fontSize: "18px", color: "#FFFFFF", pl:"8px" }}>
                 Navigasi
               </Typography>
-              <Link>
                 {navigasiMenu.map((data, index) => (
-                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", mt: "10px", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
+              <Button onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
+                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
                     {data.menu}
                   </Typography>
+              </Button>
                 ))}
-              </Link>
             </Box>
           </Grid>
 
           <Grid item xs={2} sx={{ ...flexStart, flexDirection: "column", pt: "20px", color: "#FFFFFF" }}>
-            <Box height={100}>
-              <Typography sx={{ fontSize: "18px", color: "#FFFFFF" }}>
+            <Box height={100}  sx={{ display: "flex",justifyContent: "flex-start", flexDirection: "column" }}>
+              <Typography sx={{ fontSize: "18px", color: "#FFFFFF", pl:"8px" }}>
                 Tentang Kami
               </Typography>
-              <Link>
                 {aboutMeMenu.map((data, index) => (
-                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", mt: "10px", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
+              <Button onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
+                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
                     {data.menu}
                   </Typography>
+              </Button>
                 ))}
-              </Link>
             </Box>
           </Grid>
 
           <Grid item xs={2} sx={{ ...flexStart, flexDirection: "column", pt: "20px", color: "#FFFFFF" }}>
-            <Box height={100}>
-              <Typography sx={{ fontSize: "18px", color: "#FFFFFF" }}>
+            <Box height={100}  sx={{ display: "flex",justifyContent: "flex-start", flexDirection: "column" }}>
+              <Typography sx={{ fontSize: "18px", color: "#FFFFFF", pl:"8px" }}>
                 Layanan
               </Typography>
-              <Link>
                 {serviceMenu.map((data, index) => (
-                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", mt: "10px", fontWeight: 100 , ":hover": { color: "#E4E4E4"}}}>
+              <Button onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
+                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100 , ":hover": { color: "#E4E4E4"}}}>
                     {data.menu}
                   </Typography>
+              </Button>
                 ))}
-              </Link>
             </Box>
           </Grid>
         </Grid>

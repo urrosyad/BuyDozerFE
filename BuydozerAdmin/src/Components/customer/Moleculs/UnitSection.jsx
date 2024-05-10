@@ -1,15 +1,13 @@
 import React from 'react'
 import 'react-multi-carousel/lib/styles.css';
 import Carousel from 'react-multi-carousel';
-import { Box, Divider, Link, Skeleton, Typography } from '@mui/material';
+import { Box, Button, Divider, Link, Skeleton, Typography } from '@mui/material';
 import { ArrowForwardIosRounded, Face, PersonOutlineOutlined } from '@mui/icons-material'
 import { flexCenter, flexStart } from '@themes/commonStyles';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import formatRupiah from '@utils/formatRupiah';
-
-
 
 const GET_UNIT = async () => {
   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25%25&PriceBuy=true&PageNumber=1&PageSize=5`;
@@ -51,11 +49,11 @@ const responsive = {
 };
 
 const UnitSection = ({ }) => {
-  const navigate = useNavigate()
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
     queryKey: ["Unit"],
     queryFn: GET_UNIT,
   })
+  const navigate = useNavigate()
   const skeletonBox = Array.from({ length: 5 });
 
   { unitIsLoading && console.log("data sedang loading") }
@@ -69,7 +67,12 @@ const UnitSection = ({ }) => {
         <Typography sx={{ fontSize: "22px", fontWeight: "medium", color: "#193D71", }}>
           UNIT KAMI
         </Typography>
-        <Link href="/buydozer/allunit" sx={{ color: "#193D71", textDecoration: "none", fontSize: "14px", fontWeight: "thin", mr: "30px" }}>Lihat lainnya</Link>
+        <Button 
+        onClick={() => {navigate("/buydozer/allunit"),window.scrollTo(0, 0);}}
+        sx={{ color: "#193D71", textDecoration: "none", fontSize: "14px", fontWeight: "thin", mr: "30px", ":hover":{bgcolor: "#FFFFFF",color: "#2A6DD0"}}} disableRipple
+        >
+          Lihat lainnya
+        </Button>
       </Box>
       <Box>
 
@@ -95,7 +98,6 @@ const UnitSection = ({ }) => {
 
         ) : (
 
-          // Menampilkan carousel jika loading sudah selesai
           <Carousel
             responsive={responsive}
             swipeable={true}
@@ -105,7 +107,7 @@ const UnitSection = ({ }) => {
             arrows={true}
           >
             {unitIsSuccess && dataUnit && dataUnit.data.map((item, index) => (
-              <Link border={2} href={`/buydozer/unit/${item.typeUnit}`} key={index}>
+              <Link border={2} href={`/buydozer/unit/${item.nameUnit}`} key={index}>
                 <Box sx={{
                   ...flexCenter, flexDirection: "column", width: "200px", height: "250px", boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", backgroundColor: "#FFFFFF", borderRadius: "10px", ":hover": {
                     cursor: "pointer",
@@ -114,11 +116,14 @@ const UnitSection = ({ }) => {
                   }
                 }}>
                   <Box sx={{
-                    display: "flex", justifyContent: "flex-start", alignItems: "flex-end",
+                    display: "flex", 
+                    justifyContent: "flex-start", 
+                    alignItems: "flex-end",
                     backgroundImage: `url(${item.imgUnit})`,
                     backgroundRepeat: 'no-repeat',
                     width: '100%', height: '100vh',
-                    backgroundSize: "cover", backgroundPosition: "center",
+                    backgroundSize: "cover", 
+                    backgroundPosition: "center",
                     borderRadius: "10px",
                   }}>
                     <img src={item.imgBrand} alt="brand" style={{ position: "absolute", width: "50px", height: "25px", borderRadius: "2px" }} />

@@ -12,13 +12,15 @@ export const AuthProvider = ({ children }) => {
         accessToken: localStorage.getItem("AccessToken") || null,
         userRole: localStorage.getItem("UserRole") || null,
         userName: localStorage.getItem("UserName") || null,
+        userId: localStorage.getItem("UserId") || null,
       });
 
-      const loginAuth = (accessToken, userRole, userName,) => {
+      const loginAuth = (accessToken, userRole, userName, userId) => {
         const expiresIn = new Date().getTime() / 1000 + 3600;
         localStorage.setItem("AccessToken", accessToken);
         localStorage.setItem("UserRole", userRole); 
         localStorage.setItem("UserName", userName);
+        localStorage.setItem("UserId", userId);
         localStorage.setItem("ExpiresIn", expiresIn);
         
         setAuth({
@@ -26,16 +28,21 @@ export const AuthProvider = ({ children }) => {
           accessToken: accessToken,
           userRole: userRole,
           userName: userName,
+          userId: userId,
         });
       };
 
-      useEffect(() => {
-        const expiresIn = localStorage.getItem("ExpiresIn");
-        const currentTime = new Date().getTime() / 1000;
-        const isLoggedIn = currentTime < expiresIn;
+      const authData = JSON.stringify(auth);
+      localStorage.setItem("AuthData", authData);
+
+    
+      // useEffect(() => {
+      //   const expiresIn = localStorage.getItem("ExpiresIn");
+      //   const currentTime = new Date().getTime() / 1000;
+      //   const isLoggedIn = currentTime < expiresIn;
         
-        setAuth(prevAuth => ({ ...prevAuth, isLoggedIn }));
-      }, []);
+      //   setAuth(prevAuth => ({ ...prevAuth, isLoggedIn }));
+      // }, []);
 
       
       useEffect(() => {
@@ -62,12 +69,15 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("AccessToken");
         localStorage.removeItem("UserRole");
         localStorage.removeItem("UserName");
-    
+        localStorage.removeItem("UserId");
+        localStorage.removeItem("AuthData");
+        
         setAuth({
           isLoggedIn: false,
           accessToken: null,
           userRole: null,
           userName: null,
+          userId: null,
         });
       };
 

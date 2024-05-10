@@ -6,7 +6,7 @@ import SubmitButton from '../Buttons/SubmitButton'
 import CancelButton from '../Buttons/CancelButton'
 
 
-const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik }) => {
+const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik,  }) => {
 
   const textareaStyle = {
     width: '100%',
@@ -31,7 +31,8 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
 
   return (
     <Dialog open={isOpen} onClose={onClose} sx={{
-      "& .MuiPaper-root": { borderRadius: "20px"}}}>
+      "& .MuiPaper-root": { borderRadius: "20px" }
+    }}>
       <DialogTitle variant="h5" sx={{ width: "100%", fontWeight: "medium" }}>{typeModal}</DialogTitle>
       <Divider sx={{ width: "90%", alignSelf: "center", marginBottom: "20px" }} />
       <DialogContent>
@@ -46,19 +47,13 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
                   {data.type === "file" && data.value
                     ?
                     <>
-                      {formik.errors[data.name]
-                        ? <TextField name={data.name} value={''} type={data.type} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} helperText={formik.errors[data.name]} error />
-                        : <TextField name={data.name} value={''} type={data.type} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange}
-                        />
-                      }
+                      <TextField name={data.name} value={''} type={data.type} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} helperText={formik.errors[data.name]} error={Boolean(formik.errors[data.name])} />
                       <img src={data.value} style={{ width: "80px", height: "80px", objectFit: 'cover', borderRadius: "5px", marginTop: "2px", border: "solid 1px #193D71" }} />
                     </>
                     :
                     <>
-                      {formik.errors[data.name]
-                        ? <TextField name={data.name} value={data.value || ''} type={data.type} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} helperText={formik.errors[data.name]} error />
-                        : <TextField name={data.name} value={data.value || ''} type={data.type} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} />
-                      }
+                      <TextField name={data.name} value={data.value || ''} type={data.type} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} helperText={formik.errors[data.name]} error={Boolean(formik.errors[data.name])} />
+
                     </>
                   }
                 </Box>
@@ -79,26 +74,24 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
                           <>
                             <TextareaAutosize style={textareaStyle} name={data.name} value={data.value || ''} type={data.type} maxRows={1} onChange={onChange} />
                             <Box sx={{ display: "flex", bgcolor: theme.palette.primary.contrastText, borderRadius: "5px", mt: "-10px", p: "5px 0px 0px 13px" }}>
-                              <Typography variant='caption' color={"red"}>
+                              <Typography variant='caption' sx={{color:"red"}}>
                                 {formik.errors[data.name]}
                               </Typography>
                             </Box>
                           </>
                         ) : (<TextareaAutosize style={textareaStyle} name={data.name} value={data.value || ''} type={data.type} maxRows={1} onChange={onChange} />))
                     : (
-                      formik.errors[data.name]
-                        ? (<TextField name={data.name} type={data.type} value={data.value || ''} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} helperText={formik.errors[data.name]} error />
-                        ) : (<TextField name={data.name} type={data.type} value={data.value || ''} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} />))
-                  }
+                      <TextField name={data.name} type={data.type} value={data.value || ''} variant="outlined" size='small' sx={{ fontSize: "14px" }} onChange={onChange} helperText={formik.errors[data.name]} error={Boolean(formik.errors[data.name])} />
+                    )}
                 </Box>
               ))}
             </FormControl>
           </Grid>
         </Grid>
-      </DialogContent> 
+      </DialogContent>
       <Divider sx={{ width: "93%", alignSelf: "center", marginTop: "20px" }} />
       <DialogActions sx={{ margin: "10px 20px", gap: "2px" }}>
-        <SubmitButton onSubmit={onSubmit} />
+        <SubmitButton onSubmit={onSubmit}/>
         <CancelButton onClose={onClose} />
       </DialogActions>
     </Dialog>

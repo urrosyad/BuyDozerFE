@@ -35,11 +35,11 @@ const initialValues = {
 }
 
 
+const accessToken = localStorage.getItem('AccessToken')
+
 const POST_UNIT = async ({ unitValues }) => {
 
   const BASE_URL_POST_UNIT = "https://localhost:5001/api/HeavyUnits/CreateHeavyUnit"
-
-  const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.post(BASE_URL_POST_UNIT, unitValues, {
       headers: {
@@ -56,11 +56,8 @@ const POST_UNIT = async ({ unitValues }) => {
 };
 
 const GET_UNIT_BYNAME = async ({ nameUnit }) => {
-  console.log('nama unit: ', nameUnit);
 
   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
-
-  const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_GET_UNIT, {
       headers: {
@@ -69,7 +66,6 @@ const GET_UNIT_BYNAME = async ({ nameUnit }) => {
       }
     });
     const dataUnit = response.data.items
-    // console.log('log data unit dari api: ', dataUnit);
     return dataUnit
     
   } catch (error) {   
@@ -81,7 +77,6 @@ const PUT_UNIT = async ({id, unitValues}) => {
   console.table(id, unitValues);
 
   const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
       headers: {
@@ -98,10 +93,8 @@ const PUT_UNIT = async ({id, unitValues}) => {
 }
 
 const DELETE_UNIT = async ({id}) => {
-  console.log("id yang diterima oleh function DELET_UNIT",id);
 
   const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/DeleteHeavyUnit/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.delete(BASE_URL_DELETE_UNIT, {
       headers: {
@@ -110,7 +103,6 @@ const DELETE_UNIT = async ({id}) => {
       }
     });
     const dataUnit = response.data
-    console.log("Berhasil delete DATA");
     return dataUnit;
   } catch (error) {
     console.error('Error while Delete Unit:', error);
@@ -138,14 +130,12 @@ const UnitData = () => {
       }
     }
   })
-  console.log('log data unit dari formik values: ', formik.values);
 
 
-  // Function for create data
-  const { mutate: postUnit, error: postError, isSuccess: postIsSuccess } = useMutation({
+  // CREATE UNIT
+  const { mutate: postUnit, error: postError, isSuccess: postIsSuccess,} = useMutation({
     mutationFn: POST_UNIT,
     onSuccess: (data) => {
-      console.log("Data successfully POSTED", data)
       setIsModalAddOpen(false)
       console.log("Hasil submitan add", formik.values);
       formik.handleReset(formik.values)
@@ -155,12 +145,12 @@ const UnitData = () => {
       console.error("Error saat menambahkan data:", error);
     },
   })
+  // END CREATE UNIT
 
-  // Function for update data
+  // UPDATE UNIT
   const { mutate: putUnit, error: putError, isSuccess: putIsSuccess } = useMutation({
     mutationFn: PUT_UNIT,
     onSuccess: (data) => {
-      console.log("Data successfully UPDATE", data)
       setIsModalEditOpen(false)
       console.log("Hasil submitan update", formik.values);
       // formik.handleReset(formik.values)
@@ -170,12 +160,12 @@ const UnitData = () => {
       console.error("Error saat mengedit data:", error);
     },
   })
+  // END UPDATE UNIT
 
-  // Function for delete data
+  // DELETE UNIT
   const { mutate: delUnit, error: delError, isSuccess: delIsSuccess } = useMutation({
     mutationFn: DELETE_UNIT,
     onSuccess: (data) => {
-      console.log("Data successfully DELETE", data)
       setIsModalDelOpen(false)
       queryClient.invalidateQueries(['Unit'], (oldData) => [...oldData, data]);
     },
@@ -183,6 +173,7 @@ const UnitData = () => {
       console.error("Error saat menghapus data:", error);
     },
   })
+  // END DELETE UNIT
 
 
 
@@ -230,8 +221,6 @@ const UnitData = () => {
   const handleSelectRow = async (nameUnit) => {
     setIsEdit(true)
     setIsModalEditOpen(true)
-    console.log(`data yang dikirimkan ${nameUnit}`);
-
     const fetchData = await GET_UNIT_BYNAME({ nameUnit: nameUnit })
     {!fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching")}
     formik.setValues({
@@ -243,7 +232,6 @@ const UnitData = () => {
   const handleSelectRowId = async (id, nameUnit) => {
     setIsDel(true)
     setIsModalDelOpen(true)
-    console.log(`data yang diterima UnitData`,id, nameUnit);
 
     formik.setValues({
       id: id,
@@ -254,7 +242,6 @@ const UnitData = () => {
   
     const handleSearch = (event) => {
       setSearchValue(event.target.value);
-      console.log(searchValue);
     };
 
 
@@ -301,7 +288,9 @@ const UnitData = () => {
                 value={searchValue} onChange={handleSearch} />
             </Box>
 
-            <AddButton onClick={() => setIsModalAddOpen(true)} />
+            <AddButton 
+            onClick={() => setIsModalAddOpen(true)} 
+            />
             <ModalUnit
               typeModal={"Tambah Unit"}
               formik={formik}
@@ -329,12 +318,12 @@ const UnitData = () => {
 
           </Box>
         </Box>
-        {postIsSuccess && <Alert type="success" message="Data Unit Berhasil Ditambahkan" />}
-        {putIsSuccess && <Alert type="success" message="Data Unit Berhasil Diedit" />}
-        {delIsSuccess && <Alert type="success" message="Data Unit Berhasil Dihapus" />}
-        {postError && <Alert type="error" message={`Gagal Menambahkan Data: ${postError}`} />}
-        {putError && <Alert type="error" message={`Gagal Mengedit Data: ${putError}`} />}
-        {delError && <Alert type="error" message={`Gagal Menghapus Data: ${delError}`} />}
+        {postIsSuccess && <SeverityAlert type={"success"} message={"Data Unit Berhasil Ditambahkan"} />}
+        {putIsSuccess && <SeverityAlert type={"success"} message={"Data Unit Berhasil Diedit"} />}
+        {delIsSuccess && <SeverityAlert type={"success"} message={"Data Unit Berhasil Dihapus"} />}
+        {postError && <SeverityAlert type={"error"} message={`Gagal Menambahkan Data: ${postError}`} />}
+        {putError && <SeverityAlert type={"error"} message={`Gagal Mengedit Data: ${putError}`} />}
+        {delError && <SeverityAlert type={"error"} message={`Gagal Menghapus Data: ${delError}`} />}
         
         <TableUnit 
         SearchValue={searchValue}

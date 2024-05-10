@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import theme from '@themes/theme'
 import React from 'react'
 
-const SubmitButton = ({onSubmit}) => {
+const SubmitButton = ({onSubmit, isLoading}) => {
 
   const SubmitButton = styled(Button)(({ theme }) => ({
     width: "20%",
@@ -21,7 +21,7 @@ const SubmitButton = ({onSubmit}) => {
 
   return (
           <SubmitButton type="button" onClick={onSubmit} variant='outlined'>
-             Submit
+            Submit
           </SubmitButton>
   )
 }

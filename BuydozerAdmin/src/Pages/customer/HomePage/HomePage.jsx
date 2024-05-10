@@ -89,7 +89,7 @@ const HomePage = () => {
             </Box>
             <Box>
               <ButtonOutlined
-                onClick={() => navigate("/buydozer/unit")}
+                onClick={() => {navigate("/buydozer/unit"),window.scrollTo(0, 0);}}
                 text={"lihat lihat dulu"}
                 primaryColor={"#D9D630"}
                 secondColor={"#D9D630"}
@@ -117,7 +117,7 @@ const HomePage = () => {
             </Box>
             <Box>
               <ButtonOutlined
-                onClick={() => navigate("/buydozer/allunit")}
+                onClick={() => {navigate("/buydozer/allunit"),window.scrollTo(0, 0);}}
                 text={"Mulai Sewa"}
                 primaryColor={"#193D71"}
                 secondColor={"#193D71"}

@@ -15,7 +15,7 @@ import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-tabl
 import { useQuery } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
-import theme from '../../../Themes/theme';
+import theme from '@themes/theme';
 import UnitData from './UnitData';
 
 
@@ -25,7 +25,8 @@ const GET_UNIT = async (props) => {
   // False = Desc && True = Asc
   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
 
-  const accessToken = localStorage.getItem('AccessToken');
+  // const accessToken = localStorage.getItem('AccessToken');
+  const accessToken = localStorage.getItem('AuthData').accessToken;
   try {
     const response = await axios.get(BASE_URL_GET_UNIT, {
       headers: {

@@ -72,12 +72,23 @@ const LoginPage = () => {
         }
       });
       console.log(response);
-      const { UserName,accessToken,IsAdmin,Status,Data, expiresIn} = response.data;
+      const { 
+        UserName, 
+        UserId, 
+        accessToken,
+        IsAdmin,
+        Status,
+        Data, 
+        expiresIn} = response.data;
       localStorage.setItem('ExpiresIn', expiresIn)
 
       if (!Status) {        
-        loginAuth(accessToken, IsAdmin ? 1999 : 2000, UserName);
-      }
+        loginAuth(
+          accessToken, 
+          IsAdmin ? 1999 : 2000, 
+          UserName, 
+          UserId,
+      )}
 
       return {accessToken, Data};
     } catch (error) {

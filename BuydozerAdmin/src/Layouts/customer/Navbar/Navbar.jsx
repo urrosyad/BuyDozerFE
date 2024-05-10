@@ -64,7 +64,7 @@ const Navbar = () => {
 
    const navItems = [
      { menu: "BERANDA", navigation: "/"},
-     { menu: "UNIT", navigation: "buydozer/unit"},
+     { menu: "UNIT", navigation: "/buydozer/unit"},
      { menu: "TRANSAKSI", navigation: "/buydozer/transaksi"},
    ]
 
@@ -92,11 +92,13 @@ const Navbar = () => {
 
         <Grid item xs={2} sm={4} md={4} sx={{display: "flex",justifyContent: "space-around", alignItems: "center"}}>
           {navItems.map((item, index) => (
-            <Link key={index} href={item.navigation} underline='none'>
+            <Button key={index} onClick={() => navigate(item.navigation)} color='primaryDark' sx={{":hover":{
+              bgcolor: "#FFFFFF",
+            }}} disableRipple>
               <Typography sx={{fontSize: "12px", color: "#193D71", fontWeight: "medium",":hover": {color: "#2A6DD0"},}} onClick={() => setCurrentPage(item.navigation)}>
                 {item.menu}
               </Typography>
-            </Link>
+            </Button>
           ))}
         </Grid>
 
