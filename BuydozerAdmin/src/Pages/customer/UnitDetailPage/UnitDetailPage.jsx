@@ -1,41 +1,41 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import Navbar from '@layouts/customer/Navbar/Navbar'
 import Footer from '@layouts/customer/Footer/Footer'
 import { Box, Grid, IconButton, Typography, Dialog, Skeleton } from '@mui/material';
-import { flexCenter, flexEnd } from '@themes/commonStyles'
+import { useFormik } from 'formik';
+import { flexCenter } from '@themes/commonStyles'
+import { buySchema, rentSchema } from '@schemas';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import ButtonOutlined from '@components/customer/Atoms/Button/ButtonOutlined'
 import { KeyboardBackspaceRounded } from '@mui/icons-material';
+import ButtonOutlined from '@components/customer/Atoms/Button/ButtonOutlined'
 import ModalBuy from '@components/customer/Modal/ModalBuy';
 import ModalRent from '@components/customer/Modal/ModalRent';
-import ModalConfirm from '@components/customer/Modal/ModalConfirm';
 import formatRupiah from '@utils/formatRupiah';
 import GetDateNow from '@utils/GetDateNow';
-import { useFormik } from 'formik';
-import { buySchema, rentSchema } from '@schemas';
+import { GET_UNIT } from '@api/api';
 
 const authData = localStorage.getItem('AuthData')
 const auth = JSON.parse(authData)
 const accessToken = auth.accessToken
 const userId = auth.userId
 
-const GET_UNIT = async ({ nameUnit }) => {
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceBuy=false&PageNumber=1&PageSize=100`;
-  try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const data = response.data.items
-    return { data };
-  } catch (error) {
-    console.error('Error fetching Unit:', error);
-  }
-};
+// const GET_UNIT = async ({ nameUnit }) => {
+//   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceBuy=false&PageNumber=1&PageSize=100`;
+//   try {
+//     const response = await axios.get(BASE_URL_GET_UNIT, {
+//       headers: {
+//         'Authorization': `Bearer ${accessToken}`,
+//         'Content-Type': 'application/json',
+//       }
+//     });
+//     const data = response.data.items
+//     return { data };
+//   } catch (error) {
+//     console.error('Error fetching Unit:', error);
+//   }
+// };
 
 const GET_PRICELIST_RENT = async () => {
   const BASE_URL_GET_PRICELIST_RENT = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
@@ -157,8 +157,18 @@ const UnitDetailPage = () => {
 
   // GET DETAIL UNIT
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
-    queryKey: ["Unit", { nameUnit }],
-    queryFn: () => GET_UNIT({ nameUnit }),
+    queryKey: ["Unit", {
+      nameUnit: nameUnit,
+      sortBuy: true,
+      pageNumber: 1,
+      pageSize: 1
+    }],
+    queryFn: () => GET_UNIT({
+      nameUnit: nameUnit,
+      sortBuy: true,
+      pageNumber: 1,
+      pageSize: 1
+     }),
   })
 
 

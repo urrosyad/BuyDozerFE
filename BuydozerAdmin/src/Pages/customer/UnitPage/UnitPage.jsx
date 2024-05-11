@@ -11,6 +11,7 @@ import excavatorVector from '@assets/customer/categoryUnit/excavatorVector.jpg'
 import bulldozerVector from '@assets/customer/categoryUnit/bulldozerVector.jpg'
 import posterPromo1 from '@assets/customer/posterPromo1.jpeg'
 import posterPromo2 from '@assets/customer/posterPromo2.jpeg'
+
 const unitCatergory = [
   { name: "Excavator", img: excavatorVector },
   { name: "Truck", img: truckVector },

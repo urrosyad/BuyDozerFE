@@ -8,26 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import formatRupiah from '@utils/formatRupiah';
-
-const GET_UNIT = async () => {
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25%25&PriceBuy=true&PageNumber=1&PageSize=5`;
-
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-
-    const data = response.data.items
-    console.log("ini log dari funct API", data);
-    return { data };
-  } catch (error) {
-    console.error('Error fetching Unit:', error);
-  }
-};
+import { GET_UNIT } from '@api/api';
 
 
 const responsive = {
@@ -50,8 +31,18 @@ const responsive = {
 
 const UnitSection = ({ }) => {
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
-    queryKey: ["Unit"],
-    queryFn: GET_UNIT,
+    queryKey: ["Unit", {
+      nameUnit: "",
+      sortBuy: true,
+      pageNumber: 1,
+      pageSize: 4
+    }],
+    queryFn: () => GET_UNIT({
+      nameUnit: "",
+      sortBuy: true,
+      pageNumber: 1,
+      pageSize: 4
+    }),
   })
   const navigate = useNavigate()
   const skeletonBox = Array.from({ length: 5 });
@@ -107,8 +98,8 @@ const UnitSection = ({ }) => {
             arrows={true}
           >
             {unitIsSuccess && dataUnit && dataUnit.data.map((item, index) => (
-              <Link border={2} href={`/buydozer/unit/${item.nameUnit}`} key={index}>
-                <Box sx={{
+              <Link border={2} href={`/buydozer/unit/${item.nameUnit}`}>
+                <Box key={index} sx={{
                   ...flexCenter, flexDirection: "column", width: "200px", height: "250px", boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", backgroundColor: "#FFFFFF", borderRadius: "10px", ":hover": {
                     cursor: "pointer",
                     transform: "scale(0.99)",

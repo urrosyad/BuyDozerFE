@@ -1,4 +1,4 @@
-import { Box, Skeleton, Typography } from '@mui/material'
+import { Box, Grid, Skeleton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Navbar from '@layouts/customer/Navbar/Navbar'
 import Footer from '@layouts/customer/Footer/Footer'
@@ -8,26 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 import ButtonContained from '@components/customer/Atoms/Button/ButtonContained'
 import { useNavigate } from 'react-router-dom'
 import SearchInput from '@components/customer/Moleculs/SearchInput'
+import { GET_UNIT } from '@api/api'
 
-const GET_All_UNIT = async ({searchValue=""}) => {
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${searchValue}%25&PriceBuy=false&PageNumber=1&PageSize=25`;
-
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-
-    const data = response.data.items
-    console.log("ini log dari funct API", data);
-    return { data };
-  } catch (error) {
-    console.error('Error fetching Unit:', error);
-  }
-};
 
 
 const AllUnitPage = () => {
@@ -35,8 +17,18 @@ const AllUnitPage = () => {
   const skeletonBox = Array.from({ length: 4 });
   const [searchValue, setSearchValue] = useState('')
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
-    queryKey: ["Unit", { searchValue }],
-    queryFn: () => GET_All_UNIT({searchValue}),
+    queryKey: ["Unit", {
+      nameUnit: searchValue,
+      sortBuy: true,
+      pageNumber: 1,
+      pageSize: 100
+    }],
+    queryFn: () => GET_UNIT({
+      nameUnit: searchValue,
+      sortBuy: true,
+      pageNumber: 1,
+      pageSize: 100
+     }),
   })
 
   const handleSearchUnit = (event) => {
@@ -78,7 +70,7 @@ const AllUnitPage = () => {
             />
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "100%", height: "auto", flexWrap: "wrap", flexDirection: "row", gap: 5, position: "relative", mt:"10px",p:"30px 20px",borderRadius:"20px", boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.25)", bgcolor: "#FFFFFF" }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "100%", height: "auto", flexWrap: "wrap", gap: 5, position: "relative", mt:"10px",p:"30px 20px",borderRadius:"20px", boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.25)", bgcolor: "#FFFFFF" }}>
 
           {unitIsLoading || unitIsFetching
             ? (
@@ -103,6 +95,7 @@ const AllUnitPage = () => {
             ) : (
               <>
                 {unitIsSuccess && dataUnit.data.map((item, index) => (
+
                 <Box key={index} sx={{
                   ...flexCenter, flexDirection: "column", width: "200px", height: "250px", boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", backgroundColor: "#FFFFFF", borderRadius: "10px"
                 }}>

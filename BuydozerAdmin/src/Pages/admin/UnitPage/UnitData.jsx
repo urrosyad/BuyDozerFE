@@ -7,20 +7,16 @@ import {
 import { SearchRounded } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { unitSchema } from '@schemas';
-import axios from 'axios';
-import theme from '../../../Themes/theme';
+import {POST_UNIT, PUT_UNIT, DELETE_UNIT, GET_UNIT_BYNAME } from '@api/api';
 import TableUnit from './TableUnit';
-import AddButton from '@components/admin/Atoms/Buttons/AddButton';
-import ModalUnit from '@components/admin/Atoms/Modal/ModalUnit';
-import ModalDelete from '@components/admin/Atoms/Modal/ModalDelete';
-import ModalEdit from '@components/admin/Atoms/Modal/ModalEdit';
+import { unitSchema } from '@schemas';
+import theme from '../../../Themes/theme';
 import imgConvert from '@utils/imgConvert';
-import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
-import * as yup from 'yup';
 import formatRupiah from '@utils/formatRupiah';
-
-
+import ModalUnit from '@components/admin/Atoms/Modal/ModalUnit';
+import AddButton from '@components/admin/Atoms/Buttons/AddButton';
+import ModalDelete from '@components/admin/Atoms/Modal/ModalDelete';
+import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
 
 const initialValues = {
   id:"",
@@ -32,82 +28,6 @@ const initialValues = {
   priceBuyUnit: null,
   priceRentUnit: null,
   qtyUnit: null,
-}
-
-
-const accessToken = localStorage.getItem('AccessToken')
-
-const POST_UNIT = async ({ unitValues }) => {
-
-  const BASE_URL_POST_UNIT = "https://localhost:5001/api/HeavyUnits/CreateHeavyUnit"
-  try {
-    const response = await axios.post(BASE_URL_POST_UNIT, unitValues, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUnit = response.data
-    return dataUnit;
-  } catch (error) {
-    console.error('Error while Post Unit:', error);
-    throw error
-  }
-};
-
-const GET_UNIT_BYNAME = async ({ nameUnit }) => {
-
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
-  try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUnit = response.data.items
-    return dataUnit
-    
-  } catch (error) {   
-    throw error;
-  }
-};
-
-const PUT_UNIT = async ({id, unitValues}) => {
-  console.table(id, unitValues);
-
-  const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
-  try {
-    const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUnit = response.data
-    return dataUnit;
-  } catch (error) {
-    console.error('Error while Put Unit:', error);
-    throw error
-  }
-}
-
-const DELETE_UNIT = async ({id}) => {
-
-  const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/DeleteHeavyUnit/${id}`
-  try {
-    const response = await axios.delete(BASE_URL_DELETE_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUnit = response.data
-    return dataUnit;
-  } catch (error) {
-    console.error('Error while Delete Unit:', error);
-    throw error
-  }
 }
 
 const UnitData = () => {
@@ -148,7 +68,7 @@ const UnitData = () => {
   // END CREATE UNIT
 
   // UPDATE UNIT
-  const { mutate: putUnit, error: putError, isSuccess: putIsSuccess } = useMutation({
+  const { mutate: putUnit, error: putError  , isSuccess: putIsSuccess } = useMutation({
     mutationFn: PUT_UNIT,
     onSuccess: (data) => {
       setIsModalEditOpen(false)

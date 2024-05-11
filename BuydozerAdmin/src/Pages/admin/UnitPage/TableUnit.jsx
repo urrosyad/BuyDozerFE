@@ -17,32 +17,7 @@ import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
 import theme from '@themes/theme';
 import UnitData from './UnitData';
-
-
-const GET_UNIT = async (props) => {
-  const { SearchValue, PageNumber, PageSize, BuySort } = props
-
-  // False = Desc && True = Asc
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
-
-  // const accessToken = localStorage.getItem('AccessToken');
-  const accessToken = localStorage.getItem('AuthData').accessToken;
-  try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-
-    const dataUnit = response.data.items
-    const totalCount = response.data.totalCount
-    return { dataUnit, totalCount };
-  } catch (error) {
-    console.error('Error fetching Unit:', error);
-    // throw error;
-  }
-};
+import { GET_UNIT } from '@api/api';
 
 
 const TableUnit = (props) => {
@@ -58,14 +33,14 @@ const TableUnit = (props) => {
 
 
   const fetchData = async () => {
-    const { dataUnit, totalCount } = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
+    const { data, totalCount } = await GET_UNIT({ nameUnit: SearchValue, pageNumber: page, pageSize: rowsPerPage, sortBuy: buySort });
     setTotalData(totalCount)
-    console.table(dataUnit);
-    if (!dataUnit) {
+    console.table(data);
+    if (!data) {
       throw new Error("Failed to fetch data");
     };
 
-    const formattedData = dataUnit.map(data => ({
+    const formattedData = data.map(data => ({
       id: data.id,
       nameUnit: data.nameUnit,
       typeUnit: data.typeUnit,
@@ -137,14 +112,14 @@ const TableUnit = (props) => {
 
   const skipAccessorKeys = ["imgUnit", "imgBrand"];
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
-    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceBuyUnit", header: "Harga Beli", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceRentUnit", header: "Harga Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <div>{props.row.index + 1}</div> },
+    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "priceBuyUnit", header: "Harga Beli", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "priceRentUnit", header: "Harga Sewa", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
     {
       accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
         const rowId = props.row.id;
