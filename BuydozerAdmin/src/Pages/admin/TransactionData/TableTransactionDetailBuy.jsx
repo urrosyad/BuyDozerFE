@@ -91,9 +91,6 @@ const TableTransactionDetailBuy = (props) => {
       })
 
 
-  const handleCollapseToggle = (rowId) => {
-    setOpenDesc(openDesc === rowId ? null : rowId);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

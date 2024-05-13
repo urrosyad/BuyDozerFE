@@ -301,7 +301,10 @@ const UnitData = () => {
                 value={searchValue} onChange={handleSearch} />
             </Box>
 
-            <AddButton onClick={() => setIsModalAddOpen(true)} />
+            <AddButton 
+            onClick={() => setIsModalAddOpen(true)}
+            addName={"Tambah Unit"}
+            />
             <ModalUnit
               typeModal={"Tambah Unit"}
               formik={formik}

@@ -15,7 +15,7 @@ const Sidenav = () => {
     { menu: "User", icon: <PeopleAltRounded style={{ fontSize: "16px" }} />, link: "/admin/user", },
     { menu: "Unit", icon: <CommuteRounded style={{ fontSize: "16px" }} />, link: "/admin/unit", },
     { menu: "Payment Confirm", icon: <WalletRounded style={{ fontSize: "16px" }} />, link: "/admin/paymentconfirm", },
-    { menu: "List Sewa", icon: <Sell style={{ fontSize: "16px" }} />, link: "/admin/rentlist", },
+    { menu: "List Harga Sewa", icon: <Sell style={{ fontSize: "16px" }} />, link: "/admin/rentlist", },
     { menu: "Transaksi", icon: <ReceiptLong style={{ fontSize: "16px" }} />, link: "/admin/transaction", },
   ];
 

@@ -26,6 +26,7 @@ import formatRupiah from '@utils/formatRupiah'
 import ModalTransactionDetailBuy from '../../../Components/admin/Atoms/Modal/ModalTrxDetail';
 import ModalTrxDetail from '@components/admin/Atoms/Modal/ModalTrxDetail';
 import TablePaymentConfirm from './TablePaymentConfirm';
+import ModalPaymentConfirm from '../../../Components/admin/Atoms/Modal/ModalPaymentConfirm';
 
 // ubah
 const initialValues = {
@@ -40,13 +41,32 @@ const initialValues = {
   qtyTransaction: "",
   dateTransaction: "",
   statusTransaction: "",
+  paymentConfirmationReceipt: ""
 }
+
+const GET_TRANSACTION_ON_GOING = async ({ transactionNum }) => {
+  console.log("TRANSACTION NUM:", transactionNum);
+  const BASE_URL_TRANSACTION_ON_GOING = `https://localhost:5001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=${transactionNum}&ParameterStatus=2&SortDate=false&PageNumber=1&PageSize=1`;
+  const accessToken = localStorage.getItem('AccessToken');
+  try {
+    const response = await axios.get(BASE_URL_TRANSACTION_ON_GOING, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataTransaksi = response.data.items
+    console.log("INI DATA IMG:", dataTransaksi);
+  } catch (error) {
+    console.error('Error fetching TRX:', error);
+    // throw error;
+  }
+};
 
 const PaymentConfirmData = () => {
   const [searchValue, setSearchValue] = useState('');
   const [sortDate, setSortDate] = useState(false);
-  console.log(sortDate);
-  const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  const [isModalEditOpenImage, setIsModalEditOpenImage] = useState(false)
   const [isModalDelOpen, setIsModalDelOpen] = useState(false)
   const [isModalKeyOpen, setIsModalKeyOpen] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
@@ -65,11 +85,11 @@ const PaymentConfirmData = () => {
       }
     }
   })
-  console.log('log data unit dari formik values: ', formik.values);
+  console.log('LOG DATA FORMIK: ', formik.values);
 
 
   const handleCancelForm = () => {
-    setIsModalEditOpen(false);
+    setIsModalEditOpenImage(false);
     setIsModalDelOpen(false);
     setIsModalKeyOpen(false);
     setIsEdit(false);
@@ -77,19 +97,13 @@ const PaymentConfirmData = () => {
     formik.handleReset(formik.values);
   }
 
-  const handleSelectRow = async (searchValue) => {
+  const handleSelectRow = async (paymentConfirmationReceipt) => {
     setIsEdit(true)
-    setIsModalEditOpen(true)
-    console.log(`data yang dikirimkan ${searchValue}`);
-
-    const fetchData = await GET_TRANSACTION_ON_GOING({ searchValue: searchValue, SortDate: sortDate })
-    console.log(fetchData)
-    console.log("ini console log fetchData", fetchData[0].searchValue);
-    { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
+    setIsModalEditOpenImage(true)
+    console.log(`data yang dikirimkan ${paymentConfirmationReceipt}`);
 
     formik.setValues({
-      ...formik.values,
-      ...fetchData[0]
+      paymentConfirmationReceipt: paymentConfirmationReceipt,
     });
   };
 
@@ -133,6 +147,9 @@ const PaymentConfirmData = () => {
     { content: "Finished", color: "#1937D1" },
   ];
 
+  const labelInput = [
+    { label: "Foto Brand", name: "paymentConfirmationReceipt", value: formik.values.paymentConfirmationReceipt, type: "file" },
+  ]
 
   return (
     <Grid sx={{
@@ -178,6 +195,13 @@ const PaymentConfirmData = () => {
                 </Select>
               </Box>
             </Box>
+            <ModalPaymentConfirm
+              typeModal={"Lihat Gambar"}
+              formik={formik}
+              isOpen={isModalEditOpenImage}
+              labelInput={labelInput}
+              onClose={handleCancelForm}
+            />
           </Box>
           <TablePaymentConfirm
             sortDate={sortDate}
