@@ -6,4 +6,5 @@ export { default as RegisterPage } from './RegisterPage/RegisterPage';
 export { default as ErrorPage } from './ErrorPage/ErrorPage';
 export { default as AllUnitPage } from './AllUnitPage/AllUnitPage';
 export { default as UnitDetailPage } from './UnitDetailPage/UnitDetailPage';
+export { default as InvoicePage } from './InvoicePage/InvoicePage';
 

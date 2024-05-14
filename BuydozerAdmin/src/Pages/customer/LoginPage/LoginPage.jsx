@@ -102,7 +102,7 @@ const LoginPage = () => {
         display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: `url(${image})`,
         width: "100%", height: "100vh", backgroundRepeat: 'no-repeat',
       }}>
-        <Paper component="form" onSubmit={POST_LOGIN} sx={{ height: "396px", width: "372px", borderRadius: 5, margin: "20px auto", padding: 2 }}>
+        <Paper component="form" onSubmit={POST_LOGIN} sx={{ height: "396px", width: "372px", borderRadius: 2, margin: "20px auto", padding: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginTop: 1 }}>
             <Typography sx={{ 
               fontWeight: 'bold', fontSize: 24, color: '#D9D630' 

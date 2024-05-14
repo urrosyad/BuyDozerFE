@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Grid, IconButton, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, Select, InputLabel, MenuItem, FormControl, OutlinedInput } from '@mui/material';
+import { Box, Grid, IconButton, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, Select, InputLabel, MenuItem, FormControl, OutlinedInput, CircularProgress } from '@mui/material';
 import ButtonCounter from '../Atoms/Button/ButtonCounter';
 import ButtonContained from '../Atoms/Button/ButtonContained';
 import formatRupiah from '@utils/formatRupiah';
@@ -21,7 +21,7 @@ Dengan menyetujui syarat dan ketentuan ini, Anda mengonfirmasi bahwa Anda telah 
 const checkWarning = `Pastikan anda membaca keseluruhan syarat dan ketentuan!`
 
 const ModalRent = (props) => {
-  const { isOpen, onClose, onSubmit, onChange, priceRent, formik, checked, onChecked, labelInput, dataPricelist } = props
+  const { isOpen, onClose, onSubmit, onChange, priceRent, formik, checked, onChecked, labelInput, dataPricelist, isPending } = props
 
   const [priceRentUnit, setPriceRentUnit] = useState(priceRent);
   const [totalPriceRent, setTotalPriceRent] = useState(0);
@@ -158,15 +158,6 @@ const ModalRent = (props) => {
       <Divider sx={{ width: "90%", alignSelf: "center" }} />
       <DialogActions>
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-end", flexDirection: "column", gap: 0, width: "100%", margin: "5px 20px", borderRadius: "5px" }}>
-
-        {/* <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1 }}>
-            <Typography sx={{ fontSize: "12px", fontWeight: "medium", color: "#193D71" }}>
-              Durasi Sewa:
-            </Typography>
-            <Typography sx={{ fontSize: "14px", fontWeight: "medium", color: "#193D71" }}>
-              {month} bulan
-            </Typography>
-          </Box> */}
           
           <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1 }}>
             <Typography sx={{ fontSize: "12px", fontWeight: "medium", color: "#193D71" }}>
@@ -196,16 +187,38 @@ const ModalRent = (props) => {
           </Box>
           
           <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
-            <ButtonContained
-              onClick={onSubmit}
-              text="REQUEST A QUOTE"
-              primaryColor={"#193D71"}
-              secondColor={"#D9D630"}
-              hoverColor={"#F5E94C"}
-              width={"100%"}
-              height={"40px"}
-              fz={"16px"}
-            />
+            {checked && priceRentUnit 
+            ? (
+              <ButtonContained
+                onClick={onSubmit}
+                text={
+                  isPending
+                  ? "REQUESTING..."
+                  : "REQUEST A QUOTE"
+                }
+                primaryColor={"#193D71"}
+                secondColor={"#D9D630"}
+                hoverColor={"#F5E94C"}
+                width={"100%"}
+                height={"40px"}
+                fz={"16px"}
+              />
+            ) : (
+              <Box sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "40px",
+                borderRadius: "10px",
+                color: "#193D71",
+                border: `2px solid ${"#ECEBB2"}`,
+                backgroundColor: "#ECEBB2",
+                fontSize: "16px",
+              }}>
+                REQUEST A QUOTE
+              </Box>
+            )}
           </Box>
         </Box>
       </DialogActions>

@@ -132,7 +132,7 @@ const RegisterPage = () => {
                 display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: `url(${image})`,
                 width: "100%", height: "100vh", backgroundRepeat: 'no-repeat',
             }}>
-                <Paper sx={{ height: "500px", width: "700px", borderRadius: 5, margin: "20px auto", padding: 2 }}>
+                <Paper sx={{ height: "500px", width: "700px", borderRadius: 2, margin: "20px auto", padding: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginTop: 2 }}>
                         <Typography sx={{ fontWeight: 'bold', fontSize: 24, color: '#D9D630' }}>Daftarkan Diri Anda</Typography>
                     </Box>

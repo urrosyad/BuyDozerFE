@@ -6,6 +6,7 @@ const accessToken = auth.accessToken
 const userId = auth.userId
 
 
+
 export const GET_UNIT = async (props = {}) => {
   const { nameUnit = "", sortBuy = "", pageNumber = 1, pageSize = 10 } = props;
 
@@ -100,3 +101,22 @@ export const DELETE_UNIT = async ({id}) => {
     throw error
   }
 }
+
+
+
+export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
+  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=100`
+  try {
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_BUY, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data
+    console.log("INI TRXBUY", data);
+    return { data };
+  } catch (error) {
+    console.error('Error fetching Unit:', error);
+  }
+};

@@ -21,22 +21,6 @@ const auth = JSON.parse(authData)
 const accessToken = auth.accessToken
 const userId = auth.userId
 
-// const GET_UNIT = async ({ nameUnit }) => {
-//   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceBuy=false&PageNumber=1&PageSize=100`;
-//   try {
-//     const response = await axios.get(BASE_URL_GET_UNIT, {
-//       headers: {
-//         'Authorization': `Bearer ${accessToken}`,
-//         'Content-Type': 'application/json',
-//       }
-//     });
-//     const data = response.data.items
-//     return { data };
-//   } catch (error) {
-//     console.error('Error fetching Unit:', error);
-//   }
-// };
-
 const GET_PRICELIST_RENT = async () => {
   const BASE_URL_GET_PRICELIST_RENT = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
   try {
@@ -70,6 +54,7 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
       }
     });
     const trxBuyData = response.data
+    console.log("TRXBUYDATA:",trxBuyData);
     return trxBuyData;
   } catch (error) {
     console.error('Error while Post Trx Rent:', error);
@@ -106,9 +91,10 @@ const UnitDetailPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { nameUnit } = useParams()
+  const [transactionNumBuy, setTransactionNumBuy] = useState("")
+  const [transactionNumRent, setTransactionNumRent] = useState("")
   const [isModalBuy, setIsModalBuy] = useState(false)
   const [isModalRent, setIsModalRent] = useState(false)
-  const [isModalConfirm, setIsModalConfirm] = useState(false)
   const [priceBuy, setPriceBuy] = useState(0)
   const [priceRent, setPriceRent] = useState(0)
   const [checked, setChecked] = useState(false);
@@ -156,7 +142,7 @@ const UnitDetailPage = () => {
 
 
   // GET DETAIL UNIT
-  const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
+  const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, refetch } = useQuery({
     queryKey: ["Unit", {
       nameUnit: nameUnit,
       sortBuy: true,
@@ -180,11 +166,11 @@ const UnitDetailPage = () => {
 
 
   // CREATE TRANSACTION BUY
-  const { mutate: postBuy, error: ErrorBuy, isSuccess: BuyIsSuccess } = useMutation({
+  const { mutate: postBuy, error: ErrorBuy, isSuccess: BuyIsSuccess, isPending: BuyIsPending } = useMutation({
     mutationFn: POST_TRANSACTION_BUY,
     onSuccess: (data) => {
-      setIsModalBuy(false)
-      // console.log("Hasil Pembelian", formikBuy.values);
+      setTransactionNumBuy(data.Data.TransactionNum);
+      console.log("Hasil Pembelian", formikBuy.values);
       formikBuy.handleReset(formikBuy.values)
       queryClient.invalidateQueries(['TransactionBuy'], (oldData) => [...oldData, data]);
     },
@@ -192,13 +178,14 @@ const UnitDetailPage = () => {
       console.error("Error saat melakukan pembelian:", error);
     },
   })
+  {!BuyIsPending && BuyIsSuccess && navigate("/buydozer/invoice/" + transactionNumBuy)}
 
 
   // CREATE TRANSACTION RENT
-  const { mutate: postRent, error: ErrorRent, isSuccess: RentIsSuccess } = useMutation({
+  const { mutate: postRent, error: ErrorRent, isSuccess: RentIsSuccess, isPending: RentIsPending } = useMutation({
     mutationFn: POST_TRANSACTION_RENT,
     onSuccess: (data) => {
-      setIsModalRent(false)
+      setTransactionNumRent(data.Data.TransactionNum);
       console.log("HASIL PENYEWAAN", formikRent.values);
       formikRent.handleReset(formikRent.values)
       queryClient.invalidateQueries(['TransactionRent'], (oldData) => [...oldData, data]);
@@ -207,6 +194,7 @@ const UnitDetailPage = () => {
       console.error("Error saat melakukan penyewaan:", error);
     },
   })
+  {!RentIsPending && RentIsSuccess && navigate("/buydozer/invoice/" + transactionNumRent)}
 
 
   const handleModalBuy = () => {
@@ -228,9 +216,8 @@ const UnitDetailPage = () => {
   }
 
   const handleModalClose = () => {
-
     setIsModalBuy(false),
-      setIsModalRent(false);
+    setIsModalRent(false);
   }
 
   const handleChangeBuyForm = async (event) => {
@@ -256,7 +243,7 @@ const UnitDetailPage = () => {
       // console.log("YEY SUBMIT BERHASIL");
       formikBuy.handleSubmit()
     } else {
-      // console.log("CHECK DULU COY");
+      console.log("CHECK DULU COY");
     }
   }
 
@@ -281,11 +268,13 @@ const UnitDetailPage = () => {
 
   // console.log("ini adalah data unit", dataUnit);
   // console.log("ini adalah priceBuy", priceBuy);
-  // console.log("ini adalah isi formBUY", formikBuy.values);
-  console.log("FORMIK RENT:", formikRent.values);
-  // { BuyIsSuccess && console.log("BUY BERHASILLLLLLLLLLLL") }
+  console.log("FORMIK BUY", formikBuy.values);
+  // console.log("FORMIK RENT:", formikRent.values);
+  { BuyIsSuccess && console.log("BUY BERHASILLLLLLLLLLLL") }
   { RentIsSuccess && console.log("RENT BERHASILLLLLLLLLLLL") }
-  
+  { postBuy.isLoading && console.log("POST BUY SEDANG LOADING") }
+  { BuyIsPending && console.log("POST BUY SEDANG PENDING") }
+
   return (
     <>
       <Navbar />
@@ -393,12 +382,12 @@ const UnitDetailPage = () => {
                           isOpen={isModalBuy}
                           priceBuy={priceBuy}
                           labelInput={labelInput}
+                          isPending={BuyIsPending}
                           onChecked={handleChecked}
                           onChange={handleChangeBuyForm}
                           onSubmit={handleBuySubmit}
                           onClose={handleModalClose}
                         />
-
 
                         <ButtonOutlined
                           onClick={handleModalRent}
@@ -416,6 +405,7 @@ const UnitDetailPage = () => {
                           isOpen={isModalRent}
                           priceRent={priceRent}
                           labelInput={labelInput}
+                          isPending={RentIsPending}
                           dataPricelist={pricelistIsSuccess && dataPricelist.data}
                           onChecked={handleChecked}
                           onChange={handleChangeRentForm}

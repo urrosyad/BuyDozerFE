@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Button, Grid, IconButton, Link, Menu, Typography, styled } from '@mui/material'
-import { Face } from '@mui/icons-material'
+import { Face, AccountCircleRounded } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
@@ -111,7 +111,7 @@ const Navbar = () => {
              </Typography>
              <IconButton sx={{ width: "30px", height: "30px", display: "flex", justifyContent: "center", alignItems: "center", border: "2px solid #193D71", borderRadius: "45%"}}
              onClick={handleOpenProfil}>
-                <Face sx={{color: "#193D71"}}/>
+                <AccountCircleRounded sx={{color: "#193D71"}}/>
              </IconButton>
             </>
           :

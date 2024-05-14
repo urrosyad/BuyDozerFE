@@ -1,7 +1,7 @@
 import { Button, styled } from '@mui/material';
 import React from 'react'
 
-const ButtonContained = ({onClick, text, primaryColor, secondColor, hoverColor, width, height, fz}) => {
+const ButtonContained = ({onClick, icon ="", text, primaryColor, secondColor, hoverColor, width, height, fz}) => {
     const StyleButton = styled(Button)(({}) => ({ 
               width: width,
               height: height,
@@ -19,6 +19,7 @@ const ButtonContained = ({onClick, text, primaryColor, secondColor, hoverColor, 
             }));
   return (
           <StyleButton type='button' onClick={onClick} >
+              {icon}
               {text}
           </StyleButton>
   )

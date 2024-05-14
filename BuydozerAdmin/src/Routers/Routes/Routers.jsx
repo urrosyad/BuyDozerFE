@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { Dashboard, BuyData, RentData, UnitData, UserData, RentListData, TransactionData } from '@pages/admin';
-import { HomePage, UnitPage, TransactionPage, LoginPage, RegisterPage, ErrorPage, AllUnitPage, UnitDetailPage } from '@pages/customer';
+import { HomePage, UnitPage, TransactionPage, LoginPage, RegisterPage, ErrorPage, AllUnitPage, UnitDetailPage, InvoicePage } from '@pages/customer';
 import { PrivateRoutes } from '@routers/PrivateRoutes';
 import { AdminLayout } from '@layouts/admin/AdminLayout';
 import { AuthProvider } from '@context/AuthProvider';
@@ -38,6 +38,7 @@ const Routers = () => {
               <Route path="allunit" element={<AllUnitPage />} />
               <Route path="unit" element={<UnitPage />} />
               <Route path="transaksi" element={<TransactionPage />} />
+              <Route path="invoice/:transactionNum" element={<InvoicePage />} />
               <Route path="unit/:nameUnit" element={<UnitDetailPage />} />
             </Route>
           {/* <Route element={<PrivateRoutes allowedRoles={[1999, 2000]} />}>

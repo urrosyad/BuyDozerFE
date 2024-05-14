@@ -124,7 +124,7 @@ const AllUnitPage = () => {
                       primaryColor={"#D9D630"}
                       secondColor={"#193D71"}
                       hoverColor={"#215093"}
-                      width={"150px"}
+                      width={"100%"}
                       height={"30px"}
                       fz={"14px"}
                     />

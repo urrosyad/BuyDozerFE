@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Grid, IconButton, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox } from '@mui/material';
+import { Box, Grid, IconButton, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, CircularProgress } from '@mui/material';
 import ButtonCounter from '../Atoms/Button/ButtonCounter';
 import ButtonContained from '../Atoms/Button/ButtonContained';
 import formatRupiah from '@utils/formatRupiah';
@@ -21,8 +21,10 @@ Dengan menyetujui syarat dan ketentuan ini, Anda mengonfirmasi bahwa Anda telah 
 
 const checkWarning = `Pastikan anda membaca keseluruhan syarat dan ketentuan!`
 
+
+
 const ModalBuy = (props) => {
-  const { isOpen, onClose, onSubmit, onChange, priceBuy, formik, checked, onChecked, labelInput } = props
+  const { isOpen, onClose, onSubmit, onChange, priceBuy, formik, checked, onChecked, labelInput, isPending} = props
 
   const [priceBuyUnit, setPriceBuyUnit] = useState(priceBuy);
   console.log("ini priceBuyUnit", priceBuyUnit);
@@ -109,8 +111,8 @@ const ModalBuy = (props) => {
                 </Typography>
               </Box>
             </Box>
-
           </Grid>
+
         </Grid>
 
       </DialogContent>
@@ -119,26 +121,48 @@ const ModalBuy = (props) => {
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-end", flexDirection: "column", gap: 0, width: "100%", margin: "5px 20px", borderRadius: "5px" }}
         >
 
-<Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1 , m: "5px 0px "}}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1, m: "5px 0px " }}>
             <Typography sx={{ fontSize: "12px", fontWeight: "medium", color: "#193D71" }}>
               TOTAL:
             </Typography>
             <Typography sx={{ fontSize: "16px", fontWeight: "bold", color: "#193D71" }}>
-            {formatRupiah(priceBuyUnit)}
+              {formatRupiah(priceBuyUnit)}
             </Typography>
           </Box>
-          
+
           <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
-          <ButtonContained
-            onClick={onSubmit}
-            text="REQUEST A QUOTE"
-            primaryColor={"#D9D630"}
-            secondColor={"#193D71"}
-            hoverColor={"#215093"}
-            width={"100%"}
-            height={"40px"}
-            fz={"16px"}
-          />
+            {checked && priceBuyUnit
+              ? (
+                <ButtonContained
+                  onClick={onSubmit}
+                  text={
+                    isPending
+                    ? "REQUESTING..." 
+                    : "REQUEST A QUOTE"
+                  }
+                  primaryColor={"#D9D630"}
+                  secondColor={"#193D71"}
+                  hoverColor={"#215093"}
+                  width={"100%"}
+                  height={"40px"}
+                  fz={"16px"}
+                />
+              ) : (
+                <Box sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "40px",
+                  borderRadius: "10px",
+                  color: "#D9D630",
+                  border: `2px solid ${"#7688A3"}`,
+                  backgroundColor: "#7688A3",
+                  fontSize: "16px",
+                }}>
+                  REQUEST A QUOTE
+                </Box>
+              )}
           </Box>
         </Box>
       </DialogActions>

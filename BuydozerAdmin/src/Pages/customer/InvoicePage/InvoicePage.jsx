@@ -1,0 +1,317 @@
+import React from 'react'
+import { flexCenter } from '@themes/commonStyles'
+import { Box, IconButton, Skeleton, TextField, Typography } from '@mui/material'
+import buydozerLogo from '@assets/customer/buydozerLogo.png'
+import buydozerFont from '@assets/customer/buydozerFont.png'
+import ButtonContained from '@components/customer/Atoms/Button/ButtonContained'
+import { KeyboardBackspaceRounded, WhatsApp } from '@mui/icons-material'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { dateToMonth, formatRupiah, formatIndoPhone, numToWord} from '@utils'
+
+const authData = localStorage.getItem('AuthData')
+const auth = JSON.parse(authData)
+const accessToken = auth.accessToken
+
+const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
+  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=100`
+  try {
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_BUY, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data
+    console.log("INI TRXBUY", data);
+    return { data };
+  } catch (error) {
+    console.error('Error fetching Unit:', error);
+  }
+};
+
+const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
+  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`
+  try {
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_RENT, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data.items
+    console.log("INI TRXRENT", data);
+
+    return { data };
+  } catch (error) {
+    console.error('Error fetching Unit:', error);
+  }
+};
+
+const InvoicePage = () => {
+  const navigate = useNavigate()
+  const { transactionNum } = useParams()
+  let dataTrxBuy = {}
+  let dataTrxRent = {}
+
+
+  const { data: dataBuy, isLoading: buyIsLoading, isFetching: buyIsFetching, isSuccess: buyIsSuccess, errorBuy } = useQuery({
+    queryKey: ["TransactionBuy", {
+      transactionNum: transactionNum,
+    }],
+    queryFn: () => GET_TRANSACTION_BUY({
+      transactionNum: transactionNum,
+    }),
+  })
+
+  const { data: dataRent, isLoading: rentIsLoading, isFetching: rentIsFetching, isSuccess: rentIsSuccess, errorRent } = useQuery({
+    queryKey: ["TransactionRent", {
+      transactionNum: transactionNum,
+    }],
+    queryFn: () => GET_TRANSACTION_RENT({
+      transactionNum: transactionNum,
+    }),
+  })
+  // dataTrxRent = rentIsSuccess ? dataRent.data.items : {}
+
+  console.log("rentIsSuccess:", rentIsSuccess);
+  console.log("dataRent:", dataRent);
+
+  const isLoading = buyIsLoading || rentIsLoading;
+  const isFetching = buyIsFetching || rentIsFetching;
+  const isSuccess = buyIsSuccess || rentIsSuccess;
+
+  const transactionData = rentIsSuccess && dataRent?.data?.length ? dataRent.data[0] :
+    buyIsSuccess && dataBuy?.data?.length ? dataBuy.data[0] :
+      {};
+  console.log({ dataBuy, dataRent, transactionData });
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "+6285748382270";
+    const message = encodeURIComponent(
+      "Halo, saya telah melakukan pemesanan unit. Bagaimana untuk peroses pembayaran selanjutnya?"
+    );
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+
+  return (
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start", height: "100%", padding: "30px" }}>
+      <IconButton color='primaryDark' onClick={() => navigate("/buydozer/transaksi")} sx={{ margin: "10px" }}>
+        <KeyboardBackspaceRounded color="primaryDark" sx={{ fontSize: "30px" }} />
+      </IconButton>
+
+      {/* {buyIsSuccess && dataBuy.data.items.map((item, index) => ( */}
+
+      <Box sx={{ ...flexCenter, width: "70%", height: "100%", flexDirection: "column" }}>
+
+
+
+        {/* INVOICE HEADER */}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "200px", padding: "0px 20px", backgroundColor: "#FFFFE3", }}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <img src={buydozerLogo} alt="" style={{ width: "80px" }} />
+            <img src={buydozerFont} alt="" style={{ width: "150px", margin: "-10px 9px", backgroundColor: "transparent", filter: "" }} />
+            <Typography sx={{ fontSize: "16px", color: "#D9D630", margin: "10px 14px" }}>
+              Perusahaan distributor alat berat modern
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+            <Typography sx={{ fontSize: "36px", color: "#193D71", fontWeight: "bold" }}>
+              INVOICE
+            </Typography>
+            <Typography sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium", mt: "-10px" }}>
+              {isFetching ? (
+                <Skeleton variant="text" width={"200px"} sx={{ fontSize: "24px", color: "#193D71", fontWeight: "medium" }} />
+              ) : (
+                rentIsSuccess ? "Penyewaan Unit" : "Pembelian Unit"
+              )}
+            </Typography>
+            <Typography sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }}>
+              {isFetching ? (
+                <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+              ) : (
+                transactionData?.transactionNum || "trxbuyrentxxxxx"
+              )}
+            </Typography>
+            <Typography sx={{ fontSize: "18px", color: "#193D71", fontWeight: "medium" }}>
+              {isFetching ? (
+                <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+              ) : (
+                rentIsSuccess
+                  ? `${dateToMonth(transactionData.dateRent)} - ${dateToMonth(transactionData.dateReturn)}`
+                  : dateToMonth(transactionData.dateBuy)
+              )}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* INVOICE CONTENT */}
+        <Box sx={{ width: "100%", display: "flex", flexDirection: "column", padding: "10px 20px", backgroundColor: "#FBFDFF", }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: "250px" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", p: "0px 15px" }}>
+              <Typography sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${transactionData?.nameUnit} ${transactionData?.typeUnit}`
+                )}
+              </Typography>
+
+              <Typography sx={{ fontSize: "20px", color: "#193D71", fontWeight: "thin" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "25px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${transactionData?.qtyTransaction} unit`
+                )}
+              </Typography>
+
+              <Typography sx={{ fontSize: "18px", color: "#193D71", fontWeight: "thin" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "25px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `Durasi sewa ${transactionData?.months} bulan` || ""
+                )}
+              </Typography>
+            </Box>
+
+
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+              <Typography sx={{ fontSize: "18px", color: "#23A647", fontWeight: "medium" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${formatRupiah(transactionData.priceRentUnit)}`
+                )}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", width: "100%", flexDirection: "column" }}>
+            <Box sx={{ ...flexCenter, flexDirection: "row", gap: "5px" }}>
+              <Typography sx={{ fontSize: "16px", color: "#193D71", fontWeight: "medium" }}>
+                TOTAL HARGA UNIT
+              </Typography>
+              <Typography sx={{ fontSize: "20px", color: "#23A647", fontWeight: "bold" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${formatRupiah(transactionData.totalPriceTransaction)}`
+                )}
+              </Typography>
+            </Box>
+            <Box sx={{ ...flexCenter, flexDirection: "row", gap: "5px" }}>
+              <Typography sx={{ fontSize: "12px", color: "#193D71", fontWeight: "medium" }}>
+                TERBILANG
+              </Typography>
+              <Typography sx={{ fontSize: "14px", color: "#23A647", fontWeight: "bold" }}>
+              {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${numToWord(transactionData.totalPriceTransaction)}`
+                )}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* INVOICE FOOTER */}
+        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "100%", padding: "20px 20px", backgroundColor: "#193D71", }}>
+          <Box sx={{ display: "flex", flexDirection: "row", gap: "50px" }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-start", flexDirection: "column" }}>
+              <Typography sx={{ fontSize: "14px", color: "#D9D630", fontWeight: "reguler", mb: "10px" }}>
+                kepada
+              </Typography>
+              <Typography sx={{ fontSize: "18px", color: "#D9D630", fontWeight: "medium" }}>
+              {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "16px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${transactionData?.receiverName}`
+                )}
+              </Typography>
+              <Typography sx={{ fontSize: "14px", color: "#D9D630", fontWeight: "100", width: "80%" }}>
+              {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "16px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${transactionData?.receiverAddress}`
+                )}
+              </Typography>
+              <Typography sx={{ fontSize: "14px", color: "#D9D630", fontWeight: "100" }}>
+              {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "16px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  `${transactionData?.receiverHp}`
+                )}
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: "flex", justifyContent: "flex-start", flexDirection: "column" }}>
+              <Typography sx={{ fontSize: "14px", color: "#D9D630", fontWeight: "reguler", mb: "10px" }}>
+                dari
+              </Typography>
+              <Typography sx={{ fontSize: "16px", color: "#D9D630", fontWeight: "medium" }}>
+                BUYDOZER
+              </Typography>
+              <Typography sx={{ fontSize: "14px", color: "#D9D630", fontWeight: "100", width: "80%" }}>
+                JL. Hasanudin no 56, Cakung, Jakarta Timur, Indonesia
+              </Typography>
+              <Typography sx={{ fontSize: "14px", color: "#D9D630", fontWeight: "100" }}>
+                +62 8956-3799-8198
+              </Typography>
+            </Box>
+
+          </Box>
+        </Box>
+
+
+        {/* UPLOAD PAYMENT CONFIMR */}
+        <Box sx={{ width: "100%", flexDirection: "column", p: "10px 0px", mb: "10px" }}>
+          <Typography sx={{ fontSize: "18px", color: "#193D71", fontWeight: "medium", ml: "12px" }}>
+            Upload Bukti Pembayaran
+          </Typography>
+          <TextField color='primaryDark' type='file' size='small' sx={{ width: "100%", p: "2px 0px", bgcolor: "white" }}>
+
+          </TextField>
+        </Box>
+
+        {/* BATALKAN TRANSAKSI */}
+        <Box sx={{ ...flexCenter, width: "100%", height: "150px", padding: "5px 10px", flexDirection: "column", boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)" }}>
+          <Typography sx={{ width: "80%", fontSize: "12px", color: "#193D71", fontWeight: "medium", textAlign: "center" }}>
+            Permintaan Penawaran anda telah dikirimkan ke admin dan berikut merupakan transaksi invoice dari pembelian unit yang anda lakukan. Setelah ini anda akan melakukan private message dengan admin kami untuk memroses pembayaran lebih lanjut. Jika semua proses pembayaran sesuai prosedur pembaayran yang telah diinstruksikan oleh admin Buydozer telah selesai, silahkan mengupload bukti pembayaran untuk menguatkan proses transaksi
+          </Typography>
+          <Box sx={{ ...flexCenter, flexDirection: "row", gap: "15px", mt: "10px" }}>
+
+            <ButtonContained
+              onClick={handleWhatsAppClick}
+              text={
+                "Konfirmasi ke admin"
+              }
+              icon={<WhatsApp sx={{ fontSize: "20px", mr: "5px" }} />}
+              primaryColor={"#FFFFFF"}
+              secondColor={"#28D156"}
+              hoverColor={"#23A647"}
+              width={"180px"}
+              height={"35px"}
+              fz={"12px"}
+            />
+            <ButtonContained
+              // onClick={}
+              text={"Batalkan"}
+              primaryColor={"#FFFFFF"}
+              secondColor={"#EC3535"}
+              hoverColor={"#C32828"}
+              width={"180px"}
+              height={"35px"}
+              fz={"12px"}
+            />
+          </Box>
+        </Box>
+      </Box>
+      {/* ))} */}
+    </Box>
+  )
+}
+
+export default InvoicePage
