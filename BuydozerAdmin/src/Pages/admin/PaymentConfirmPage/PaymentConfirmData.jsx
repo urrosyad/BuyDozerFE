@@ -2,29 +2,14 @@ import React, { useState } from 'react'
 import {
   Card,
   Box, Typography,
-  Grid, InputBase, Alert, Tab,
+  Grid, InputBase,
   Select,
   MenuItem
 } from '@mui/material'
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
 import { SearchRounded } from '@mui/icons-material';
 import { useFormik } from 'formik';
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { unitSchema } from '@schemas';
-import axios from 'axios';
 import theme from '@src/theme';
-import AddButton from '@components/admin/Atoms/Buttons/AddButton';
-import ModalUser from '@components/admin/Atoms/Modal/ModalUser';
-import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
-import imgConvert from '@utils/imgConvert';
-import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
-import * as yup from 'yup';
-import { formatDateTimeOffset, formatDateTime } from '@utils/formatDate';
-import formatRupiah from '@utils/formatRupiah'
-import ModalTransactionDetailBuy from '../../../Components/admin/Atoms/Modal/ModalTrxDetail';
-import ModalTrxDetail from '@components/admin/Atoms/Modal/ModalTrxDetail';
 import TablePaymentConfirm from './TablePaymentConfirm';
 import ModalPaymentConfirm from '../../../Components/admin/Atoms/Modal/ModalPaymentConfirm';
 
@@ -44,34 +29,11 @@ const initialValues = {
   paymentConfirmationReceipt: ""
 }
 
-const GET_TRANSACTION_ON_GOING = async ({ transactionNum }) => {
-  console.log("TRANSACTION NUM:", transactionNum);
-  const BASE_URL_TRANSACTION_ON_GOING = `https://localhost:5001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=${transactionNum}&ParameterStatus=2&SortDate=false&PageNumber=1&PageSize=1`;
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_TRANSACTION_ON_GOING, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataTransaksi = response.data.items
-    console.log("INI DATA IMG:", dataTransaksi);
-  } catch (error) {
-    console.error('Error fetching TRX:', error);
-    // throw error;
-  }
-};
-
 const PaymentConfirmData = () => {
   const [searchValue, setSearchValue] = useState('');
   const [sortDate, setSortDate] = useState(false);
   const [isModalEditOpenImage, setIsModalEditOpenImage] = useState(false)
-  const [isModalDelOpen, setIsModalDelOpen] = useState(false)
-  const [isModalKeyOpen, setIsModalKeyOpen] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
-  const [isDel, setIsDel] = useState(false)
-  const queryClient = useQueryClient()
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: unitSchema,
@@ -119,25 +81,12 @@ const PaymentConfirmData = () => {
     });
   };
 
-  const handleDelSubmit = async () => {
-    delUser({ id: formik.values.id })
-  }
-
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
     console.log(searchValue);
   };
   const handleSortDate = () => {
     setSortDate(!sortDate)
-  };
-
-  const handlePostChange = async (event) => {
-    const { name, value } = event.target;
-    formik.setValues({
-      ...formik.values,
-      [name]: value,
-    });
-    console.table("Ini ADALAH INPUTAN FORMIK POST CANGE" + formik.values);
   };
 
   const statusConfig = [
@@ -211,14 +160,6 @@ const PaymentConfirmData = () => {
             statusConfig={statusConfig}
           />
         </Box>
-
-        {/* {putIsSuccess && <SeverityAlert severity={"success"} message={"Data User Berhasil Diedit"} />}
-        {delIsSuccess && <SeverityAlert severity={"success"} message={"Data User Berhasil Dihapus"} />}
-        {putIsAdminSuccess && <SeverityAlert severity={"success"} message={"Data User Berhasil Dihapus"} />}
-        {putError && <SeverityAlert severity={"error"} message={`Gagal Mengedit Data: ${putError}`} />}
-        {putIsAdminError && <SeverityAlert severity={"error"} message={`Gagal Mengedit Data User: ${putIsAdminError}`} />}
-        {delError && <SeverityAlert severity={"error"} message={`Gagal Menghapus Data: ${delError}`} />} */}
-
       </Card>
     </Grid>
   )

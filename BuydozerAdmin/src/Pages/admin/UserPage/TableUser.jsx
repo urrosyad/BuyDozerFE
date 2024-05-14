@@ -50,7 +50,6 @@ const TableUser = (props) => {
   const fetchData = async () => {
     const { dataUser, totalCount } = await GET_USER({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortUserName: sortUserName });
     setTotalData(totalCount);
-    // console.log("fetch data", dataUser); sudah selalu bisa
     if (!dataUser) {
       throw new Error("Failed to fetch data");
     };
@@ -77,10 +76,6 @@ const TableUser = (props) => {
         queryKey: ["User"],
         queryFn: fetchData,
       })
-
-  const handleCollapseToggle = (rowId) => {
-    setOpenDesc(openDesc === rowId ? null : rowId);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -171,7 +166,6 @@ const TableUser = (props) => {
     )
   }
 
-  // console.log("ini log dari data table", data)
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>
@@ -216,7 +210,7 @@ const TableUser = (props) => {
                   <TableRow key={row.id} style={rowStyle}>
                     {row.getVisibleCells().map((cell) => {
                       return (
-                        <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium", overflow:"wrap" }}>
+                        <TableCell key={cell.id} align='center' sx={{ color: "#2A6DD0", borderBottom: "none", fontWeight: "medium", overflow: "wrap" }}>
                           <Typography sx={{ fontSize: "14px", }}>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </Typography>

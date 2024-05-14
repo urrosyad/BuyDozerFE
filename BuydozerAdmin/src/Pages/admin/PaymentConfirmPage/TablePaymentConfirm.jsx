@@ -5,23 +5,19 @@ import {
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
-  IconButton, Collapse,
+  IconButton,
   CircularProgress, Button,
   Tooltip
 } from '@mui/material'
-import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp, KeyRounded, KeyOffRounded } from '@mui/icons-material';
-import { EditButton, DeleteButton, KeyButton } from '@components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
 import { formatDate, formatDateTime } from '@utils/formatDate';
 import axios from 'axios';
-import theme from '@src/theme';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 import { useFormik } from 'formik';
 
 
@@ -44,7 +40,6 @@ const GET_TRANSACTION = async (props) => {
 
   } catch (error) {
     console.error('Error fetching User:', error);
-    // throw error;
   }
 };
 
@@ -80,11 +75,6 @@ const TablePaymentConfirm = (props) => {
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
-  // const [sortDate, setSortDate] = useState(false)
-  // const [putValues, setPutValues] = useState({
-  //   id: null,
-  //   statusTransaction: 0
-  // });
 
   const formik = useFormik({
     initialValues: {
@@ -97,7 +87,6 @@ const TablePaymentConfirm = (props) => {
   const fetchData = async () => {
     const { dataTransaksi, totalCount } = await GET_TRANSACTION({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortDate: sortDate });
     setTotalData(totalCount);
-    // console.log("fetch data", dataTransaksi); sudah selalu bisa
 
     console.log("ini adalah data TRX", dataTransaksi);
 
@@ -149,7 +138,6 @@ const TablePaymentConfirm = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         console.log("data trxNum: ", trxnum, "\nData trxData:", trxData);
-        // PUT_TRANSACTION_STATUS(trxData.id, trxData);
         putConfirm(formik.values)
         Swal.fire({
           title: `Ter${action.toLowerCase()}!`,
@@ -182,10 +170,6 @@ const TablePaymentConfirm = (props) => {
   })
 
 
-  const handleCollapseToggle = (rowId) => {
-    setOpenDesc(openDesc === rowId ? null : rowId);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
@@ -194,11 +178,6 @@ const TablePaymentConfirm = (props) => {
     setRowsPerPage(+event.target.value);
     setPage(1);
   };
-
-  const handleSortDate = () => {
-    setSortDate(!sortDate)
-  }
-
 
   useEffect(() => {
     refetch()
@@ -241,12 +220,6 @@ const TablePaymentConfirm = (props) => {
             <Box gap={1} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
               <Tooltip title="Konfirmasi">
                 <IconButton onClick={() => {
-                  // const putValues = { id: props.row.original.id, statusTransaction: 3 };
-                  // setPutValues({
-                  //   id: props.row.original.id,
-                  //   statusTransaction: 3
-                  // })
-
                   formik.setValues({
                     id: props.row.original.id,
                     statusTransaction: 3
@@ -300,8 +273,6 @@ const TablePaymentConfirm = (props) => {
       </div>
     )
   }
-
-  // console.log("ini log dari data table", data)
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>

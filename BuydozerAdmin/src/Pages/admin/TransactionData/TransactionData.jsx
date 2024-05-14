@@ -138,9 +138,8 @@ const TransactionData = () => {
     {
       ...formik.values,
       transactionNum: fetchData[0].transactionNum,
-      nameUnit: fetchData[0].unit.nameUnit,
-      priceRentUnit: fetchData[0].unit.priceRentUnit,
-      userName: fetchData[0].user.userName,
+      nameUnit: fetchData[0].nameUnit,
+      userName: fetchData[0].userName,
       receiverName: fetchData[0].receiverName,
       receiverHp: fetchData[0].receiverHp,
       receiverAddress: fetchData[0].receiverAddress,
@@ -148,11 +147,16 @@ const TransactionData = () => {
       dateTransaction: fetchData[0].dateTransaction,
       statusTransaction: fetchData[0].statusTransaction,
       created: fetchData[0].created,
+      totalPriceTransaction: fetchData[0].totalPriceTransaction
     };
     if (tab != 'buy') {
       // Jika tab bukan "buy", maka Anda perlu mengatur dateRent dan dateReturn
-      valuesToSet.dateRent = fetchData[0].detailRents.dateRent;
-      valuesToSet.dateReturn = fetchData[0].detailRents.dateReturn;
+      valuesToSet.dateRent = fetchData[0].dateRent;
+      valuesToSet.dateReturn = fetchData[0].dateReturn;
+      valuesToSet.priceRentUnit = fetchData[0].priceRentUnit;
+
+    } else {
+      valuesToSet.priceBuyUnit = fetchData[0].priceBuyUnit;
     }
     formik.setValues(valuesToSet);
 
@@ -220,20 +224,22 @@ const TransactionData = () => {
   const labelDetailBuy = [
     { name: "transactionNum", label: "Nomor Transaksi", value: formik.values.transactionNum, type: "text" },
     { name: "nameUnit", label: "Nama Unit", value: formik.values.nameUnit, type: "text" },
-    { name: "priceRentUnit", label: "Harga Sewa", value: formatRupiah(formik.values.priceRentUnit), type: "text" },
+    { name: "priceBuyUnit", label: "Harga Beli", value: formik.values.priceBuyUnit, type: "number" },
     { name: "userName", label: "Nama Pengguna", value: formik.values.userName, type: "text" },
     { name: "receiverName", label: "Nama Penerima", value: formik.values.receiverName, type: "text" },
     { name: "receiverHp", label: "Telepon Penerima", value: formik.values.receiverHp, type: "text" },
     { name: "receiverAddress", label: "Alamat Penerima", value: formik.values.receiverAddress, type: "text" },
-    { name: "qtyTransaction", label: "Qty Unit", value: formik.values.qtyTransaction, type: "text" },
+    { name: "qtyTransaction", label: "Qty Unit", value: formik.values.qtyTransaction, type: "number" },
     { name: "dateTransaction ", label: "Tanggal Transaksi", value: formik.values.dateTransaction, type: "date" },
     { name: "created", label: "Tanggal Dibuat", value: formatDateTime(formik.values.created), type: "text" },
+    { name: "totalPriceTransaction", label: "Total Harga Transaksi", value: formik.values.totalPriceTransaction, type: "number" },
+
     // { name: "statusTransaction ", label: "Status", value: formik.values.statusTransaction, type: "integer" },
   ]
   const labelDetailRent = [
     { name: "transactionNum", label: "Nomor Transaksi", value: formik.values.transactionNum, type: "text" },
     { name: "nameUnit", label: "Nama Unit", value: formik.values.nameUnit, type: "text" },
-    { name: "priceRentUnit", label: "Harga Sewa", value: formatRupiah(formik.values.priceRentUnit), type: "text" },
+    { name: "priceRentUnit", label: "Harga Sewa", value: formik.values.priceRentUnit, type: "number" },
     { name: "userName", label: "Nama Pengguna", value: formik.values.userName, type: "text" },
     { name: "receiverName", label: "Nama Penerima", value: formik.values.receiverName, type: "text" },
     { name: "receiverHp", label: "Telepon Penerima", value: formik.values.receiverHp, type: "text" },
@@ -243,6 +249,8 @@ const TransactionData = () => {
     { name: "created ", label: "Tanggal Dibuat", value: formatDateTime(formik.values.created), type: "text" },
     { name: "dateRent", label: "Tanggal Sewa", value: formik.values.dateRent, type: "date" },
     { name: "dateReturn ", label: "Tanggal Kembali", value: formik.values.dateReturn, type: "date" },
+    { name: "totalPriceTransaction", label: "Total Harga Transaksi", value: formik.values.totalPriceTransaction, type: "number" },
+
   ]
 
   const statusConfig = [

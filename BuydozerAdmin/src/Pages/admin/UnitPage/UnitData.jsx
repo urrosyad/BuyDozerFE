@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import {
   Card,
   Box, Typography,
-  Grid, InputBase, Alert
+  Grid, InputBase
 } from '@mui/material'
 import { SearchRounded } from '@mui/icons-material';
 import { useFormik } from 'formik';
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { unitSchema } from '@schemas';
 import axios from 'axios';
 import theme from '@src/theme';
@@ -16,8 +16,6 @@ import ModalUnit from '@components/admin/Atoms/Modal/ModalUnit';
 import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
 import imgConvert from '@utils/imgConvert';
 import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
-import * as yup from 'yup';
-import formatRupiah from '@utils/formatRupiah';
 
 
 
@@ -163,7 +161,6 @@ const UnitData = () => {
       console.log("Data successfully UPDATE", data)
       setIsModalEditOpen(false)
       console.log("Hasil submitan update", formik.values);
-      // formik.handleReset(formik.values)
       queryClient.invalidateQueries(['Unit'], (oldData) => [...oldData, data]);
     },
     onError: (error) => {
@@ -256,7 +253,7 @@ const UnitData = () => {
     setSearchValue(event.target.value);
     console.log(searchValue);
   };
-  
+
 
   const labelInput = [
     { label: "Nama Unit", name: "nameUnit", value: formik.values.nameUnit, type: "text" },
@@ -301,9 +298,9 @@ const UnitData = () => {
                 value={searchValue} onChange={handleSearch} />
             </Box>
 
-            <AddButton 
-            onClick={() => setIsModalAddOpen(true)}
-            addName={"Tambah Unit"}
+            <AddButton
+              onClick={() => setIsModalAddOpen(true)}
+              addName={"Tambah Unit"}
             />
             <ModalUnit
               typeModal={"Tambah Unit"}
@@ -332,12 +329,12 @@ const UnitData = () => {
 
           </Box>
         </Box>
-        {postIsSuccess && <Alert type="success" message="Data Unit Berhasil Ditambahkan" />}
-        {putIsSuccess && <Alert type="success" message="Data Unit Berhasil Diedit" />}
-        {delIsSuccess && <Alert type="success" message="Data Unit Berhasil Dihapus" />}
-        {postError && <Alert type="error" message={`Gagal Menambahkan Data: ${postError}`} />}
-        {putError && <Alert type="error" message={`Gagal Mengedit Data: ${putError}`} />}
-        {delError && <Alert type="error" message={`Gagal Menghapus Data: ${delError}`} />}
+        {postIsSuccess && <SeverityAlert type={"success"} message={"Data Unit Berhasil Ditambahkan"} />}
+        {putIsSuccess && <SeverityAlert type={"success"} message={"Data Unit Berhasil Diedit"} />}
+        {delIsSuccess && <SeverityAlert type={"success"} message={"Data Unit Berhasil Dihapus"} />}
+        {postError && <SeverityAlert type={"error"} message={`Gagal Menambahkan Data: ${postError}`} />}
+        {putError && <SeverityAlert type={"error"} message={`Gagal Mengedit Data: ${putError}`} />}
+        {delError && <SeverityAlert type={"error"} message={`Gagal Menghapus Data: ${delError}`} />}
 
         <TableUnit
           SearchValue={searchValue}

@@ -7,7 +7,6 @@ import {
   Paper, TablePagination,
   IconButton, Collapse,
   CircularProgress,
-  Alert,
 } from '@mui/material'
 import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
@@ -16,14 +15,13 @@ import { useQuery } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
 import theme from '@src/theme';
-import UnitData from './UnitData';
 
 
 const GET_UNIT = async (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
 
   // False = Desc && True = Asc
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceRent=false&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -52,9 +50,6 @@ const TableUnit = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
   const [totalData, setTotalData] = useState(0)
   const [buySort, setBuySort] = useState(false)
-  const [isModalConfirmOpen, SetIsModalConfirmOpen] = useState(false)
-
-
 
   const fetchData = async () => {
     const { dataUnit, totalCount } = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
@@ -200,8 +195,6 @@ const TableUnit = (props) => {
     )
   }
 
-  // console.table(data);
-  // console.table({page, rowsPerPage});
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>

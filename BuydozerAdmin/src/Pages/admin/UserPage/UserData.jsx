@@ -42,7 +42,6 @@ const GET_USER_BYNAME = async ({ userName }) => {
       }
     });
     const dataUser = response.data.items
-    // console.log('log data unit dari api: ', dataUnit);
     return dataUser
 
   } catch (error) {
@@ -56,13 +55,6 @@ const PUT_USER = async ({ id, userValues }) => {
 
   const BASE_URL_PUT_USER = `https://localhost:5001/api/UserEntitys/UpdateUserEntity/${id}`
   const accessToken = localStorage.getItem('AccessToken')
-  // const userDTO = {
-  //   id: id,
-  //   userName: userValues.userName,
-  //   email: userValues.email,
-  //   companyUser: userValues.companyUser,
-  //   positionUser: userValues.positionUser
-  // }
   try {
     const response = await axios.put(BASE_URL_PUT_USER, userValues, {
       headers: {
@@ -83,27 +75,6 @@ const DELETE_USER = async ({ id }) => {
   console.log("id yang diterima oleh function DELETE_USER", id);
 
   const BASE_URL_DELETE_USER = `https://localhost:5001/api/UserEntitys/DeleteUserEntity/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.delete(BASE_URL_DELETE_USER, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUser = response.data
-    console.log("Berhasil delete DATA");
-    return dataUser;
-  } catch (error) {
-    console.error('Error while Delete User:', error);
-    throw error
-  }
-}
-
-const UPDATE_USER_FROM_ADMIN = async ({ id }) => {
-  console.log("id yang diterima oleh function DELETE_USER", id);
-
-  const BASE_URL_DELETE_USER = `https://localhost:5001/api/UserEntitys/DeleteAdmin/${id}`
   const accessToken = localStorage.getItem('AccessToken')
   try {
     const response = await axios.delete(BASE_URL_DELETE_USER, {

@@ -5,19 +5,14 @@ import {
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
-  IconButton, Collapse,
-  CircularProgress,
-  Alert,
+  IconButton,
+  CircularProgress
 } from '@mui/material'
-import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { SwapVertRounded } from '@mui/icons-material';
 import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useQuery } from '@tanstack/react-query';
-import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
-import theme from '@src/theme';
-import RentListData from './RentListData';
-
 
 const GET_RentList = async (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
@@ -47,12 +42,10 @@ const GET_RentList = async (props) => {
 const TableRentList = (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
 
-  const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
   const [totalData, setTotalData] = useState(0)
   const [buySort, setBuySort] = useState(false)
-  const [isModalConfirmOpen, SetIsModalConfirmOpen] = useState(false)
 
 
 
@@ -85,10 +78,6 @@ const TableRentList = (props) => {
         queryKey: ["RentList"],
         queryFn: fetchData,
       })
-
-  const handleCollapseToggle = (rowId) => {
-    setOpenDesc(openDesc === rowId ? null : rowId);
-  };
 
   // handle when move to the next page
   const handleChangePage = (event, newPage) => {
@@ -133,22 +122,6 @@ const TableRentList = (props) => {
     { accessorKey: "nameRent", header: "Nama Opsi Sewa", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "priceRentUnit", header: "Pajak Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "months", header: "Bulan Sewa", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    // {
-    //   accessorKey: "descRentList", header: "", width: "0%", cell: (props) => {
-    //     const rowId = props.row.id;
-    //     const isCollapse = openDesc === rowId;
-    //     return (
-    //       <>
-    //         <IconButton
-    //           aria-label="expand row"
-    //           size="small"
-    //           onClick={() => handleCollapseToggle(rowId)}>
-    //           {isCollapse ? <KeyboardArrowUp style={{ fontSize: "16px" }} /> : <KeyboardArrowDown style={{ fontSize: "16px" }} />}
-    //         </IconButton>
-    //       </>
-    //     )
-    //   }
-    // },
     {
       accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -183,8 +156,6 @@ const TableRentList = (props) => {
     )
   }
 
-  // console.table(data);
-  // console.table({page, rowsPerPage});
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>

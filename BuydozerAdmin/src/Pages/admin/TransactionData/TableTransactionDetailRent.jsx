@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Box, Typography,
+  Typography,
   Table, TableContainer,
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
-  IconButton, Collapse,
   CircularProgress, Button
 } from '@mui/material'
-import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp, KeyRounded, KeyOffRounded } from '@mui/icons-material';
-import { EditButton, DeleteButton, KeyButton } from '@components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useQuery } from '@tanstack/react-query';
 import formatRupiah from '@utils/formatRupiah';
 import { formatDate, formatDateTime } from '@utils/formatDate';
 import axios from 'axios';
-import theme from '@src/theme';
 
 const GET_TRANSACTION = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
@@ -36,23 +32,19 @@ const GET_TRANSACTION = async (props) => {
 
   } catch (error) {
     console.error('Error fetching User:', error);
-    // throw error;
   }
 };
 
 
 const TableTransactionDetailRent = (props) => {
-  const { SearchValue, sortDate, PageNumber, PageSize, ParameterName, statusConfig } = props
-  const [openDesc, setOpenDesc] = useState(null);
+  const { SearchValue, sortDate, statusConfig } = props
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
-  // const [sortDate, setSortDate] = useState(false)
 
   const fetchData = async () => {
     const { dataTransaksi, totalCount } = await GET_TRANSACTION({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortDate: sortDate });
     setTotalData(totalCount);
-    // console.log("fetch data", dataTransaksi); sudah selalu bisa
 
     console.log("ini adalah data tanggal", dataTransaksi);
 
@@ -63,9 +55,9 @@ const TableTransactionDetailRent = (props) => {
     const formattedData = dataTransaksi.map(data => ({
       id: data.id,
       transactionNum: data.transactionNum,
-      nameUnit: data.unit.nameUnit,
-      priceRentUnit: formatRupiah(data.unit.priceRentUnit),
-      userName: data.user.userName,
+      nameUnit: data.nameUnit,
+      priceRentUnit: formatRupiah(data.priceRentUnit),
+      userName: data.userName,
       receiverName: data.receiverName,
       receiverHp: data.receiverHp,
       receiverAddress: data.receiverAddress,
@@ -73,6 +65,7 @@ const TableTransactionDetailRent = (props) => {
       dateTransaction: formatDate(data.dateTransaction),
       statusTransaction: data.statusTransaction,
       created: formatDateTime(data.created),
+      totalPriceTransaction: formatRupiah(data.totalPriceTransaction)
     }));
     return formattedData;
   };
@@ -89,11 +82,6 @@ const TableTransactionDetailRent = (props) => {
         queryFn: fetchData,
       })
 
-
-  const handleCollapseToggle = (rowId) => {
-    setOpenDesc(openDesc === rowId ? null : rowId);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
@@ -103,9 +91,6 @@ const TableTransactionDetailRent = (props) => {
     setPage(1);
   };
 
-  const handleSortDate = () => {
-    setSortDate(!sortDate)
-  }
 
   const handleDetailOnClick = (index) => {
     const clickedData = data[index].transactionNum;
@@ -115,30 +100,10 @@ const TableTransactionDetailRent = (props) => {
     props.onSelectRow(clickedData);
   }
 
-  const handleKeyOnClick = (index) => {
-    const idRow = data[index].id;
-    const roleRow = data[index].isAdmin;
-    const userNameRow = data[index].userName;
-    console.log("Ini IdRow", idRow);
-
-    props.onSelectRowRole(idRow, roleRow, userNameRow);
-  }
-
   useEffect(() => {
     refetch()
   }, [SearchValue, page, rowsPerPage, sortDate, refetch]);
 
-
-  // const statusConfig = {
-  //   0: { content: "Reject", color: "#EC3535" },
-  //   1: { content: "Ongoing", color: "#C4C4C4" },
-  //   2: { content: "Confirm", color: "#193D71" },
-  //   3: { content: "Finished", color: "#28D156" },
-  // };
-
-
-
-  // const skipAccessorKeys = ["imgUnit", "imgBrand"];
   const columns = [
     { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
     { accessorKey: "transactionNum", header: "Nomor Transaksi", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
@@ -146,9 +111,6 @@ const TableTransactionDetailRent = (props) => {
     { accessorKey: "priceRentUnit", header: "Harga Sewa Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "qtyTransaction", header: "Kuantitas Barang", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "userName", header: "Nama Pengguna", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    // { accessorKey: "receiverName", header: "Nama Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    // { accessorKey: "receiverHp", header: "Telepon Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    // { accessorKey: "receiverAddress", header: "Alamat Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "dateTransaction", header: "Tanggal Transaksi", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     { accessorKey: "created", header: "Tanggal Dibuat", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
     {
@@ -200,7 +162,6 @@ const TableTransactionDetailRent = (props) => {
     )
   }
 
-  // console.log("ini log dari data table", data)
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>
