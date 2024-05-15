@@ -66,7 +66,7 @@ export const POST_UNIT = async ({ unitValues = "" }) => {
 
 export const PUT_UNIT = async ({id, unitValues}) => {
 
-  console.table(id, unitValues);
+  console.log("ID DAN ISI PUT UNIT:",id, unitValues);
 
   const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
   try {

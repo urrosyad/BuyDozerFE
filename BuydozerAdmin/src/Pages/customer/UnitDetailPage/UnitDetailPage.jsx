@@ -178,7 +178,10 @@ const UnitDetailPage = () => {
       console.error("Error saat melakukan pembelian:", error);
     },
   })
-  {!BuyIsPending && BuyIsSuccess && navigate("/buydozer/invoice/" + transactionNumBuy)}
+  {!BuyIsPending && BuyIsSuccess && (
+    navigate("/buydozer/invoice/" + transactionNumBuy),
+    window.scrollTo(0, 0)
+    )}
 
 
   // CREATE TRANSACTION RENT
@@ -194,7 +197,10 @@ const UnitDetailPage = () => {
       console.error("Error saat melakukan penyewaan:", error);
     },
   })
-  {!RentIsPending && RentIsSuccess && navigate("/buydozer/invoice/" + transactionNumRent)}
+  {!RentIsPending && RentIsSuccess && (
+    navigate("/buydozer/invoice/" + transactionNumRent), 
+    window.scrollTo(0, 0)
+  )}
 
 
   const handleModalBuy = () => {

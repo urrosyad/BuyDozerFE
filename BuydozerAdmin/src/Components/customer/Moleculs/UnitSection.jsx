@@ -53,7 +53,7 @@ const UnitSection = ({ }) => {
 
 
   return (
-    <Box border={1} sx={{ height: "auto", padding: "10px 90px", margin: "40px 0" }}>
+    <Box sx={{ height: "auto", padding: "10px 90px", margin: "40px 0" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
         <Typography sx={{ fontSize: "22px", fontWeight: "medium", color: "#193D71", }}>
           UNIT KAMI
@@ -71,7 +71,7 @@ const UnitSection = ({ }) => {
 
           // Menampilkan skeleton box saat loading sesuai lenght dataUnit
           <>
-            <Box border={1} sx={{ display: "flex", flexDirection: "row", width: "100%", gap:3, mt:"30px"}}>
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap:3, mt:"30px"}}>
               {/* Mapping skeleton box */}
               {skeletonBox.map((_, index) => (
                 <Box key={index} sx={{
@@ -98,7 +98,7 @@ const UnitSection = ({ }) => {
             arrows={true}
           >
             {unitIsSuccess && dataUnit && dataUnit.data.map((item, index) => (
-              <Link border={2} href={`/buydozer/unit/${item.nameUnit}`}>
+              <Link href={`/buydozer/unit/${item.nameUnit}`}>
                 <Box key={index} sx={{
                   ...flexCenter, flexDirection: "column", width: "200px", height: "250px", boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", backgroundColor: "#FFFFFF", borderRadius: "10px", ":hover": {
                     cursor: "pointer",

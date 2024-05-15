@@ -27,7 +27,7 @@ const UnitPage = () => {
       <CarouselSection />
 
       {/* UNIT CATEGORY SECTION */}
-      <Box border={1} sx={{ padding: "5% 15%", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ padding: "5% 15%", display: "flex", flexDirection: "column" }}>
         <Typography sx={{ ml: "30px", fontSize: "22px", fontWeight: "medium", color: "#193D71", mb: "20px" }}>
           KATEGORI UNIT
         </Typography>
@@ -47,7 +47,7 @@ const UnitPage = () => {
       {/* END SECTION */}
 
       {/* PROMO POSTER SECTION */}
-      <Box border={1} sx={{
+      <Box sx={{
         ...flexCenter, flexDirection: "row", padding: "5% 15%", gap: 2,
 
       }}>

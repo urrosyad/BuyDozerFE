@@ -71,8 +71,8 @@ const Footer = () => {
                 Navigasi
               </Typography>
                 {navigasiMenu.map((data, index) => (
-              <Button onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
-                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
+              <Button key={data.menu} onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
+                  <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
                     {data.menu}
                   </Typography>
               </Button>
@@ -86,8 +86,8 @@ const Footer = () => {
                 Tentang Kami
               </Typography>
                 {aboutMeMenu.map((data, index) => (
-              <Button onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
-                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
+              <Button key={data.menu} onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
+                  <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100, ":hover": { color: "#E4E4E4"} }}>
                     {data.menu}
                   </Typography>
               </Button>
@@ -101,8 +101,8 @@ const Footer = () => {
                 Layanan
               </Typography>
                 {serviceMenu.map((data, index) => (
-              <Button onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
-                  <Typography key={index} sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100 , ":hover": { color: "#E4E4E4"}}}>
+              <Button key={data.menu} onClick={() => navigate(item.navigation)}  color='primaryDark' sx={{display:"flex", justifyContent:"left",":hover":{bgcolor: "none",}}} disableRipple>
+                  <Typography sx={{ fontSize: "14px", color: "#FFFFFF", fontWeight: 100 , ":hover": { color: "#E4E4E4"}}}>
                     {data.menu}
                   </Typography>
               </Button>
