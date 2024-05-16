@@ -27,8 +27,14 @@ const theme = createTheme({
     info: {
       main: "#35ECAC",
     },
+    disabled: {
+      main: "#C4C4C4",
+    },
     primaryDark: {
       main: "#193D71",
+    },
+    primaryLight: {
+      main: "#8BB9FF",
     },
   },
   typography: {
@@ -40,22 +46,22 @@ const theme = createTheme({
       bold: 700,
     },
   },
-  components:{
-    MuiTooltip:{
-      styleOverrides:{
-        arrow:{
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        arrow: {
           color: "#193D71",
         },
-        tooltip:{
+        tooltip: {
           backgroundColor: "#193D71",
           color: "#FFFFFF"
-          
+
         }
       }
     },
-    MuiTypography:{
-      styleOverrides:{
-        root:{
+    MuiTypography: {
+      styleOverrides: {
+        root: {
           fontFamily: "Rubik, sans-serif",
           fontWeight: {
             thin: 300,
@@ -72,51 +78,52 @@ const theme = createTheme({
         }
       }
     },
-    MuiCard:{
-      styleOverrides:{
-        root:{
+    MuiCard: {
+      styleOverrides: {
+        root: {
           boxShadow: "none"
         }
       }
     },
-  MuiButton:{
-    styleOverrides:{
-      root:{
-        textTransform: "capitalize",
-        ":active": {
-          transform: "scale(0.95)",
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "capitalize",
+          ":active": {
+            transform: "scale(0.95)",
+          },
         },
-      },
-    }
-  },
-  MuiTextField:{
-    styleOverrides:{
-      root:{
-        width: "100%",
-        height: "auto",
-        backgroundColor: "#EEF2FF",
-        borderRadius: "5px",
       }
-    }
-  },
-  MuiTextareaAutosize: {
-    styleOverrides: {
-      root: {
-        width: '100%',
-        height: '50px',
-        padding: '8px',
-        border: '1px solid #EEF2FF',
-        borderRadius: '5px',
-        boxSizing: 'border-box',
-        '&:hover': {
-          border: '1px solid black',
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          width: "100%",
+          height: "auto",
+          backgroundColor: "#EEF2FF",
+          borderRadius: "5px",
+        }
+      }
+    },
+    MuiTextareaAutosize: {
+      styleOverrides: {
+        root: {
+          width: '100%',
+          height: '50px',
+          padding: '8px',
+          border: '1px solid #EEF2FF',
+          borderRadius: '5px',
+          boxSizing: 'border-box',
+          '&:hover': {
+            border: '1px solid black',
+          },
+          '&:focus': {
+            border: '1px solid #2A6DD0',
+            outline: 'none',
+          },
+          resize: 'vertical',
+          fontSize: '16px',
         },
-        '&:focus': {
-          border: '1px solid #2A6DD0',
-          outline: 'none',
-        },
-        resize: 'vertical',
-        fontSize: '16px',
       },
     },
   },
@@ -130,7 +137,6 @@ const theme = createTheme({
       },
       underline: 'none',
     },
-  },
   },
   breakpoints: {
     values: {

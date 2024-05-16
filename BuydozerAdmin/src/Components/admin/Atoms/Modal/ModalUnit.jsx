@@ -36,7 +36,8 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
       <DialogTitle variant="h5" sx={{ width: "100%", fontWeight: "medium" }}>{typeModal}</DialogTitle>
       <Divider sx={{ width: "90%", alignSelf: "center", marginBottom: "20px" }} />
       <DialogContent>
-        <Grid container >
+
+        <Grid container>
           <Grid item xs={6}>
             <FormControl sx={{ width: "95%", marginLeft: "5px" }}>
               {labelInput.slice(0, Math.ceil(labelInput.length / 2)).map((data, index) => (

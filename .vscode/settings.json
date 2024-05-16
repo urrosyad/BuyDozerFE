@@ -1,3 +1,5 @@
 {
-          "prettier.insertPragma": true
+        "prettier.insertPragma": true,
+        "terminal.integrated.allowMnemonics": false,
+        "workbench.layoutControl.type": "both"
 }

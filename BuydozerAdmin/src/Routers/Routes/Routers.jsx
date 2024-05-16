@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { Dashboard, BuyData, RentData, UnitData, UserData, RentListData, TransactionData } from '@pages/admin';
+import { Dashboard, UnitData, UserData, RentListData, TransactionData, PaymentConfirmData } from '@pages/admin';
 import { HomePage, UnitPage, TransactionPage, LoginPage, RegisterPage, ErrorPage, AllUnitPage, UnitDetailPage, InvoicePage } from '@pages/customer';
 import { PrivateRoutes } from '@routers/PrivateRoutes';
 import { AdminLayout } from '@layouts/admin/AdminLayout';
@@ -24,8 +24,7 @@ const Routers = () => {
           <Route path="/admin/*" element={<AdminLayout />}>
             <Route element={<PrivateRoutes allowedRoles={[1999]} />}>
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="buy" element={<BuyData />} />
-              <Route path="rent" element={<RentData />} />
+              <Route path="paymentconfirm" element={<PaymentConfirmData />} />
               <Route path="unit" element={<UnitData />} />
               <Route path="user" element={<UserData />} />
               <Route path="rentlist" element={<RentListData />} />

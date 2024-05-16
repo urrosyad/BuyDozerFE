@@ -5,7 +5,7 @@ import theme from '@themes/theme'
 import { AddCircleOutlineOutlined, UploadFileRounded } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
 
-const AddButton = ({ onClick }) => {
+const AddButton = ({ onClick, addName }) => {
 
   return (
     <>
@@ -38,7 +38,7 @@ const AddButton = ({ onClick }) => {
         }}
           startIcon={<AddCircleOutlineOutlined style={{ fontSize: '16px' }} />}
           onClick={onClick}>
-          Tambah Unit
+          {addName}
         </Button>
       </Box>
     </>

@@ -5,84 +5,67 @@ import {
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
-  IconButton, Collapse,
-  CircularProgress,
+  IconButton,
+  CircularProgress
 } from '@mui/material'
-import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { SwapVertRounded } from '@mui/icons-material';
 import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { useQuery } from '@tanstack/react-query';
-import formatRupiah from '@utils/formatRupiah';
 import axios from 'axios';
-import theme from '@themes/theme';
-import UnitData from './UnitData';
-// import { GET_UNIT } from '@api/api';
 
-
-
-const GET_UNIT = async (props) => {
+const GET_RentList = async (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
 
   // False = Desc && True = Asc
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_GET_RentList = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${SearchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
+    const response = await axios.get(BASE_URL_GET_RentList, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       }
     });
 
-    const dataUnit = response.data.items
+    const dataRentList = response.data.items
     const totalCount = response.data.totalCount
-    return { dataUnit, totalCount };
+    return { dataRentList, totalCount };
   } catch (error) {
-    console.error('Error fetching Unit:', error);
+    console.error('Error fetching RentList:', error);
     // throw error;
   }
 };
 
 
-const TableUnit = (props) => {
+const TableRentList = (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
 
-  const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
   const [totalData, setTotalData] = useState(0)
   const [buySort, setBuySort] = useState(false)
 
+
+
   const fetchData = async () => {
-    const { dataUnit, totalCount } = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
+    const { dataRentList, totalCount } = await GET_RentList({ SearchValue: SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
     setTotalData(totalCount)
-    console.table(dataUnit);
-    if (!dataUnit) {
+    console.table(dataRentList);
+    if (!dataRentList) {
       throw new Error("Failed to fetch data");
     };
 
-    const formattedData = dataUnit.map(data => ({
+    const formattedData = dataRentList.map(data => ({
       id: data.id,
-      nameUnit: data.nameUnit,
-      typeUnit: data.typeUnit,
-      descUnit: data.descUnit,
-      imgUnit: <img
-        src={data.imgUnit}
-        alt='foto unit'
-        style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71" }}>
-      </img>,
-      imgBrand: <img
-        src={data.imgBrand}
-        alt='logo brand'
-        style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71" }}>
-      </img>,
-      priceBuyUnit: formatRupiah(data.priceBuyUnit),
-      priceRentUnit: formatRupiah(data.priceRentUnit),
-      qtyUnit: data.qtyUnit,
+      nameRent: data.nameRent,
+      priceRentUnit: data.priceRentUnit * 100 + "% dari harga total",
+      months: data.months + " Bulan",
     }));
     return formattedData;
   };
+
 
   const {
     data,
@@ -92,14 +75,9 @@ const TableUnit = (props) => {
     error,
     refetch } = useQuery
       ({
-        queryKey: ["Unit"],
+        queryKey: ["RentList"],
         queryFn: fetchData,
       })
-
-  // handle open collapse decs uniit
-  const handleCollapseToggle = (rowId) => {
-    setOpenDesc(openDesc === rowId ? null : rowId);
-  };
 
   // handle when move to the next page
   const handleChangePage = (event, newPage) => {
@@ -117,53 +95,33 @@ const TableUnit = (props) => {
     setBuySort(!buySort)
   }
 
-  // to send data nameUnit to parent Component
   const handleEditOnClick = (index) => {
-    const clickedData = data[index].nameUnit;
+    const clickedData = data[index].nameRent;
     console.log('Data yang diklik:', clickedData);
 
+    // to send data nameRent to parent Component
     props.onSelectRow(clickedData);
   }
 
-   // to send data idUnit to parent Component
   const handleDelOnClick = (index) => {
     const idRow = data[index].id;
-    const nameUnitRow = data[index].nameUnit;
-    console.log('Data yang diklik:', idRow, nameUnitRow);
+    const nameRentRow = data[index].nameRent;
+    console.log('Data yang diklik:', idRow, nameRentRow);
 
-    props.onSelectRowId(idRow, nameUnitRow);
+    // to send data nameRent to parent Component
+    props.onSelectRowId(idRow, nameRentRow);
   }
 
   useEffect(() => {
     refetch()
   }, [SearchValue, page, rowsPerPage, buySort, refetch]);
 
-  const skipAccessorKeys = ["imgUnit", "imgBrand"];
+  const skipAccessorKeys = ["imgRentList", "imgBrand"];
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <div>{props.row.index + 1}</div> },
-    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "priceBuyUnit", header: "Harga Beli", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "priceRentUnit", header: "Harga Sewa", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    {
-      accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
-        const rowId = props.row.id;
-        const isCollapse = openDesc === rowId;
-        return (
-          <>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => handleCollapseToggle(rowId)}>
-              {isCollapse ? <KeyboardArrowUp style={{ fontSize: "16px" }} /> : <KeyboardArrowDown style={{ fontSize: "16px" }} />}
-            </IconButton>
-          </>
-        )
-      }
-    },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
+    { accessorKey: "nameRent", header: "Nama Opsi Sewa", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "priceRentUnit", header: "Pajak Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "months", header: "Bulan Sewa", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
     {
       accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -198,13 +156,10 @@ const TableUnit = (props) => {
     )
   }
 
-  // console.table(data);
-  // console.table({page, rowsPerPage});
-  
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>
-        <TableHead>
+        <TableHead style={{ height: "1px" }}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -213,7 +168,7 @@ const TableUnit = (props) => {
                     <TableCell key={header.id} align='center' sx={{ bgcolor: "#8BB9FF", width: header.column.columnDef.width }}>
                       <Typography sx={{ fontSize: "14px", color: "#EEF2FF", fontWeight: "medium" }}>
                         {header.column.columnDef.header}
-                        {(header.column.columnDef.accessorKey === "priceBuyUnit") ? (
+                        {(header.column.columnDef.accessorKey === "priceBuyRentList") ? (
                           <IconButton sx={{ fontSize: 'small', color: "#F8FAFF" }} onClick={handleSortBuy}>
                             <SwapVertRounded />
                           </IconButton>
@@ -234,7 +189,7 @@ const TableUnit = (props) => {
                   {isPending || isFetching ? (
                     <CircularProgress sx={{ color: "#2A6DD0" }} />
                   ) : (
-                    "Unit tidak ditemukan"
+                    "RentList tidak ditemukan"
                   )}
                 </Typography>
               </TableCell>
@@ -257,27 +212,6 @@ const TableUnit = (props) => {
                       }
                     })}
                   </TableRow>
-                  <TableRow sx={{ border: "none" }} style={rowStyle}>
-                    <TableCell colSpan={columns.length} align='left' >
-                      <Collapse in={openDesc === row.id} timeout="auto" unmountOnExit>
-                        <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-start"} gap={10}>
-                          <Box display={"flex"} flexDirection={"row"} gap={"5px"}>
-                            {row.original.imgUnit}
-                            <br />
-                            {row.original.imgBrand}
-                          </Box>
-                          <Box sx={{ marginLeft: "20px", padding: 1, border: "2px solid #8BB9FF", borderRadius: "10px" }} >
-                            <Typography sx={{ fontSize: "16px", color: theme.palette.primary.main, fontWeight: "medium" }}>
-                              Deskripsi
-                            </Typography>
-                            <Typography sx={{ fontSize: "14px", color: theme.palette.primary.main, }}>
-                              {row.original.descUnit}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Collapse>
-                    </TableCell>
-                  </TableRow>
                 </>
               )
             }
@@ -298,4 +232,4 @@ const TableUnit = (props) => {
   )
 }
 
-export default TableUnit
+export default TableRentList

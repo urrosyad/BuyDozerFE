@@ -79,3 +79,9 @@ export const rentSchema = yup.object().shape({
   .max(50, "alamat tidak lebih dari 50 karakter"),
   qtyTransaction: yup.string().required("jumlah tidak boleh 0!"),
 });
+
+export const rentListSchema = yup.object().shape({
+  nameRent: yup.string().min(3, 'Deskripsi unit minimal 3 character').required('harus diisi!'),
+  priceRentUnit: yup.number().required('Harga Sewa tidak boleh kosong!').min(0, 'harus diisi!'),
+  months: yup.number().required('Bulan Sewa tidak boleh kosong!').min(0, 'harus diisi!'),
+})
