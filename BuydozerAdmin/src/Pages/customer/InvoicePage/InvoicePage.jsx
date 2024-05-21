@@ -14,6 +14,7 @@ import { dateToMonth, formatRupiah, formatIndoPhone, numToWord, imgConvert } fro
 const authData = localStorage.getItem('AuthData')
 const auth = JSON.parse(authData)
 const accessToken = auth.accessToken
+// const accessToken = localStorage.getItem("AccessToken")
 
 const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
   const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`

@@ -16,6 +16,7 @@ const AllUnitPage = () => {
   const navigate = useNavigate()
   const skeletonBox = Array.from({ length: 4 });
   const [searchValue, setSearchValue] = useState('')
+  
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
     queryKey: ["Unit", {
       nameUnit: searchValue,
