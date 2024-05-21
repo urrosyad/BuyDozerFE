@@ -42,11 +42,11 @@ const GET_TRANSACTION_RENT = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
   console.log('nomor transaksi: ', transactionNum);
 
-  const BASE_URL_GET_TRANSACTIONRENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
-    const response = await axios.get(BASE_URL_GET_TRANSACTIONRENT, {
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_RENT, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
@@ -64,11 +64,11 @@ const GET_TRANSACTION_BUY = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
   console.log('nomor transaksi: ', transactionNum);
 
-  const BASE_URL_GET_TRANSACTIONBUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
-    const response = await axios.get(BASE_URL_GET_TRANSACTIONBUY, {
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_BUY, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',

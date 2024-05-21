@@ -16,10 +16,7 @@ import axios from 'axios';
 
 const GET_RentList = async (props) => {
   const { SearchValue, PageNumber, PageSize, BuySort } = props
-
-  // False = Desc && True = Asc
   const BASE_URL_GET_RentList = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${SearchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
-
   const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_GET_RentList, {
@@ -28,7 +25,6 @@ const GET_RentList = async (props) => {
         'Content-Type': 'application/json',
       }
     });
-
     const dataRentList = response.data.items
     const totalCount = response.data.totalCount
     return { dataRentList, totalCount };
@@ -60,7 +56,7 @@ const TableRentList = (props) => {
     const formattedData = dataRentList.map(data => ({
       id: data.id,
       nameRent: data.nameRent,
-      priceRentUnit: data.priceRentUnit * 100 + "% dari harga total",
+      priceRentUnit: data.priceRentUnit * 100/100 + "% dari harga total",
       months: data.months + " Bulan",
     }));
     return formattedData;

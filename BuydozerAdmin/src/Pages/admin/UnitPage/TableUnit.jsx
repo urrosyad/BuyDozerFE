@@ -70,12 +70,12 @@ const TableUnit = (props) => {
       imgUnit: <img
         src={data.imgUnit}
         alt='foto unit'
-        style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px", border: "solid 2px #193D71" }}>
+        style={{ width: "100px", height: "100px", objectFit: 'cover', borderRadius: "10px" }}>
       </img>,
       imgBrand: <img
         src={data.imgBrand}
         alt='logo brand'
-        style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px", border: "solid 2px #193D71" }}>
+        style={{ width: "100%", height: "50px", objectFit: 'cover', borderRadius: "5px" }}>
       </img>,
       priceBuyUnit: formatRupiah(data.priceBuyUnit),
       priceRentUnit: formatRupiah(data.priceRentUnit),

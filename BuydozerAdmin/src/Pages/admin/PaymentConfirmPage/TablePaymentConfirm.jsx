@@ -23,8 +23,6 @@ import { useFormik } from 'formik';
 
 const GET_TRANSACTION = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate, statusConfig } = props
-
-  // False = Desc && True = Asc
   const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=%25${SearchValue}%25&ParameterUserName=%25${SearchValue}%25&ParameterStatus=2&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -45,10 +43,6 @@ const GET_TRANSACTION = async (props) => {
 
 const PUT_TRANSACTION_STATUS = async ({ id, statusTransaction }) => {
   const requestBody = ({ id, statusTransaction })
-
-  console.log("INI LOG REQUEST BDOY", requestBody);
-
-
   const BASE_URL_PUT_TRANSACTION_STATUS = `https://localhost:5001/api/TransactionDetailBuy/UpdateTransactionDetailBuy/${id}`
   const accessToken = localStorage.getItem('AccessToken')
   try {
@@ -82,7 +76,7 @@ const TablePaymentConfirm = (props) => {
       statusTransaction: 0
     }
   })
-  console.log("INI LOG FOMIK", formik.values);
+  // console.log("INI LOG FOMIK", formik.values);
 
   const fetchData = async () => {
     const { dataTransaksi, totalCount } = await GET_TRANSACTION({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortDate: sortDate });
@@ -151,7 +145,7 @@ const TablePaymentConfirm = (props) => {
 
   const handleShowImageOnClick = (index) => {
     const clickedData = data[index].paymentConfirmationReceipt;
-    console.log('Data yang diklik:', clickedData);
+    // console.log('Data yang diklik:', clickedData);
 
     // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
@@ -161,7 +155,6 @@ const TablePaymentConfirm = (props) => {
   const { mutate: putConfirm, error: errorConfirm, isSuccess: ConfirmIsSuccess } = useMutation({
     mutationFn: PUT_TRANSACTION_STATUS,
     onSuccess: (data) => {
-      console.log("Hasil Pembelian", formik.values);
       queryClient.invalidateQueries(['Transaction'], (oldData) => [...oldData, data]);
     },
     onError: (error) => {
@@ -225,7 +218,7 @@ const TablePaymentConfirm = (props) => {
                     statusTransaction: 3
                   })
 
-                  console.log("INI PUT VALUES DI ICON", formik.values);
+                  // console.log("INI PUT VALUES DI ICON", formik.values);
                   handleApproval(true, props.row.original.transactionNum, formik)
 
                 }}>

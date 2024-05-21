@@ -13,7 +13,7 @@ import theme from '@themes/theme';
 import TablePaymentConfirm from './TablePaymentConfirm';
 import ModalPaymentConfirm from '../../../Components/admin/Atoms/Modal/ModalPaymentConfirm';
 
-// ubah
+// Ubah 
 const initialValues = {
   id: "",
   transactionNum: "",
@@ -47,7 +47,7 @@ const PaymentConfirmData = () => {
       }
     }
   })
-  console.log('LOG DATA FORMIK: ', formik.values);
+  // console.log('LOG DATA FORMIK: ', formik.values);
 
 
   const handleCancelForm = () => {
@@ -62,7 +62,7 @@ const PaymentConfirmData = () => {
   const handleSelectRow = async (paymentConfirmationReceipt) => {
     setIsEdit(true)
     setIsModalEditOpenImage(true)
-    console.log(`data yang dikirimkan ${paymentConfirmationReceipt}`);
+    // console.log(`data yang dikirimkan ${paymentConfirmationReceipt}`);
 
     formik.setValues({
       paymentConfirmationReceipt: paymentConfirmationReceipt,
@@ -73,7 +73,7 @@ const PaymentConfirmData = () => {
   const handleSelectRowId = async (id, userName) => {
     setIsDel(true)
     setIsModalDelOpen(true)
-    console.log(`data yang diterima UserData`, id, userName);
+    // console.log(`data yang diterima UserData`, id, userName);
 
     formik.setValues({
       id: id,
@@ -83,7 +83,7 @@ const PaymentConfirmData = () => {
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
-    console.log(searchValue);
+    // console.log(searchValue);
   };
   const handleSortDate = () => {
     setSortDate(!sortDate)
@@ -145,7 +145,7 @@ const PaymentConfirmData = () => {
               </Box>
             </Box>
             <ModalPaymentConfirm
-              typeModal={"Lihat Gambar"}
+              typeModal={"Bukti Pembayran"}
               formik={formik}
               isOpen={isModalEditOpenImage}
               labelInput={labelInput}

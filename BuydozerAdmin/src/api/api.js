@@ -2,9 +2,10 @@
 import axios from "axios";
 const authData = localStorage.getItem('AuthData')
 const auth = JSON.parse(authData)
-const accessToken = auth.accessToken
-const userId = auth.userId
-
+// const accessToken = auth.accessToken
+// const userId = auth.userId
+const userName = localStorage.getItem("UserName");
+const accessToken = localStorage.getItem("AccessToken");
 
 
 export const GET_UNIT = async (props = {}) => {
@@ -47,7 +48,7 @@ export const GET_UNIT_BYNAME = async ({ nameUnit }) => {
   }
 };
 
-export const POST_UNIT = async ({ unitValues = "" }) => {
+export const POST_UNIT = async ({ unitValues }) => {
   const BASE_URL_POST_UNIT = "https://localhost:5001/api/HeavyUnits/CreateHeavyUnit"
   try {
     const response = await axios.post(BASE_URL_POST_UNIT, unitValues, {
@@ -102,8 +103,6 @@ export const DELETE_UNIT = async ({id}) => {
   }
 }
 
-
-
 export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
   const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=100`
   try {
@@ -117,6 +116,40 @@ export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
     console.log("INI TRXBUY", data);
     return { data };
   } catch (error) {
-    console.error('Error fetching Unit:', error);
+    console.error('Error get transaction buy:', error);
+  }
+};
+
+export const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
+  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`
+  try {
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_RENT, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data
+    return { data };
+  } catch (error) {
+    console.error('Error get transaction rent:', error);
+  }
+};
+
+
+export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {
+  const BASE_URL_GET_TRANSACTION_ONGOING = `https://localhost:5001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterUserName=${username}&ParameterTransactionNumber=${transactionNum ? transactionNum : "%25%25"}&ParameterStatus=%25%25&SortDate=true&PageNumber=1&PageSize=${transactionNum ? "1" : "50"}`
+  try {
+    console.log({ accessToken });
+    const response = await axios.get(BASE_URL_GET_TRANSACTION_ONGOING, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data.items || [];
+    return { data };
+  } catch (error) {
+    console.error('ERROR GET TRANSACTION:', error);
   }
 };

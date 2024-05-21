@@ -13,10 +13,9 @@ import formatRupiah from '@utils/formatRupiah';
 import { formatDate, formatDateTime } from '@utils/formatDate';
 import axios from 'axios';
 
+
 const GET_TRANSACTION_BUY = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
-
-  // False = Desc && True = Asc
   const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {

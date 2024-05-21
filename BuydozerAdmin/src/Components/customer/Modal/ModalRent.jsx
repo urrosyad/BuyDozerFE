@@ -164,7 +164,10 @@ const ModalRent = (props) => {
               Harga Sewa:
             </Typography>
             <Typography sx={{ fontSize: "13px", fontWeight: "medium", color: "#193D71" }}>
-              {formatRupiah(priceRentUnit)}
+              {month 
+              ? formatRupiah(priceRentUnit)+"x"+month+" Bulan"
+              : formatRupiah(priceRentUnit)
+            }
             </Typography>
           </Box>
 

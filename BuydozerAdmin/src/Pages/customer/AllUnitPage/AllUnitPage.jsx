@@ -67,6 +67,7 @@ const AllUnitPage = () => {
             bgColor={"#FFFFFF"}
             searchValue={searchValue}
             handleSearch={handleSearchUnit}
+            placeholder={"Cari Unit"}
             />
         </Box>
 

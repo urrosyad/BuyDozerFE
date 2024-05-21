@@ -3,7 +3,7 @@ import React from 'react'
 import theme from '../../../Themes/theme'
 import { SearchRounded } from '@mui/icons-material'
 
-const SearchInput = ({searchValue, handleSearch, color, bgColor}) => {
+const SearchInput = ({ placeholder, searchValue, handleSearch, color, bgColor}) => {
   return (
           <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", border: `2px solid ${color}`, bgcolor: bgColor, color: color, borderRadius: "5px", }}>
           <SearchRounded sx={{ fontSize: "16px", ml: "10px" }} />
@@ -14,7 +14,7 @@ const SearchInput = ({searchValue, handleSearch, color, bgColor}) => {
             fontWeight: "medium", 
             fontSize: "14px"
           }} 
-          placeholder='Cari Unit...' 
+          placeholder={placeholder} 
           color={color}
           value={searchValue} onChange={handleSearch} />
         </Box>
