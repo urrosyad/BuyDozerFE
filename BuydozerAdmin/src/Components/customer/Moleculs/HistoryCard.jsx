@@ -84,7 +84,7 @@ const HistoryCard = ({ dataHistory, isSuccess, isLoading, isFetching }) => {
                 ? <Typography sx={{ fontSize: "16px", fontWeight: "medium", color: "#193D71" }}>
                   {isFetching
                     ? <Skeleton variant="text" animation="wave" width={"150px"} height={"20px"} />
-                    : data.dateRent
+                    : `${data.months} Bulan`
                   }
                 </Typography>
                 : ""}

@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { dateToMonth, formatRupiah, formatIndoPhone, numToWord, imgConvert } from '@utils'
 import ModalPaymentConfirm from '@components/admin/Atoms/Modal/ModalPaymentConfirm'
-import { GET_TRANSACTION_ONGOING, GET_TRANSACTION_RENT, GET_TRANSACTION_BUY } from '@api/api'
+import { GET_TRANSACTION_ONGOING, GET_TRANSACTION_RENT, GET_TRANSACTION_BUY, PUT_TRANSACTION_STATUS_BUY, PUT_TRANSACTION_STATUS_RENT } from '@api/api'
 import useAuth from '@hooks/useAuth'
 // '../../../Utils' 
 
@@ -22,7 +22,6 @@ const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
   const requestBody = {
     id: idTransaction,
     paymentConfirmationReceiptTransaction: paymentImg,
-    statusTransaction: 2
   }
 
   const BASE_URL_PUT_TRANSACTION_ONGOING = `https://localhost:5001/api/TransactionOnGoing/UpdateTransactionOnGoing/${idTransaction}`
@@ -36,7 +35,7 @@ const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
     const data = response.data
     return { data };
   } catch (error) {
-    console.error('Error fetching Unit:', error);
+    console.error('Error update payment confirm:', error);
   }
 };
 
@@ -49,7 +48,7 @@ const statusConfig = [
 
 const InvoicePage = () => {
   const auth = useAuth()
-  const name = auth.auth.userName 
+  const name = auth.auth.userName
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { transactionNum } = useParams()
@@ -83,11 +82,11 @@ const InvoicePage = () => {
   // GET DATA TRANSACTION IMG
   const { data: dataImg, isLoading: imgIsLoading, isFetching: imgIsFetching, isSuccess: imgIsSuccess } = useQuery({
     queryKey: ["TransactionOngoing", {
-      username: name ,
+      username: name,
       transactionNum: transactionNum,
     }],
     queryFn: () => GET_TRANSACTION_ONGOING({
-      username: name ,
+      username: name,
       transactionNum: transactionNum,
     }),
   })
@@ -103,6 +102,30 @@ const InvoicePage = () => {
     },
   })
 
+  // BATALKAN PESANAN || UPDATE STATUS TRANSACTION TO REJECTED
+  // MUTATE TRANSACTION BUY TU PUT STATUS
+  const { mutate: putStatusBuy, error: errorPutBuy, isSuccess: putBuyIsSuccess, isPending: putBuyIsPending } = useMutation({
+    mutationFn: PUT_TRANSACTION_STATUS_BUY,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['TransactionBuy'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat mengupdate data pembelian:", error);
+    },
+  })
+
+  // MUTATE TRANSACTION RENT TU PUT STATUS
+  const { mutate: putStatusRent, error: errorPutRent, isSuccess: putRentIsSuccess, isPending: putRentIsPending } = useMutation({
+    mutationFn: PUT_TRANSACTION_STATUS_RENT,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['TransactionRent'], (oldData) => [...oldData, data]);
+      console.log("RENT DIBATALKANNN IS WORK");
+    },
+    onError: (error) => {
+      console.error("Error saat mengupdate data penyewaan:", error);
+    },
+  })
+
 
   const isLoading = buyIsLoading || rentIsLoading;
   const isFetching = buyIsFetching || rentIsFetching;
@@ -111,7 +134,7 @@ const InvoicePage = () => {
   const transactionData = rentIsSuccess && dataRent?.data?.items.length ? dataRent.data.items[0] : buyIsSuccess && dataBuy?.data?.items.length ? dataBuy.data.items[0] : {};
   const statusIndex = transactionData.statusTransaction;
   const status = statusConfig[statusIndex];
-  console.log({dataRent});
+  console.log({ dataRent });
 
   const handleWhatsAppClick = () => {
     const phoneNumber = "+6285748382270";
@@ -141,6 +164,19 @@ const InvoicePage = () => {
     setPaymentImg(paymentEncoded);
   };
 
+  const handleCancleTransaction = async () => {
+    {
+      dataRent?.data?.items?.length
+        ? await putStatusRent({
+          id: transactionData.id,
+          statusTransaction: 0
+        })
+        : await putStatusBuy({
+          id: transactionData.id,
+          statusTransaction: 0
+        })
+    }
+  }
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start", height: "100%", padding: "30px" }}>
@@ -237,9 +273,19 @@ const InvoicePage = () => {
                 ) : (
                   dataRent?.data?.items?.length
                     ?
-                    (`${formatRupiah(transactionData.priceRentUnit * transactionData.qtyTransaction)}`)
+                    (`${formatRupiah(transactionData.priceRentUnit * transactionData.qtyTransaction * transactionData?.months)}`)
                     :
                     (`${formatRupiah(transactionData.priceBuyUnit * transactionData.qtyTransaction)}`)
+                )}
+              </Typography>
+              <Typography sx={{ fontSize: "18px", color: "#23A647", fontWeight: "medium" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  dataRent?.data?.items?.length
+                    ?
+                    (`+ ${formatRupiah(transactionData.totalPriceTransaction - (transactionData.priceRentUnit * transactionData.qtyTransaction * transactionData?.months))}`)
+                    : ""
                 )}
               </Typography>
             </Box>
@@ -422,16 +468,29 @@ const InvoicePage = () => {
                 height={"35px"}
                 fz={"12px"}
               />
-              <ButtonContained
-                // onClick={}
-                text={"Batalkan"}
-                primaryColor={"#FFFFFF"}
-                secondColor={"#EC3535"}
-                hoverColor={"#C32828"}
-                width={"180px"}
-                height={"35px"}
-                fz={"12px"}
-              />
+              {putBuyIsPending || putRentIsPending
+                ?
+                <ButtonContained
+                  text={"Proses Pembatalan..."}
+                  primaryColor={"#FFFFFF"}
+                  secondColor={"#EC3535"}
+                  hoverColor={"#C32828"}
+                  width={"180px"}
+                  height={"35px"}
+                  fz={"12px"}
+                />
+                : 
+                <ButtonContained
+                  onClick={handleCancleTransaction}
+                  text={"Batalkan"}
+                  primaryColor={"#FFFFFF"}
+                  secondColor={"#EC3535"}
+                  hoverColor={"#C32828"}
+                  width={"180px"}
+                  height={"35px"}
+                  fz={"12px"}
+                />
+              }
             </Box>
           </Box>
         ) : null}

@@ -109,8 +109,6 @@ const TablePaymentConfirm = (props) => {
     data,
     isPending,
     isFetching,
-    isLoading,
-    error,
     refetch } = useQuery
       ({
         queryKey: ["Transaction"],
@@ -118,6 +116,15 @@ const TablePaymentConfirm = (props) => {
       })
 
 
+  const { mutate: putConfirm, error: errorConfirm, isSuccess: ConfirmIsSuccess } = useMutation({
+    mutationFn: PUT_TRANSACTION_STATUS,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['Transaction'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat melakukan update:", error);
+    },
+  })
 
   const handleApproval = (isConfirm, trxnum, trxData) => {
     const action = isConfirm ? "Konfirmasi" : "Tolak";
@@ -145,23 +152,9 @@ const TablePaymentConfirm = (props) => {
 
   const handleShowImageOnClick = (index) => {
     const clickedData = data[index].paymentConfirmationReceipt;
-    // console.log('Data yang diklik:', clickedData);
-
     // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
   }
-
-
-  const { mutate: putConfirm, error: errorConfirm, isSuccess: ConfirmIsSuccess } = useMutation({
-    mutationFn: PUT_TRANSACTION_STATUS,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(['Transaction'], (oldData) => [...oldData, data]);
-    },
-    onError: (error) => {
-      console.error("Error saat melakukan update:", error);
-    },
-  })
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -251,7 +244,6 @@ const TablePaymentConfirm = (props) => {
     columns,
     getCoreRowModel: getCoreRowModel()
   })
-
 
   if (data === undefined) {
     return (

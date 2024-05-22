@@ -120,6 +120,25 @@ export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
   }
 };
 
+export const PUT_TRANSACTION_STATUS_BUY = async ({ id, statusTransaction }) => {
+  const requestBody = ({ id, statusTransaction })
+  const BASE_URL_PUT_TRANSACTION_STATUS_BUY = `https://localhost:5001/api/TransactionDetailBuy/UpdateTransactionDetailBuy/${id}`
+  try {
+    const response = await axios.put(BASE_URL_PUT_TRANSACTION_STATUS_BUY, requestBody, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataTransaksi = response.data
+    console.log("BERHASIL KONFIRMASI");
+    return dataTransaksi;
+  } catch (error) {
+    console.error('Error while Put transaction buy:', error);
+    throw error
+  }
+}
+
 export const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
   const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`
   try {
@@ -135,6 +154,25 @@ export const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
     console.error('Error get transaction rent:', error);
   }
 };
+
+export const PUT_TRANSACTION_STATUS_RENT = async ({ id, statusTransaction }) => {
+  const requestBody = ({ id, statusTransaction })
+  const BASE_URL_PUT_TRANSACTION_STATUS_RENT = `https://localhost:5001/api/TransactionDetailRents/UpdateTransactionDetailRent/${id}`
+  try {
+    const response = await axios.put(BASE_URL_PUT_TRANSACTION_STATUS_RENT, requestBody, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataTransaksi = response.data
+    console.log("BERHASIL KONFIRMASI");
+    return dataTransaksi;
+  } catch (error) {
+    console.error('Error while Put transaction rent:', error);
+    throw error
+  }
+}
 
 
 export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {

@@ -65,6 +65,7 @@ const TransactionPage = ({ }) => {
       username: name,
       transactionNum: searchValue,
     }),
+    enabled: !!name,
   })
 
   let dataHistoryBuy = [];
