@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query';
+import { GET_UNIT } from '@api/api';
+import { useEffect, useState } from 'react'
+import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
+import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import {
   Box, Typography,
   Table, TableContainer,
@@ -8,46 +13,11 @@ import {
   IconButton, Collapse,
   CircularProgress,
 } from '@mui/material'
-import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
-import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { useQuery } from '@tanstack/react-query';
-import formatRupiah from '@utils/formatRupiah';
-import axios from 'axios';
 import theme from '@themes/theme';
-import UnitData from './UnitData';
-// import { GET_UNIT } from '@api/api';
-
-
-
-const GET_UNIT = async (props) => {
-  const { SearchValue, PageNumber, PageSize, BuySort } = props
-
-  // False = Desc && True = Asc
-  const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${SearchValue}%25&PriceBuy=${BuySort}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
-
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_GET_UNIT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-
-    const dataUnit = response.data.items
-    const totalCount = response.data.totalCount
-    return { dataUnit, totalCount };
-  } catch (error) {
-    console.error('Error fetching Unit:', error);
-    // throw error;
-  }
-};
-
+import formatRupiah from '@utils/formatRupiah';
 
 const TableUnit = (props) => {
-  const { SearchValue, PageNumber, PageSize, BuySort } = props
-
+  const { SearchValue } = props
   const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
@@ -55,14 +25,14 @@ const TableUnit = (props) => {
   const [buySort, setBuySort] = useState(false)
 
   const fetchData = async () => {
-    const { dataUnit, totalCount } = await GET_UNIT({ SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
+    const { data, totalCount } = await GET_UNIT({ nameUnit: SearchValue, sortBuy: buySort, PageNumber: page, PageSize: rowsPerPage });
     setTotalData(totalCount)
-    console.table(dataUnit);
-    if (!dataUnit) {
+
+    if (!data) {
       throw new Error("Failed to fetch data");
     };
 
-    const formattedData = dataUnit.map(data => ({
+    const formattedData = data.map(data => ({
       id: data.id,
       nameUnit: data.nameUnit,
       typeUnit: data.typeUnit,
@@ -84,17 +54,11 @@ const TableUnit = (props) => {
     return formattedData;
   };
 
-  const {
-    data,
-    isPending,
-    isFetching,
-    isLoading,
-    error,
-    refetch } = useQuery
-      ({
-        queryKey: ["Unit"],
-        queryFn: fetchData,
-      })
+  const { data, isPending, isFetching, isLoading, error, refetch } = useQuery
+    ({
+      queryKey: ["Unit"],
+      queryFn: fetchData,
+    })
 
   // handle open collapse decs uniit
   const handleCollapseToggle = (rowId) => {
@@ -120,17 +84,13 @@ const TableUnit = (props) => {
   // to send data nameUnit to parent Component
   const handleEditOnClick = (index) => {
     const clickedData = data[index].nameUnit;
-    console.log('Data yang diklik:', clickedData);
-
     props.onSelectRow(clickedData);
   }
 
-   // to send data idUnit to parent Component
+  // to send data idUnit to parent Component
   const handleDelOnClick = (index) => {
     const idRow = data[index].id;
     const nameUnitRow = data[index].nameUnit;
-    console.log('Data yang diklik:', idRow, nameUnitRow);
-
     props.onSelectRowId(idRow, nameUnitRow);
   }
 
@@ -178,29 +138,20 @@ const TableUnit = (props) => {
     },
   ]
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel()
-  })
+  const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() })
 
-  if (data === undefined) {
+  if (isFetching && isLoading) {
     return (
-      <div>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh" }}>
         <CircularProgress size={50} sx={{
-          position: "absolute",
           color: "#8BB9FF",
-          marginTop: 20,
-          marginLeft: 80,
+          mb: 20
         }}
         />
-      </div>
+      </Box>
     )
   }
 
-  // console.table(data);
-  // console.table({page, rowsPerPage});
-  
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>

@@ -1,23 +1,15 @@
-import React, { useState } from 'react'
-import {
-  Card,
-  Box, Typography,
-  Grid, InputBase, Alert
-} from '@mui/material'
-import { SearchRounded } from '@mui/icons-material';
+import { useState } from 'react'
 import { useFormik } from 'formik';
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { unitSchema } from '@schemas';
-import axios from 'axios';
+import { SearchRounded } from '@mui/icons-material';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { Card, Box, Typography, Grid, InputBase} from '@mui/material'
+import { GET_USER_BYNAME, PUT_USER, PUT_ROLE_ADMIN, DELETE_USER } from '@api/api';
 import theme from '@themes/theme';
 import TableUser from './TableUser';
-import AddButton from '@components/admin/Atoms/Buttons/AddButton';
 import ModalUser from '@components/admin/Atoms/Modal/ModalUser';
 import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
-import imgConvert from '@utils/imgConvert';
 import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
-import * as yup from 'yup';
-import formatRupiah from '@utils/formatRupiah';
 
 // ubah
 const initialValues = {
@@ -26,93 +18,6 @@ const initialValues = {
   email: "",
   companyUser: "",
   positionUser: "",
-}
-const GET_USER_BYNAME = async ({ userName }) => {
-  console.log('nama user: ', userName);
-
-  const BASE_URL_GET_USER = `https://localhost:5001/api/UserEntitys/GetUserEntity?ParameterName=%25${userName}%25&SortUserName=true&PageNumber=1&PageSize=1
-`;
-
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_GET_USER, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUser = response.data.items
-    return dataUser
-
-  } catch (error) {
-    throw error;
-  }
-};
-
-//ubah url
-const PUT_USER = async ({ id, userValues }) => {
-  console.table(id, userValues);
-
-  const BASE_URL_PUT_USER = `https://localhost:5001/api/UserEntitys/UpdateUserEntity/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.put(BASE_URL_PUT_USER, userValues, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUser = response.data
-    return dataUser;
-  } catch (error) {
-    console.error('Error while Put User:', error);
-    throw error
-  }
-}
-
-// ubah url
-const DELETE_USER = async ({ id }) => {
-  console.log("id yang diterima oleh function DELETE_USER", id);
-
-  const BASE_URL_DELETE_USER = `https://localhost:5001/api/UserEntitys/DeleteUserEntity/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.delete(BASE_URL_DELETE_USER, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUser = response.data
-    console.log("Berhasil delete DATA");
-    return dataUser;
-  } catch (error) {
-    console.error('Error while Delete User:', error);
-    throw error
-  }
-}
-
-// ubah url
-const PUT_ROLE_ADMIN = async ({ id }) => {
-  console.log("id yang diterima oleh function PUT_ROLE_ADMIN", id);
-
-  const BASE_URL_PUT_ROLE_ADMIN = `https://localhost:5001/api/UserEntitys/CreateAdmin?id=${id}`
-  console.log(BASE_URL_PUT_ROLE_ADMIN);
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.post(BASE_URL_PUT_ROLE_ADMIN, null, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUser = response.data
-    console.log("Berhasil update data user menjadi admin");
-    return dataUser;
-  } catch (error) {
-    console.log('Error while updating User to admin:', error);
-    throw error
-  }
 }
 
 const UserData = () => {
@@ -136,8 +41,6 @@ const UserData = () => {
       }
     }
   })
-  console.log('log data unit dari formik values: ', formik.values);
-
 
   const handleCancelForm = () => {
     setIsModalEditOpen(false);
@@ -151,28 +54,24 @@ const UserData = () => {
   const handleSelectRow = async (userName) => {
     setIsEdit(true)
     setIsModalEditOpen(true)
-    console.log(`data yang dikirimkan ${userName}`);
 
-    const fetchData = await GET_USER_BYNAME({ userName: userName })
-    console.log("ini console log fetchData", fetchData[0].userName);
-    { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
+    const fetchData = await GET_USER_BYNAME({ Username: userName })
 
-    formik.setValues({
-      ...formik.values,
-      id: fetchData[0].id,
-      userName: fetchData[0].userName,
-      email: fetchData[0].email,
-      companyUser: fetchData[0].companyUser,
-      positionUser: fetchData[0].positionUser,
-    });
+    {fetchData && 
+      formik.setValues({
+        ...formik.values,
+        id: fetchData[0].id,
+        userName: fetchData[0].userName,
+        email: fetchData[0].email,
+        companyUser: fetchData[0].companyUser,
+        positionUser: fetchData[0].positionUser,
+      });
+    }
   };
 
-  // ubah nameUnit jd userName
   const handleSelectRowId = async (id, userName) => {
     setIsDel(true)
     setIsModalDelOpen(true)
-    console.log(`data yang diterima UserData`, id, userName);
-
     formik.setValues({
       id: id,
       userName: userName
@@ -181,17 +80,12 @@ const UserData = () => {
 
   const handleSelectRowRole = async (id, isAdmin, userName) => {
     setIsModalKeyOpen(true)
-    console.log(`data isAdmin`, id, isAdmin, userName);
-
     formik.setValues({
       id: id,
       userName: userName,
       isAdmin: isAdmin
     });
   };
-
-
-
 
   const handlePutSubmit = async () => {
     putUser({ id: formik.values.id, userValues: formik.values})
@@ -201,7 +95,6 @@ const UserData = () => {
     delUser({ id: formik.values.id })
   }
   const handlePutRoleAdmin = async () => {
-    console.log("ini log dari handlePutRoleAdmin", formik.values.id);
     putIsAdminUser({ id: formik.values.id })
   }
 
@@ -214,10 +107,8 @@ const UserData = () => {
   const { mutate: putUser, error: putError, isSuccess: putIsSuccess } = useMutation({
     mutationFn: PUT_USER,
     onSuccess: (data) => {
-      console.log("Data successfully UPDATE", data)
       setIsModalEditOpen(false)
-      console.log("Hasil submitan update", formik.values);
-      // formik.handleReset(formik.values)
+      console.log("Data successfully UPDATE", data)
       queryClient.invalidateQueries(['User'], (oldData) => [...oldData, data]);
     },
     onError: (error) => {
@@ -250,18 +141,14 @@ const UserData = () => {
     },
   })
 
-
-  const handlePostChange = async (event) => {
+  const handlePutChange = async (event) => {
     const { name, value } = event.target;
-
-
     formik.setValues({
       ...formik.values,
       [name]: value,
     });
-
-    console.table("Ini ADALAH INPUTAN FORMIK POST CANGE" + formik.values);
   };
+
   const labelInput = [
     { name: "userName", label: "Nama Pengguna", value: formik.values.userName, type: "text" },
     { name: "email", label: "Email", value: formik.values.email, type: "text" },
@@ -305,7 +192,7 @@ const UserData = () => {
               formik={formik}
               isOpen={isModalEditOpen}
               labelInput={labelInput}
-              onChange={handlePostChange}
+              onChange={handlePutChange}
               onSubmit={handlePutSubmit}
               onClose={handleCancelForm}
             />

@@ -1,19 +1,12 @@
-import React, { useState } from 'react'
-import {
-  Card,
-  Box, Typography,
-  Grid, InputBase,
-  Select,
-  MenuItem
-} from '@mui/material'
-import { SearchRounded } from '@mui/icons-material';
+import { useState } from 'react'
 import { useFormik } from 'formik';
 import { unitSchema } from '@schemas';
+import { SearchRounded } from '@mui/icons-material';
+import { Card,Box, Typography, Grid, InputBase, Select, MenuItem } from '@mui/material'
 import theme from '@themes/theme';
 import TablePaymentConfirm from './TablePaymentConfirm';
 import ModalPaymentConfirm from '../../../Components/admin/Atoms/Modal/ModalPaymentConfirm';
 
-// Ubah 
 const initialValues = {
   id: "",
   transactionNum: "",
@@ -36,45 +29,24 @@ const PaymentConfirmData = () => {
   const [isEdit, setIsEdit] = useState(false)
   const formik = useFormik({
     initialValues: initialValues,
-    validationSchema: unitSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
-    onSubmit: (values) => {
-      {
-        isEdit
-          ? putUser({ id: values.id, userValues: values })
-          : null
-      }
-    }
   })
-  // console.log('LOG DATA FORMIK: ', formik.values);
-
 
   const handleCancelForm = () => {
     setIsModalEditOpenImage(false);
-    setIsModalDelOpen(false);
-    setIsModalKeyOpen(false);
     setIsEdit(false);
-    setIsDel(false);
     formik.handleReset(formik.values);
   }
 
   const handleSelectRow = async (paymentConfirmationReceipt) => {
     setIsEdit(true)
     setIsModalEditOpenImage(true)
-    // console.log(`data yang dikirimkan ${paymentConfirmationReceipt}`);
-
     formik.setValues({
       paymentConfirmationReceipt: paymentConfirmationReceipt,
     });
   };
 
-  // ubah nameUnit jd userName
   const handleSelectRowId = async (id, userName) => {
-    setIsDel(true)
     setIsModalDelOpen(true)
-    // console.log(`data yang diterima UserData`, id, userName);
-
     formik.setValues({
       id: id,
       userName: userName
@@ -83,7 +55,6 @@ const PaymentConfirmData = () => {
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
-    // console.log(searchValue);
   };
   const handleSortDate = () => {
     setSortDate(!sortDate)
@@ -145,7 +116,7 @@ const PaymentConfirmData = () => {
               </Box>
             </Box>
             <ModalPaymentConfirm
-              typeModal={"Bukti Pembayran"}
+              typeModal={"Bukti Pembayaran"}
               formik={formik}
               isOpen={isModalEditOpenImage}
               labelInput={labelInput}

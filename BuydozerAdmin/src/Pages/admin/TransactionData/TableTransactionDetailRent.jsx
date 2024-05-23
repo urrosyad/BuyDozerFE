@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import formatRupiah from '@utils/formatRupiah';
+import { formatDate, formatDateTime } from '@utils/formatDate';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react'
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import {
-  Typography,
+  Box, Typography,
   Table, TableContainer,
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
   CircularProgress, Button
 } from '@mui/material'
-import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { useQuery } from '@tanstack/react-query';
-import formatRupiah from '@utils/formatRupiah';
-import { formatDate, formatDateTime } from '@utils/formatDate';
-import axios from 'axios';
 
 const GET_TRANSACTION = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
-
-  // False = Desc && True = Asc
   const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -91,12 +89,9 @@ const TableTransactionDetailRent = (props) => {
     setPage(1);
   };
 
-
+  // Handle function to send data nameUnit to parent Component
   const handleDetailOnClick = (index) => {
     const clickedData = data[index].transactionNum;
-    console.log('Data yang diklik:', clickedData);
-
-    // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
   }
 
@@ -147,18 +142,15 @@ const TableTransactionDetailRent = (props) => {
     getCoreRowModel: getCoreRowModel()
   })
 
-
   if (data === undefined) {
     return (
-      <div>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh" }}>
         <CircularProgress size={50} sx={{
-          position: "absolute",
           color: "#8BB9FF",
-          marginTop: 20,
-          marginLeft: 68,
+          mb: 20
         }}
         />
-      </div>
+      </Box>
     )
   }
 

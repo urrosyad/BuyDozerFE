@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import formatRupiah from '@utils/formatRupiah';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react'
+import { formatDate, formatDateTime } from '@utils/formatDate';
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import {
-  Typography,
+  Box, Typography,
   Table, TableContainer,
   TableBody, TableCell,
   TableHead, TableRow,
   Paper, TablePagination,
   CircularProgress, Button
 } from '@mui/material'
-import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { useQuery } from '@tanstack/react-query';
-import formatRupiah from '@utils/formatRupiah';
-import { formatDate, formatDateTime } from '@utils/formatDate';
-import axios from 'axios';
 
 
 const GET_TRANSACTION_BUY = async (props) => {
@@ -28,7 +28,6 @@ const GET_TRANSACTION_BUY = async (props) => {
     const dataTransaksi = response.data.items
     const totalCount = response.data.totalCount
     return { dataTransaksi, totalCount };
-
   } catch (error) {
     console.error('Error fetching User:', error);
   }
@@ -36,8 +35,7 @@ const GET_TRANSACTION_BUY = async (props) => {
 
 
 const TableTransactionDetailBuy = (props) => {
-  const { SearchValue, sortDate, PageNumber, PageSize, ParameterName, statusConfig } = props
-
+  const { SearchValue, sortDate, statusConfig } = props
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
@@ -70,18 +68,10 @@ const TableTransactionDetailBuy = (props) => {
     return formattedData;
   };
 
-  const {
-    data,
-    isPending,
-    isFetching,
-    isLoading,
-    error,
-    refetch } = useQuery
-      ({
-        queryKey: ["TransactionBuy"],
-        queryFn: fetchData,
-      })
-
+  const { data, isPending, isFetching, isLoading, error, refetch } = useQuery({
+    queryKey: ["TransactionBuy"],
+    queryFn: fetchData,
+  })
 
 
   const handleChangePage = (event, newPage) => {
@@ -96,8 +86,6 @@ const TableTransactionDetailBuy = (props) => {
   const handleDetailOnClick = (index) => {
     const clickedData = data[index].transactionNum;
     console.log('Data yang diklik:', clickedData);
-
-    // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
   }
 
@@ -150,17 +138,16 @@ const TableTransactionDetailBuy = (props) => {
 
   if (data === undefined) {
     return (
-      <div>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh" }}>
         <CircularProgress size={50} sx={{
-          position: "absolute",
           color: "#8BB9FF",
-          marginTop: 20,
-          marginLeft: 68,
+          mb: 20
         }}
         />
-      </div>
+      </Box>
     )
   }
+
   return (
     <TableContainer component={Paper} sx={{ borderRadius: "15px", width: "100%", }}>
       <Table sx={{ minWidth: 700 }}>

@@ -2,17 +2,15 @@
 import axios from "axios";
 const authData = localStorage.getItem('AuthData')
 const auth = JSON.parse(authData)
-// const accessToken = auth.accessToken
+const accessToken = auth.accessToken
 // const userId = auth.userId
 const userName = localStorage.getItem("UserName");
-const accessToken = localStorage.getItem("AccessToken");
 
 
+//---------UNIT ENDPOINT---------// 
 export const GET_UNIT = async (props = {}) => {
   const { nameUnit = "", sortBuy = "", pageNumber = 1, pageSize = 10 } = props;
-
   const BASE_URL_GET_UNIT = `https://localhost:5001/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceBuy=${sortBuy}&PageNumber=${pageNumber}&PageSize=${pageSize}`;
-
   try {
     const response = await axios.get(BASE_URL_GET_UNIT, {
       headers: {
@@ -23,7 +21,6 @@ export const GET_UNIT = async (props = {}) => {
 
     const data = response.data.items;
     const totalCount = response.data.totalCount
-    console.log("ini log dari funct API", data);
     return { data, totalCount };
   } catch (error) {
     console.error("Error fetching Unit:", error);
@@ -68,7 +65,6 @@ export const POST_UNIT = async ({ unitValues }) => {
 export const PUT_UNIT = async ({id, unitValues}) => {
 
   console.log("ID DAN ISI PUT UNIT:",id, unitValues);
-
   const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
   try {
     const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
@@ -86,7 +82,6 @@ export const PUT_UNIT = async ({id, unitValues}) => {
 }
 
 export const DELETE_UNIT = async ({id}) => {
-
   const BASE_URL_DELETE_UNIT = `https://localhost:5001/api/HeavyUnits/DeleteHeavyUnit/${id}`
   try {
     const response = await axios.delete(BASE_URL_DELETE_UNIT, {
@@ -102,7 +97,182 @@ export const DELETE_UNIT = async ({id}) => {
     throw error
   }
 }
+//---------UNIT ENDPOINT---------// 
 
+
+//---------USER ENDPOINT---------// 
+export const GET_USER = async (props) => {
+  const { Username, PageNumber, PageSize, SortUserName } = props
+
+  const BASE_URL_USER = `https://localhost:5001/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=${SortUserName}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  
+  try {
+    const response = await axios.get(BASE_URL_USER, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUser = response.data.items
+    const totalCount = response.data.totalCount
+    return { dataUser, totalCount };
+  } catch (error) {
+    console.error('Error fetching User:', error);
+    // throw error;
+  }
+};
+
+export const GET_USER_BYNAME = async ({ Username }) => {
+  const BASE_URL_GET_USER = `https://localhost:5001/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=true&PageNumber=1&PageSize=1
+`;
+  try {
+    const response = await axios.get(BASE_URL_GET_USER, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUser = response.data.items
+    return dataUser
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const PUT_USER = async ({ id, userValues }) => {
+  const BASE_URL_PUT_USER = `https://localhost:5001/api/UserEntitys/UpdateUserEntity/${id}`
+  try {
+    const response = await axios.put(BASE_URL_PUT_USER, userValues, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUser = response.data
+    return dataUser;
+  } catch (error) {
+    console.error('Error while Put User:', error);
+    throw error
+  }
+}
+
+export const PUT_ROLE_ADMIN = async ({ id }) => {
+  const BASE_URL_PUT_ROLE_ADMIN = `https://localhost:5001/api/UserEntitys/CreateAdmin?id=${id}`
+  try {
+    const response = await axios.post(BASE_URL_PUT_ROLE_ADMIN, null, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUser = response.data
+    console.log("Berhasil update data user menjadi admin");
+    return dataUser;
+  } catch (error) {
+    console.log('Error while updating User to admin:', error);
+    throw error
+  }
+}
+
+export const DELETE_USER = async ({ id }) => {
+  const BASE_URL_DELETE_USER = `https://localhost:5001/api/UserEntitys/DeleteUserEntity/${id}`
+  try {
+    const response = await axios.delete(BASE_URL_DELETE_USER, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataUser = response.data
+    console.log("Berhasil delete data user");
+    return dataUser;
+  } catch (error) {
+    console.error('Error while Delete User:', error);
+    throw error
+  }
+}
+//---------USER ENDPOINT---------// 
+
+
+//---------RENT LIST ENDPOINT---------//
+export const GET_RENT_LIST = async (props) => {
+  const { SearchValue} = props
+  const BASE_URL_GET_RentList = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${SearchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
+  try {
+    const response = await axios.get(BASE_URL_GET_RentList, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataRentList = response.data.items
+    const totalCount = response.data.totalCount
+    return { dataRentList, totalCount };
+  } catch (error) {
+    console.error('Error fetching RentList:', error);
+    // throw error;
+  }
+};
+
+export const POST_RENT_LIST = async ({ requestBody }) => {
+  const BASE_URL_POST_RentList = "https://localhost:5001/api/PriceListRents/CreatePriceListRent"
+
+  try {
+    const response = await axios.post(BASE_URL_POST_RentList, requestBody, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataRentList = response.data
+    return dataRentList;
+  } catch (error) {
+    console.error('Error while Post RentList:', error);
+    throw error
+  }
+};
+
+export const PUT_RENT_LIST = async ({ id, requestBody }) => {
+  console.table(id, requestBody);
+
+  const BASE_URL_PUT = `https://localhost:5001/api/PriceListRents/UpdatePriceListRent/${id}`
+  try {
+    const response = await axios.put(BASE_URL_PUT, requestBody, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataRentList = response.data
+    return dataRentList;
+  } catch (error) {
+    console.error('Error while Put RentList:', error);
+    throw error
+  }
+}
+
+
+export const DELETE_RENT_LIST = async ({ id }) => {
+  const BASE_URL_DELETE = `https://localhost:5001/api/PriceListRents/DeletePriceListRent/${id}`
+  try {
+    const response = await axios.delete(BASE_URL_DELETE, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const dataRentList = response.data
+    console.log("Berhasil delete DATA");
+    return dataRentList;
+  } catch (error) {
+    console.error('Error while Delete RentList:', error);
+    throw error
+  }
+}
+//---------RENT LIST ENDPOINT---------//
+
+
+//---------TRANSACTION ENDPOINT---------//
 export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
   const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=100`
   try {
@@ -191,3 +361,4 @@ export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {
     console.error('ERROR GET TRANSACTION:', error);
   }
 };
+//---------TRANSACTION ENDPOINT---------//

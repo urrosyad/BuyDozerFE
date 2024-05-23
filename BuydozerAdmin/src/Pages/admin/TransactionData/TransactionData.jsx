@@ -1,29 +1,16 @@
-import React, { useState } from 'react'
-import { Card, Box, Typography, Grid, InputBase, Tab, Select, MenuItem
-} from '@mui/material'
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { SearchRounded } from '@mui/icons-material';
-import { useFormik } from 'formik';
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { unitSchema } from '@schemas';
 import axios from 'axios';
 import theme from '@themes/theme';
+import ModalTrxDetail from '@components/admin/Atoms/Modal/ModalTrxDetail';
 import TableTransactionDetailBuy from './TableTransactionDetailBuy';
 import TableTransactionDetailRent from './TableTransactionDetailRent';
-import AddButton from '@components/admin/Atoms/Buttons/AddButton';
-import ModalUser from '@components/admin/Atoms/Modal/ModalUser';
-import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
-import imgConvert from '@utils/imgConvert';
-import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
-import * as yup from 'yup';
-import { formatDateTimeOffset, formatDateTime } from '@utils/formatDate';
-import formatRupiah from '@utils/formatRupiah'
-import ModalTransactionDetailBuy from '../../../Components/admin/Atoms/Modal/ModalTrxDetail';
-import ModalTrxDetail from '@components/admin/Atoms/Modal/ModalTrxDetail';
+import { useState } from 'react'
+import { useFormik } from 'formik';
+import { SearchRounded } from '@mui/icons-material';
+import { formatDateTime } from '@utils/formatDate';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Card, Box, Typography, Grid, InputBase, Tab, Select, MenuItem
+} from '@mui/material'
 
-// ubah
 const initialValues = {
   id: "",
   transactionNum: "",
@@ -41,7 +28,6 @@ const initialValues = {
 const GET_TRANSACTION_RENT = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
   console.log('nomor transaksi: ', transactionNum);
-
   const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
@@ -53,17 +39,15 @@ const GET_TRANSACTION_RENT = async (props) => {
       }
     });
     const dataTransaksiRent = response.data.items
-    // console.log('log data unit dari api: ', dataUnit);
     return dataTransaksiRent
-
   } catch (error) {
     throw error;
   }
 };
+
 const GET_TRANSACTION_BUY = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
   console.log('nomor transaksi: ', transactionNum);
-
   const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
@@ -75,9 +59,7 @@ const GET_TRANSACTION_BUY = async (props) => {
       }
     });
     const dataTransaksiBuy = response.data.items
-    // console.log('log data unit dari api: ', dataUnit);
     return dataTransaksiBuy
-
   } catch (error) {
     throw error;
   }
@@ -89,45 +71,20 @@ const TransactionData = () => {
   console.log(sortDate);
   const [tab, setTab] = useState('buy');
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
-  const [isModalDelOpen, setIsModalDelOpen] = useState(false)
-  const [isModalKeyOpen, setIsModalKeyOpen] = useState(false)
-  const [isEdit, setIsEdit] = useState(false)
-  const [isDel, setIsDel] = useState(false)
-  const queryClient = useQueryClient()
   const formik = useFormik({
     initialValues: initialValues,
-    validationSchema: unitSchema,
-    validateOnChange: false,
-    validateOnBlur: false,
-    onSubmit: (values) => {
-      {
-        isEdit
-          ? putUser({ id: values.id, userValues: values })
-          : null
-      }
-    }
   })
-  console.log('log data unit dari formik values: ', formik.values);
-
 
   const handleCancelForm = () => {
     setIsModalEditOpen(false);
-    setIsModalDelOpen(false);
-    setIsModalKeyOpen(false);
     setIsEdit(false);
-    setIsDel(false);
     formik.handleReset(formik.values);
   }
 
   const handleSelectRow = async (searchValue) => {
     setIsEdit(true)
     setIsModalEditOpen(true)
-    console.log(`data yang dikirimkan ${searchValue}`);
-
     const fetchData = tab != "buy" ? await GET_TRANSACTION_RENT({ searchValue: searchValue, SortDate: sortDate }) : await GET_TRANSACTION_BUY({ searchValue: searchValue, SortDate: sortDate })
-    console.log(fetchData)
-    console.log("ini console log fetchData", fetchData[0].userName);
-    { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
 
     const valuesToSet =
     {
@@ -149,7 +106,6 @@ const TransactionData = () => {
       valuesToSet.dateRent = fetchData[0].dateRent;
       valuesToSet.dateReturn = fetchData[0].dateReturn;
       valuesToSet.priceRentUnit = fetchData[0].priceRentUnit;
-
     } else {
       valuesToSet.priceBuyUnit = fetchData[0].priceBuyUnit;
     }
@@ -160,38 +116,11 @@ const TransactionData = () => {
   // ubah nameUnit jd userName
   const handleSelectRowId = async (id, userName) => {
     setIsDel(true)
-    setIsModalDelOpen(true)
-    console.log(`data yang diterima UserData`, id, userName);
-
     formik.setValues({
       id: id,
       userName: userName
     });
   };
-
-  const handleSelectRowRole = async (id, isAdmin, userName) => {
-    setIsModalKeyOpen(true)
-    console.log(`data isAdmin`, id, isAdmin, userName);
-
-    formik.setValues({
-      id: id,
-      userName: userName,
-      isAdmin: isAdmin
-    });
-  };
-
-  const handlePutSubmit = async () => {
-    putUser({ id: formik.values.id, userValues: formik.values })
-  }
-
-  const handleDelSubmit = async () => {
-    delUser({ id: formik.values.id })
-  }
-
-  const handlePutRoleAdmin = async () => {
-    console.log("ini log dari handlePutRoleAdmin", formik.values.id);
-    putIsAdminUser({ id: formik.values.id })
-  }
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
@@ -201,16 +130,6 @@ const TransactionData = () => {
   const handleSortDate = () => {
     setSortDate(!sortDate)
   };
-
-  const handlePostChange = async (event) => {
-    const { name, value } = event.target;
-    formik.setValues({
-      ...formik.values,
-      [name]: value,
-    });
-    console.table("Ini ADALAH INPUTAN FORMIK POST CANGE" + formik.values);
-  };
-
 
   const handleTabsChange = (event, newTab) => {
     setTab(newTab);
@@ -229,7 +148,6 @@ const TransactionData = () => {
     { name: "created", label: "Tanggal Dibuat", value: formatDateTime(formik.values.created), type: "text" },
     { name: "totalPriceTransaction", label: "Total Harga Transaksi", value: formik.values.totalPriceTransaction, type: "number" },
 
-    // { name: "statusTransaction ", label: "Status", value: formik.values.statusTransaction, type: "integer" },
   ]
   const labelDetailRent = [
     { name: "transactionNum", label: "Nomor Transaksi", value: formik.values.transactionNum, type: "text" },
@@ -245,14 +163,13 @@ const TransactionData = () => {
     { name: "dateRent", label: "Tanggal Sewa", value: formik.values.dateRent, type: "date" },
     { name: "dateReturn ", label: "Tanggal Kembali", value: formik.values.dateReturn, type: "date" },
     { name: "totalPriceTransaction", label: "Total Harga Transaksi", value: formik.values.totalPriceTransaction, type: "number" },
-
   ]
 
   const statusConfig = [
     { content: "Reject", color: "#EC3535" },
-    { content: "Ongoing", color: "#C4C4C4" },
+    { content: "Ongoing", color: "#D9D630" },
     { content: "Paid", color: "#28D156" },
-    { content: "Finished", color: "#1937D1" },
+    { content: "Finished", color: "#193D71" },
   ];
 
   return (

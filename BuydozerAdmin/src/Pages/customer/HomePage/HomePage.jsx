@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Button, Grid, Link, Typography, styled } from '@mui/material'
-import HeaderImg from '@assets/customer/HeaderImg.png'
+import React from 'react'
+import { Footer } from '@layouts/customer/Footer'
+import { useNavigate } from 'react-router-dom'
+import { flexCenter, flexEnd } from '@themes/commonStyles'
+import { Box, Grid, Typography } from '@mui/material'
 import { CaterpillarLogo, HyundaiLogo, KomatsuLogo, LiebherrLogo, ToyotaLogo, VolvoLogo, ScaniaLogo } from '@assets/customer/logoCompany';
-
+import Navbar from '@layouts/customer/Navbar/Navbar'
+import Poster1 from '@assets/customer/Poster1.png'
+import HeaderImg from '@assets/customer/HeaderImg.png'
+import CommentSection from '@components/customer/Moleculs/CommentSection';
+import ButtonOutlined from '@components/customer/Atoms/Button/ButtonOutlined';
+import ButtonContained from '@components/customer/Atoms/Button/ButtonContained'
 import PembelianPosterImg from '@assets/customer/PembelianPosterImg.png'
 import PenyewaanPosterImg from '@assets/customer/PenyewaanPosterImg.png'
-import Poster1 from '@assets/customer/Poster1.png'
-import { useNavigate } from 'react-router-dom'
-import useAuth from '@hooks/useAuth';
-import Navbar from '@layouts/customer/Navbar/Navbar'
-import { Footer } from '@layouts/customer/Footer'
-import { flexCenter, flexEnd } from '@themes/commonStyles'
-import ButtonContained from '@components/customer/Atoms/Button/ButtonContained'
-import ButtonOutlined from '@components/customer/Atoms/Button/ButtonOutlined';
-import CommentSection from '@components/customer/Moleculs/CommentSection';
 
-const authData = localStorage.getItem('AuthData')
-const auth = JSON.parse(authData)
-console.log({auth});
 const logoImgs = [
   { logo: CaterpillarLogo, name: 'Caterpillar' },
   { logo: HyundaiLogo, name: 'Hyundai' },
@@ -143,7 +138,6 @@ const HomePage = () => {
           MULAI BERGABUNG MENJADI BAGIAN DARI INVESTASI JANGKA PANJANG BUYDOZER</Typography>
         <img src={Poster1} style={{ width: '100%', height: '100%', borderRadius: '10px', backgroundSize: "cover", zIndex: "0" }} />
       </Box>
-      
 
       {/* COMMENT SECTION */}
       <CommentSection />

@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query';
+import { GET_RENT_LIST } from '@api/api';
+import { useEffect, useState } from 'react'
+import { SwapVertRounded } from '@mui/icons-material';
+import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import {
   Box, Typography,
   Table, TableContainer,
@@ -8,47 +13,18 @@ import {
   IconButton,
   CircularProgress
 } from '@mui/material'
-import { SwapVertRounded } from '@mui/icons-material';
-import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
-import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
-const GET_RentList = async (props) => {
-  const { SearchValue, PageNumber, PageSize, BuySort } = props
-  const BASE_URL_GET_RentList = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${SearchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_GET_RentList, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataRentList = response.data.items
-    const totalCount = response.data.totalCount
-    return { dataRentList, totalCount };
-  } catch (error) {
-    console.error('Error fetching RentList:', error);
-    // throw error;
-  }
-};
-
-
-const TableRentList = (props) => {
-  const { SearchValue, PageNumber, PageSize, BuySort } = props
-
+const TableRentList = ( props ) => {
+  const { SearchValue } = props
   const [page, setPage] = useState(1); // Halaman ke
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
   const [totalData, setTotalData] = useState(0)
   const [buySort, setBuySort] = useState(false)
 
 
-
   const fetchData = async () => {
-    const { dataRentList, totalCount } = await GET_RentList({ SearchValue: SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
+    const { dataRentList, totalCount } = await GET_RENT_LIST({ SearchValue: SearchValue, PageNumber: page, PageSize: rowsPerPage, BuySort: buySort });
     setTotalData(totalCount)
-    console.table(dataRentList);
     if (!dataRentList) {
       throw new Error("Failed to fetch data");
     };
@@ -56,24 +32,16 @@ const TableRentList = (props) => {
     const formattedData = dataRentList.map(data => ({
       id: data.id,
       nameRent: data.nameRent,
-      priceRentUnit: data.priceRentUnit * 100/100 + "% dari harga total",
+      priceRentUnit: data.priceRentUnit * 100 / 100 + "% dari harga total",
       months: data.months + " Bulan",
     }));
     return formattedData;
   };
 
-
-  const {
-    data,
-    isPending,
-    isFetching,
-    isLoading,
-    error,
-    refetch } = useQuery
-      ({
-        queryKey: ["RentList"],
-        queryFn: fetchData,
-      })
+  const { data, isPending, isFetching, isLoading, error, refetch } = useQuery({
+    queryKey: ["RentList"],
+    queryFn: fetchData,
+  })
 
   // handle when move to the next page
   const handleChangePage = (event, newPage) => {
@@ -93,8 +61,6 @@ const TableRentList = (props) => {
 
   const handleEditOnClick = (index) => {
     const clickedData = data[index].nameRent;
-    console.log('Data yang diklik:', clickedData);
-
     // to send data nameRent to parent Component
     props.onSelectRow(clickedData);
   }
@@ -102,8 +68,6 @@ const TableRentList = (props) => {
   const handleDelOnClick = (index) => {
     const idRow = data[index].id;
     const nameRentRow = data[index].nameRent;
-    console.log('Data yang diklik:', idRow, nameRentRow);
-
     // to send data nameRent to parent Component
     props.onSelectRowId(idRow, nameRentRow);
   }
@@ -140,15 +104,13 @@ const TableRentList = (props) => {
 
   if (data === undefined) {
     return (
-      <div>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh" }}>
         <CircularProgress size={50} sx={{
-          position: "absolute",
           color: "#8BB9FF",
-          marginTop: 20,
-          marginLeft: 80,
+          mb: 20
         }}
         />
-      </div>
+      </Box>
     )
   }
 
