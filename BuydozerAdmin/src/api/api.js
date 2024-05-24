@@ -102,7 +102,7 @@ export const DELETE_UNIT = async ({id}) => {
 
 //---------USER ENDPOINT---------// 
 export const GET_USER = async (props) => {
-  const { Username, PageNumber, PageSize, SortUserName } = props
+  const { Username = "", PageNumber = 1, PageSize = 10, SortUserName = true } = props
 
   const BASE_URL_USER = `https://localhost:5001/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=${SortUserName}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   
@@ -361,4 +361,79 @@ export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {
     console.error('ERROR GET TRANSACTION:', error);
   }
 };
+
 //---------TRANSACTION ENDPOINT---------//
+
+
+//---------REPORT ENDPOINT---------//
+export const GET_TRANSACTION_REPORT = async () => {
+  const BASE_URL_TRANSACTION_REPORT = `https://localhost:5001/api/TransactionReport/GetTransactionReport`;
+  try {
+    const response = await axios.get(BASE_URL_TRANSACTION_REPORT, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data
+    return { data };
+  } catch (error) {
+    console.error('Error Get transaction report:', error);
+    return { data: [] }
+  }
+};
+
+export const GET_USER_TRANSACTION_TYPE = async () => {
+  const BASE_URL_USER_TRANSACTION_TYPE = `https://localhost:5001/api/TransactionReport/GetUserTransactionType`;
+  try {
+    const response = await axios.get(BASE_URL_USER_TRANSACTION_TYPE, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data
+    return { data };
+  } catch (error) {
+    console.error('Error Get transaction report:', error);
+    return { data: [] }
+  }
+};
+
+export const GET_SUMMARY_TRANSACTION_STATUS = async () => {
+  const BASE_URL_SUMMARY_TRANSACTION = `https://localhost:5001/api/TransactionReport/GetSummaryTransactionStatus`;
+  try {
+    const response = await axios.get(BASE_URL_SUMMARY_TRANSACTION, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data
+    return { data };
+  } catch (error) {
+    console.error('Error Get transaction report:', error);
+    return { data: [] }
+  }
+};
+
+
+export const GET_UNIT_REMAINING = async () => {
+  const BASE_URL_UNIT_REMAINING = `https://localhost:5001/api/TransactionReport/GetUnitRemaining`;
+  try {
+    const response = await axios.get(BASE_URL_UNIT_REMAINING, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = response.data.items
+    return { data };
+  } catch (error) {
+    console.error('Error Get transaction report:', error);
+    return { data: [] }
+  }
+};
+
+
+//---------REPORT ENDPOINT---------//
