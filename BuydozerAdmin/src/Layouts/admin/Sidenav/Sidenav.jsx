@@ -58,14 +58,14 @@ const Sidenav = () => {
               flexDirection: "column",
               alignItems: "flex-end",
             }}>
-              <Link href="/admin/dashboard">
+              <Box>
                 <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1, mb: -3 , color: '#193D71'}} >
                   ADMIN
                 </Typography>
                 <Typography sx={{ fontSize: "18px", fontWeight: "bold", padding: 1, color: '#193D71' }}>
                   BUYDOZER
                 </Typography>
-              </Link>
+              </Box>
             </Box>
           </Box>
           <Box sx={{ fontWeight: "bold", bgcolor: "#F9FAFF" }} >

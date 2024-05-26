@@ -129,13 +129,7 @@ const theme = createTheme({
   },
   MuiLink: {
     defaultProps: {
-      sx: {
-        color: "#FFFFFF",
-        ":hover": {
-          cursor: "pointer",
-        }
-      },
-      underline: 'none',
+      underlined: 'none',
     },
   },
   breakpoints: {

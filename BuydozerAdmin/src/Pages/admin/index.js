@@ -1,4 +1,3 @@
-export { default as BuyData } from './BuyPage/BuyData';
 export { default as Dashboard } from './DashboardPage/Dashboard';
 export { default as RentListData } from './RentListPage/RentListData';
 export { default as PaymentConfirmData } from './PaymentConfirmPage/PaymentConfirmData';

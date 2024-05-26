@@ -13,7 +13,6 @@ const customerComment = [
   { name: "Eriza Angelika", position: "Arsitecture", comment: "Ketersediaan alat berat di Buydozer tidak perlu di ragukan lagi. Layanan purna jualnya sangat memuaskan, dan pelayanan nya cepat dan terpercaya. Terima kasih Buydozer!" },
 ]
 
-
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },

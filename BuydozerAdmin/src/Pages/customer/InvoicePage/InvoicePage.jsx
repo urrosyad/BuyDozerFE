@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { flexCenter } from '@themes/commonStyles'
-import { Box, IconButton, Skeleton, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, IconButton, Skeleton, TextField, Typography } from '@mui/material'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import ButtonContained from '@components/customer/Atoms/Button/ButtonContained'
-import { KeyboardBackspaceRounded, WhatsApp } from '@mui/icons-material'
+import { CancelRounded, KeyboardBackspaceRounded, WhatsApp } from '@mui/icons-material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { dateToMonth, formatRupiah, formatIndoPhone, numToWord, imgConvert } from '@utils'
+import ModalPaymentConfirm from '@components/admin/Atoms/Modal/ModalPaymentConfirm'
+import { GET_TRANSACTION_ONGOING, GET_TRANSACTION_RENT, GET_TRANSACTION_BUY, PUT_TRANSACTION_STATUS_BUY, PUT_TRANSACTION_STATUS_RENT } from '@api/api'
+import useAuth from '@hooks/useAuth'
 // '../../../Utils' 
 
 const authData = localStorage.getItem('AuthData')
@@ -16,49 +19,12 @@ const auth = JSON.parse(authData)
 const accessToken = auth.accessToken
 // const accessToken = localStorage.getItem("AccessToken")
 
-const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
-  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`
-  try {
-    const response = await axios.get(BASE_URL_GET_TRANSACTION_BUY, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const data = response.data.items
-    console.log("INI TRXBUY", data);
-    return { data };
-  } catch (error) {
-    console.error('Error get transaction buy:', error);
-  }
-};
-
-const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
-  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`
-  try {
-    const response = await axios.get(BASE_URL_GET_TRANSACTION_RENT, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const data = response.data.items
-    console.log("INI TRXRENT", data);
-
-    return { data };
-  } catch (error) {
-    console.error('Error get transaction rent:', error);
-  }
-};
-
 const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
   const requestBody = {
     id: idTransaction,
     paymentConfirmationReceiptTransaction: paymentImg,
-    statusTransaction: 2
   }
 
-  console.log("LOG REQ BODY", requestBody);
   const BASE_URL_PUT_TRANSACTION_ONGOING = `https://localhost:5001/api/TransactionOnGoing/UpdateTransactionOnGoing/${idTransaction}`
   try {
     const response = await axios.put(BASE_URL_PUT_TRANSACTION_ONGOING, requestBody, {
@@ -68,10 +34,9 @@ const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
       }
     });
     const data = response.data
-    console.log("INI RESPONSE BUKTI", data);
     return { data };
   } catch (error) {
-    console.error('Error fetching Unit:', error);
+    console.error('Error update payment confirm:', error);
   }
 };
 
@@ -83,11 +48,15 @@ const statusConfig = [
 ]
 
 const InvoicePage = () => {
+  const auth = useAuth()
+  const name = auth.auth.userName
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { transactionNum } = useParams()
   const [paymentImg, setPaymentImg] = useState('')
-  console.log({ paymentImg });
+  const [isPayment, setIsPayemnt] = useState(false)
+  const [modalImg, setModalImg] = useState(false)
+  console.log({ modalImg, paymentImg });
 
   // GET DATA TRANSACTION BUY
   const { data: dataBuy, isLoading: buyIsLoading, isFetching: buyIsFetching, isSuccess: buyIsSuccess, errorBuy } = useQuery({
@@ -98,6 +67,7 @@ const InvoicePage = () => {
       transactionNum: transactionNum,
     }),
   })
+  // console.log(buyIsSuccess && dataBuy.data.items.length);
 
   // GET DATA TRANSACTION RENT
   const { data: dataRent, isLoading: rentIsLoading, isFetching: rentIsFetching, isSuccess: rentIsSuccess, errorRent } = useQuery({
@@ -105,6 +75,19 @@ const InvoicePage = () => {
       transactionNum: transactionNum,
     }],
     queryFn: () => GET_TRANSACTION_RENT({
+      transactionNum: transactionNum,
+    }),
+  })
+  console.log(rentIsSuccess && dataRent?.data?.items.length);
+
+  // GET DATA TRANSACTION IMG
+  const { data: dataImg, isLoading: imgIsLoading, isFetching: imgIsFetching, isSuccess: imgIsSuccess } = useQuery({
+    queryKey: ["TransactionOngoing", {
+      username: name,
+      transactionNum: transactionNum,
+    }],
+    queryFn: () => GET_TRANSACTION_ONGOING({
+      username: name,
       transactionNum: transactionNum,
     }),
   })
@@ -120,19 +103,39 @@ const InvoicePage = () => {
     },
   })
 
-  console.log("rentIsSuccess:", rentIsSuccess);
-  console.log("dataRent:", dataRent);
-  console.log("dataBuy:", dataBuy);
+  // BATALKAN PESANAN || UPDATE STATUS TRANSACTION TO REJECTED
+  // MUTATE TRANSACTION BUY TU PUT STATUS
+  const { mutate: putStatusBuy, error: errorPutBuy, isSuccess: putBuyIsSuccess, isPending: putBuyIsPending } = useMutation({
+    mutationFn: PUT_TRANSACTION_STATUS_BUY,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['TransactionBuy'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat mengupdate data pembelian:", error);
+    },
+  })
+
+  // MUTATE TRANSACTION RENT TU PUT STATUS
+  const { mutate: putStatusRent, error: errorPutRent, isSuccess: putRentIsSuccess, isPending: putRentIsPending } = useMutation({
+    mutationFn: PUT_TRANSACTION_STATUS_RENT,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['TransactionRent'], (oldData) => [...oldData, data]);
+      console.log("RENT DIBATALKANNN IS WORK");
+    },
+    onError: (error) => {
+      console.error("Error saat mengupdate data penyewaan:", error);
+    },
+  })
+
 
   const isLoading = buyIsLoading || rentIsLoading;
   const isFetching = buyIsFetching || rentIsFetching;
   const isSuccess = buyIsSuccess || rentIsSuccess;
 
-  const transactionData = rentIsSuccess && dataRent?.data?.length ? dataRent.data[0] : buyIsSuccess && dataBuy?.data?.length ? dataBuy.data[0] : {};
-  console.log({ dataBuy, dataRent, transactionData });
-
+  const transactionData = rentIsSuccess && dataRent?.data?.items.length ? dataRent.data.items[0] : buyIsSuccess && dataBuy?.data?.items.length ? dataBuy.data.items[0] : {};
   const statusIndex = transactionData.statusTransaction;
   const status = statusConfig[statusIndex];
+  console.log({ dataRent });
 
   const handleWhatsAppClick = () => {
     const phoneNumber = "+6285748382270";
@@ -145,10 +148,16 @@ const InvoicePage = () => {
 
 
   const handleUploadPaymentConfirm = async () => {
-    await putPaymentImg({
-      idTransaction: transactionData.id,
-      paymentImg: paymentImg
-    })
+    {
+      paymentImg
+        ? (
+          await putPaymentImg({
+            idTransaction: transactionData.id,
+            paymentImg: paymentImg
+          })
+        )
+        : setIsPayemnt(true)
+    }
   }
 
   const handleOnChangePaymentImg = async (event) => {
@@ -156,6 +165,19 @@ const InvoicePage = () => {
     setPaymentImg(paymentEncoded);
   };
 
+  const handleCancleTransaction = async () => {
+    {
+      dataRent?.data?.items?.length
+        ? await putStatusRent({
+          id: transactionData.id,
+          statusTransaction: 0
+        })
+        : await putStatusBuy({
+          id: transactionData.id,
+          statusTransaction: 0
+        })
+    }
+  }
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start", height: "100%", padding: "30px" }}>
@@ -182,7 +204,7 @@ const InvoicePage = () => {
               {isFetching ? (
                 <Skeleton variant="text" width={"200px"} sx={{ fontSize: "24px", color: "#193D71", fontWeight: "medium" }} />
               ) : (
-                rentIsSuccess ? "Penyewaan Unit" : "Pembelian Unit"
+                dataRent?.data?.items?.length ? "Penyewaan Unit" : "Pembelian Unit"
               )}
             </Typography>
             <Typography sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }}>
@@ -196,10 +218,9 @@ const InvoicePage = () => {
               {isFetching ? (
                 <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
               ) : (
-                dataRent?.data?.length
+                dataRent?.data?.items?.length
                   ? `${dateToMonth(transactionData.dateRent)} - ${dateToMonth(transactionData.dateReturn)}`
-                  :
-                  dateToMonth(transactionData.dateBuy)
+                  : dateToMonth(transactionData.dateBuy)
               )
               }
             </Typography>
@@ -239,8 +260,8 @@ const InvoicePage = () => {
                 {isFetching ? (
                   <Skeleton variant="text" width={"200px"} sx={{ fontSize: "25px", color: "#193D71", fontWeight: "medium" }} />
                 ) : (
-                  dataRent?.data?.length ? (
-                  `Durasi sewa ${transactionData?.months} bulan`) : ""
+                  dataRent?.data?.items?.length ? (
+                    `Durasi sewa ${transactionData?.months} bulan`) : ""
                 )}
               </Typography>
             </Box>
@@ -251,11 +272,21 @@ const InvoicePage = () => {
                 {isFetching ? (
                   <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
                 ) : (
-                  dataRent?.data?.length
+                  dataRent?.data?.items?.length
                     ?
-                    (`${formatRupiah(transactionData.priceRentUnit * transactionData.qtyTransaction)}`)
+                    (`${formatRupiah(transactionData.priceRentUnit * transactionData.qtyTransaction * transactionData?.months)}`)
                     :
                     (`${formatRupiah(transactionData.priceBuyUnit * transactionData.qtyTransaction)}`)
+                )}
+              </Typography>
+              <Typography sx={{ fontSize: "18px", color: "#23A647", fontWeight: "medium" }}>
+                {isFetching ? (
+                  <Skeleton variant="text" width={"200px"} sx={{ fontSize: "20px", color: "#193D71", fontWeight: "medium" }} />
+                ) : (
+                  dataRent?.data?.items?.length
+                    ?
+                    (`+ ${formatRupiah(transactionData.totalPriceTransaction - (transactionData.priceRentUnit * transactionData.qtyTransaction * transactionData?.months))}`)
+                    : ""
                 )}
               </Typography>
             </Box>
@@ -347,8 +378,31 @@ const InvoicePage = () => {
               </Typography>
               <TextField
                 onChange={handleOnChangePaymentImg}
-                color='primaryDark' type='file' size='small' sx={{ width: "100%", p: "2px 0px", bgcolor: "white", mb: "10px" }}>
+                color='primaryDark' type='file' size='small' sx={{ width: "100%", p: "2px 0px", bgcolor: "white" }}
+                error={isPayment}
+                helperText={isPayment && "Upload Foto terlebih dahulu"}>
               </TextField>
+              {paymentImg &&
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Button
+                    onClick={() => setModalImg(true)}
+                    color='primary'
+                    sx={{ mb: "10px", width: "60px", height: "60px", flexDirection: "row", display: "flex", gap: "10px" }}>
+                    <img src={paymentImg} alt="ini foto" style={{ width: "50px", height: "50px" }} />
+                  </Button>
+                  <Box sx={{ ...flexCenter }}>
+                    <IconButton color='primaryDark' size="small" onClick={() => setPaymentImg('')}>
+                      <CancelRounded />
+                    </IconButton>
+                  </Box>
+                  <ModalPaymentConfirm
+                    typeModal={"Bukti Pembayaran"}
+                    img={paymentImg}
+                    isOpen={modalImg}
+                    onClose={() => setModalImg(false)}
+                  />
+                </Box>
+              }
               {paymentImgIsPending
                 ? (
                   <ButtonContained
@@ -375,21 +429,24 @@ const InvoicePage = () => {
             </>
           )
             : (
-              <Box sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "40px",
-                borderRadius: "10px",
-                color: "#D9D630",
-                border: `2px solid ${"#7688A3"}`,
-                backgroundColor: "#7688A3",
-                fontSize: "14px",
-                fontWeight: "medium",
-              }}>
-                Bukti Berhasil diupload
-              </Box>
+              <>
+                <ButtonContained
+                  onClick={() => setModalImg(true)}
+                  text={"Lihat Bukti Pembayaran"}
+                  primaryColor={"#193D71"}
+                  secondColor={"#D9D630"}
+                  hoverColor={"#F5E94C"}
+                  width={"100%"}
+                  height={"40px"}
+                  fz={"14px"}
+                />
+                <ModalPaymentConfirm
+                  typeModal={"Bukti Pembayaran"}
+                  img={imgIsSuccess && dataImg.data[0].paymentConfirmationReceipt}
+                  isOpen={modalImg}
+                  onClose={() => setModalImg(false)}
+                />
+              </>
             )}
         </Box>
 
@@ -412,16 +469,29 @@ const InvoicePage = () => {
                 height={"35px"}
                 fz={"12px"}
               />
-              <ButtonContained
-                // onClick={}
-                text={"Batalkan"}
-                primaryColor={"#FFFFFF"}
-                secondColor={"#EC3535"}
-                hoverColor={"#C32828"}
-                width={"180px"}
-                height={"35px"}
-                fz={"12px"}
-              />
+              {putBuyIsPending || putRentIsPending
+                ?
+                <ButtonContained
+                  text={"Proses Pembatalan..."}
+                  primaryColor={"#FFFFFF"}
+                  secondColor={"#EC3535"}
+                  hoverColor={"#C32828"}
+                  width={"180px"}
+                  height={"35px"}
+                  fz={"12px"}
+                />
+                : 
+                <ButtonContained
+                  onClick={handleCancleTransaction}
+                  text={"Batalkan"}
+                  primaryColor={"#FFFFFF"}
+                  secondColor={"#EC3535"}
+                  hoverColor={"#C32828"}
+                  width={"180px"}
+                  height={"35px"}
+                  fz={"12px"}
+                />
+              }
             </Box>
           </Box>
         ) : null}

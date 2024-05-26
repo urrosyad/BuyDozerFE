@@ -3,7 +3,10 @@ import * as yup from 'yup';
 import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase } from '@mui/material'
 import { LocalActivity, Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom'
+import buydozerFont from '@assets/customer/buydozerFont.png'
+import buydozerLogo from '@assets/customer/buydozerLogo.png'
 import { useFormik } from 'formik'
+import { flexCenter } from '@themes/commonStyles'
 import axios from 'axios'
 import image from '@assets/bgLogin.png'
 import theme from '../../../Themes/theme';
@@ -12,7 +15,7 @@ import useAuth from '@hooks/useAuth'
 
 const BASE_URL_LOGIN = "https://localhost:5001/api/LoginRegisters/Login"
 
-const styleButton = { 
+const styleButton = {
   width: "150px",
   borderRadius: "10px",
   color: "#D9D630",
@@ -23,15 +26,16 @@ const styleButton = {
     backgroundColor: "#D9D630",
     color: "#193D71",
     border: "2px solid #D9D630"
-}}
+  }
+}
 
 const LoginPage = () => {
-  const {loginAuth } = useAuth()
+  const { loginAuth } = useAuth()
   const navigate = useNavigate()
   const formik = useFormik({
-    initialValues:{
-      username:"",
-      password: "", 
+    initialValues: {
+      username: "",
+      password: "",
     },
     validateOnChange: false,
     validationSchema: yup.object().shape({
@@ -40,13 +44,14 @@ const LoginPage = () => {
     }),
     onSubmit: async () => {
       try {
-        const {Data} = await POST_LOGIN()
-        
+        const { Data } = await POST_LOGIN()
+
         if (Data) {
           const userError = Data.toLowerCase().includes('username');
-          {userError 
-            ? formik.setFieldError('username', Data) 
-            : formik.setFieldError('password', Data) 
+          {
+            userError
+              ? formik.setFieldError('username', Data)
+              : formik.setFieldError('password', Data)
           }
         }
 
@@ -72,104 +77,111 @@ const LoginPage = () => {
         }
       });
       console.log(response);
-      const { 
-        UserName, 
-        UserId, 
+      const {
+        UserName,
+        UserId,
         accessToken,
         IsAdmin,
         Status,
-        Data, 
-        expiresIn} = response.data;
+        Data,
+        expiresIn } = response.data;
       localStorage.setItem('ExpiresIn', expiresIn)
 
-      if (!Status) {        
+      if (!Status) {
         loginAuth(
-          accessToken, 
-          IsAdmin ? 1999 : 2000, 
-          UserName, 
+          accessToken,
+          IsAdmin ? 1999 : 2000,
+          UserName,
           UserId,
-      )}
+        )
+      }
 
-      return {accessToken, Data};
+      return { accessToken, Data };
     } catch (error) {
       console.error('Error while login:', error);
       throw error;
-    }}
+    }
+  }
 
   return (
     <Box>
       <Box sx={{
-        display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: `url(${image})`,
+        ...flexCenter,backgroundImage: `url(${image})`, flexDirection: "column",
         width: "100%", height: "100vh", backgroundRepeat: 'no-repeat',
       }}>
-        <Paper component="form" onSubmit={POST_LOGIN} sx={{ height: "396px", width: "372px", borderRadius: 2, margin: "20px auto", padding: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginTop: 1 }}>
-            <Typography sx={{ 
-              fontWeight: 'bold', fontSize: 24, color: '#D9D630' 
+        <Box sx={{ ...flexCenter, flexDirection: 'column', width: "auto", height: "120px", borderRadius: 2 }}>
+          <Box sx={{...flexCenter}}>
+          <img src={buydozerLogo} style={{ position: "absolute", width: "150px", zIndex: 0, opacity: 0.1 }} />
+          <img src={buydozerFont} style={{ width: "250px", zIndex: 1 }} />
+          </Box>
+
+        </Box>
+        <Paper component="form" onSubmit={POST_LOGIN} sx={{ height: "396px", width: "372px", borderRadius: 2, margin: "0 auto", padding: 2 }}>
+          <Box sx={{ ...flexCenter, flexDirection: 'column', marginTop: 1 }}>
+            <Typography sx={{
+              fontWeight: 'medium', fontSize: "24px", color: '#D9D630'
             }}>
               Welcome To Buydozer
             </Typography>
-            <Typography sx={{ 
-              fontSize: "16px", color: '#193D71' 
-            }}>
-              Heavy Unit Heavy Profit
-            </Typography>
+            <Typography sx={{fontSize: "16px", color: '#193D71'}}>
+            Heavy Unit Heavy Profit
+          </Typography>
           </Box>
 
-          <Box sx={{ margin: "10px 20px"}}>
-            <FormControl sx={{width:"100%" }}>
+          <Box sx={{ margin: "10px 20px" }}>
+            <FormControl sx={{ width: "100%" }}>
               <Typography sx={{ fontSize: "18px", color: '#193D71' }}>Username</Typography>
-              <Box sx={{ 
+              <Box sx={{
                 height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
               }}>
-                <InputBase 
-                type='text' name='username' value={formik.values.username}
-                sx={{ 
-                  width:"100%", height:"100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl:'10px'
-                }}  
-                onChange={handleOnChangeLogin} 
+                <InputBase
+                  type='text' name='username' value={formik.values.username}
+                  sx={{
+                    width: "100%", height: "100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl: '10px'
+                  }}
+                  onChange={handleOnChangeLogin}
                 />
               </Box>
 
               {/* validation */}
               {formik.errors.username && (
-              <Box sx={{ 
-                height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"
-              }}>
+                <Box sx={{
+                  height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"
+                }}>
 
-                <Typography sx={{ fontSize: 12, color: "#EC3535", ml: "10px" }}>
-                  {formik.errors.username}
-                </Typography>
-              </Box>
-              )} 
+                  <Typography sx={{ fontSize: 12, color: "#EC3535", ml: "10px" }}>
+                    {formik.errors.username}
+                  </Typography>
+                </Box>
+              )}
 
             </FormControl>
-            <FormControl sx={{width:"100%",marginTop: "10px" }}>
+            <FormControl sx={{ width: "100%", marginTop: "10px" }}>
               <Typography sx={{ fontSize: 18, color: '#193D71' }}>Password</Typography>
-              <Box sx={{ 
+              <Box sx={{
                 height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px",
               }}>
-                <InputBase 
-                type={showPassword ? 'text' : 'password'} name='password' value={formik.values.password}
-                sx={{ 
-                  width:"100%", height:"100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl:'10px'
-                }}
-                onChange={handleOnChangeLogin} />
-                <IconButton size='small' sx={{color: "#2A6DD0", mr: 2}} onClick={handleClickShowPassword}>
-                {showPassword ? <VisibilityOff fontSize='small' /> : <Visibility fontSize='small' />}
+                <InputBase
+                  type={showPassword ? 'text' : 'password'} name='password' value={formik.values.password}
+                  sx={{
+                    width: "100%", height: "100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl: '10px'
+                  }}
+                  onChange={handleOnChangeLogin} />
+                <IconButton size='small' sx={{ color: "#2A6DD0", mr: 2 }} onClick={handleClickShowPassword}>
+                  {showPassword ? <VisibilityOff fontSize='small' /> : <Visibility fontSize='small' />}
                 </IconButton>
               </Box>
 
               {/* validation */}
               {formik.errors.password && (
-              <Box sx={{ 
-                height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"
-              }}>
+                <Box sx={{
+                  height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"
+                }}>
 
-                <Typography sx={{ fontSize: 12, color: "#EC3535", ml: "10px" }}>
-                  {formik.errors.password}
-                </Typography>
-              </Box>
+                  <Typography sx={{ fontSize: 12, color: "#EC3535", ml: "10px" }}>
+                    {formik.errors.password}
+                  </Typography>
+                </Box>
               )}
 
             </FormControl>

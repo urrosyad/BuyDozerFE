@@ -98,7 +98,7 @@ const UnitSection = ({ }) => {
             arrows={true}
           >
             {unitIsSuccess && dataUnit && dataUnit.data.map((item, index) => (
-              <Link href={`/buydozer/unit/${item.nameUnit}`}>
+              <Link href={`/buydozer/unit/${item.nameUnit}`} underline='none'>
                 <Box key={index} sx={{
                   ...flexCenter, flexDirection: "column", width: "200px", height: "250px", boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", backgroundColor: "#FFFFFF", borderRadius: "10px", ":hover": {
                     cursor: "pointer",

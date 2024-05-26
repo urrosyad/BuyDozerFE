@@ -23,7 +23,7 @@ const ModalTrxDetail = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelI
 
     return (
         <Dialog open={isOpen} onClose={onClose} sx={{
-            "& .MuiPaper-root": { borderRadius: "20px" }
+            "& .MuiPaper-root": { borderRadius: "20px", width:"800px" }
         }}>
             <DialogTitle variant="h5" sx={{ width: "100%", fontWeight: "medium" }}>{typeModal}</DialogTitle>
             <Divider sx={{ width: "90%", alignSelf: "center" }} />

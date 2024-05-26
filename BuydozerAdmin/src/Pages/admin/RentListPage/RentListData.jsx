@@ -15,8 +15,7 @@ import ModalPriceListRent from '@components/admin/Atoms/Modal/ModalPriceListRent
 import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
 import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
 import TableRentList from './TableRentList';
-
-
+import { GET_RENT_LIST, POST_RENT_LIST, PUT_RENT_LIST, DELETE_RENT_LIST } from '@api/api';
 
 const initialValues = {
   id: "",
@@ -28,90 +27,6 @@ const initialValues = {
   priceBuyUnit: null,
   priceRentUnit: null,
   qtyUnit: null,
-}
-
-
-const POST_RentList = async ({ RentListValues }) => {
-
-  const BASE_URL_POST_RentList = "https://localhost:5001/api/PriceListRents/CreatePriceListRent"
-
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.post(BASE_URL_POST_RentList, RentListValues, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataRentList = response.data
-    return dataRentList;
-  } catch (error) {
-    console.error('Error while Post RentList:', error);
-    throw error
-  }
-};
-
-const GET_RentList_BYNAME = async ({ searchValue }) => {
-  console.log('nama RentList: ', searchValue);
-
-  const BASE_URL_GET_RentList = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${searchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
-
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_GET_RentList, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataRentList = response.data.items
-    // console.log('log data RentList dari api: ', dataRentList);
-    return dataRentList
-
-  } catch (error) {
-    throw error;
-  }
-};
-
-const PUT_RentList = async ({ id, RentListValues }) => {
-  console.table(id, RentListValues);
-
-  const BASE_URL_PUT_RentList = `https://localhost:5001/api/PriceListRents/UpdatePriceListRent/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.put(BASE_URL_PUT_RentList, RentListValues, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataRentList = response.data
-    return dataRentList;
-  } catch (error) {
-    console.error('Error while Put RentList:', error);
-    throw error
-  }
-}
-
-const DELETE_RentList = async ({ id }) => {
-  console.log("id yang diterima oleh function DELETE_RentList", id);
-
-  const BASE_URL_DELETE_RentList = `https://localhost:5001/api/PriceListRents/DeletePriceListRent/${id}`
-  const accessToken = localStorage.getItem('AccessToken')
-  try {
-    const response = await axios.delete(BASE_URL_DELETE_RentList, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataRentList = response.data
-    console.log("Berhasil delete DATA");
-    return dataRentList;
-  } catch (error) {
-    console.error('Error while Delete RentList:', error);
-    throw error
-  }
 }
 
 const RentListData = () => {
@@ -130,17 +45,16 @@ const RentListData = () => {
     onSubmit: (values) => {
       {
         isEdit
-          ? putRentList({ id: values.id, RentListValues: values })
-          : postRentList({ RentListValues: values })
+          ? putRentList({ id: values.id, requestBody: values })
+          : postRentList({ requestBody: values })
       }
     }
   })
-  console.log('log data RentList dari formik values: ', formik.values);
 
 
-  // Function for create data
+  // CREATE DATA RENT LIST
   const { mutate: postRentList, error: postError, isSuccess: postIsSuccess } = useMutation({
-    mutationFn: POST_RentList,
+    mutationFn: POST_RENT_LIST,
     onSuccess: (data) => {
       console.log("Data successfully POSTED", data)
       setIsModalAddOpen(false)
@@ -153,9 +67,9 @@ const RentListData = () => {
     },
   })
 
-  // Function for update data
+  // UPDATE DATA RENT LIST
   const { mutate: putRentList, error: putError, isSuccess: putIsSuccess } = useMutation({
-    mutationFn: PUT_RentList,
+    mutationFn: PUT_RENT_LIST,
     onSuccess: (data) => {
       console.log("Data successfully UPDATE", data)
       setIsModalEditOpen(false)
@@ -168,9 +82,9 @@ const RentListData = () => {
     },
   })
 
-  // Function for delete data
+  // DELETE DATA RENTLIST
   const { mutate: delRentList, error: delError, isSuccess: delIsSuccess } = useMutation({
-    mutationFn: DELETE_RentList,
+    mutationFn: DELETE_RENT_LIST,
     onSuccess: (data) => {
       console.log("Data successfully DELETE", data)
       setIsModalDelOpen(false)
@@ -181,18 +95,13 @@ const RentListData = () => {
     },
   })
 
-
-
   const handlePostChange = async (event) => {
     const { name, value } = event.target;
     formik.setValues({
       ...formik.values,
       [name]: value,
     });
-
-    // console.table(formik.values);
   };
-
 
   const handlePostSubmit = async () => {
     formik.handleSubmit()
@@ -215,13 +124,10 @@ const RentListData = () => {
     formik.handleReset(formik.values);
   }
 
-
   const handleSelectRow = async (searchValue) => {
     setIsEdit(true)
     setIsModalEditOpen(true)
-    console.log(`data yang dikirimkan ${searchValue}`);
-
-    const fetchData = await GET_RentList_BYNAME({ searchValue: searchValue })
+    const fetchData = await GET_RENT_LIST({ searchValue: searchValue })
     { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
     formik.setValues({
       ...formik.values,
@@ -232,14 +138,11 @@ const RentListData = () => {
   const handleSelectRowId = async (id, nameRent) => {
     setIsDel(true)
     setIsModalDelOpen(true)
-    console.log(`data yang diterima UnitData`, id, nameRent);
-
     formik.setValues({
       id: id,
       nameRent: nameRent
     });
   };
-
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);

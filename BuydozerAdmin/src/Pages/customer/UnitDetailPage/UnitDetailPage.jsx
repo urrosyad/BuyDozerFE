@@ -20,7 +20,8 @@ const authData = localStorage.getItem('AuthData')
 const auth = JSON.parse(authData)
 const accessToken = auth.accessToken
 const userId = auth.userId
-// const accessToken =  localStorage.getItem("AccessToken")
+// const userName = localStorage.getItem("UserName");
+// const accessToken = localStorage.getItem("AccessToken");
 
 const GET_PRICELIST_RENT = async () => {
   const BASE_URL_GET_PRICELIST_RENT = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;

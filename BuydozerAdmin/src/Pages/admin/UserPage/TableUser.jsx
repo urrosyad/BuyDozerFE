@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query';
+import { GET_USER } from '@api/api';
+import { EditButton, DeleteButton, KeyButton } from '@components/admin/Atoms/Buttons';
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
+import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp, KeyRounded, KeyOffRounded } from '@mui/icons-material';
 import {
   Box, Typography,
   Table, TableContainer,
@@ -8,39 +13,10 @@ import {
   IconButton, Collapse,
   CircularProgress,
 } from '@mui/material'
-import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp, KeyRounded, KeyOffRounded } from '@mui/icons-material';
-import { EditButton, DeleteButton, KeyButton } from '@components/admin/Atoms/Buttons';
-import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import theme from '@themes/theme';
-
-const GET_USER = async (props) => {
-  const { SearchValue, PageNumber, PageSize, SortUserName } = props
-
-  // False = Desc && True = Asc
-  const BASE_URL_USER = `https://localhost:5001/api/UserEntitys/GetUserEntity?ParameterName=%25${SearchValue}%25&SortUserName=${SortUserName}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
-  const accessToken = localStorage.getItem('AccessToken');
-  try {
-    const response = await axios.get(BASE_URL_USER, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    const dataUser = response.data.items
-    const totalCount = response.data.totalCount
-    return { dataUser, totalCount };
-
-  } catch (error) {
-    console.error('Error fetching User:', error);
-    // throw error;
-  }
-};
 
 
 const TableUser = (props) => {
-  const { SearchValue, PageNumber, PageSize, ParameterName } = props
+  const { SearchValue } = props
   const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
@@ -48,12 +24,11 @@ const TableUser = (props) => {
   const [sortUserName, setSortUserName] = useState(false)
 
   const fetchData = async () => {
-    const { dataUser, totalCount } = await GET_USER({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortUserName: sortUserName });
+    const { dataUser, totalCount } = await GET_USER({ Username: SearchValue, PageNumber: page, PageSize: rowsPerPage, SortUserName: sortUserName });
     setTotalData(totalCount);
     if (!dataUser) {
       throw new Error("Failed to fetch data");
     };
-
     const formattedData = dataUser.map(data => ({
       id: data.id,
       userName: data.userName,
@@ -66,16 +41,10 @@ const TableUser = (props) => {
   };
 
   const {
-    data,
-    isPending,
-    isFetching,
-    isLoading,
-    error,
-    refetch } = useQuery
-      ({
-        queryKey: ["User"],
-        queryFn: fetchData,
-      })
+    data, isPending, isFetching, isLoading, error, refetch } = useQuery({
+      queryKey: ["User"],
+      queryFn: fetchData,
+    })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -92,7 +61,6 @@ const TableUser = (props) => {
 
   const handleEditOnClick = (index) => {
     const clickedData = data[index].userName;
-    console.log('Data yang diklik:', clickedData);
 
     // to send data nameUnit to parent Component
     props.onSelectRow(clickedData);
@@ -101,7 +69,6 @@ const TableUser = (props) => {
   const handleDelOnClick = (index) => {
     const idRow = data[index].id;
     const userNameRow = data[index].userName;
-    console.log('Data yang diklik:', idRow, userNameRow);
 
     // to send data nameUnit to parent Component
     props.onSelectRowId(idRow, userNameRow);
@@ -111,7 +78,6 @@ const TableUser = (props) => {
     const idRow = data[index].id;
     const roleRow = data[index].isAdmin;
     const userNameRow = data[index].userName;
-    console.log("Ini IdRow", idRow);
 
     props.onSelectRowRole(idRow, roleRow, userNameRow);
   }
@@ -119,8 +85,6 @@ const TableUser = (props) => {
   useEffect(() => {
     refetch()
   }, [SearchValue, page, rowsPerPage, sortUserName, refetch]);
-
-  // const skipAccessorKeys = ["imgUnit", "imgBrand"];
   const columns = [
     { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
     { accessorKey: "userName", header: "Nama Pengguna", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
@@ -154,15 +118,13 @@ const TableUser = (props) => {
 
   if (data === undefined) {
     return (
-      <div>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh" }}>
         <CircularProgress size={50} sx={{
-          position: "absolute",
           color: "#8BB9FF",
-          marginTop: 20,
-          marginLeft: 68,
+          mb: 20
         }}
         />
-      </div>
+      </Box>
     )
   }
 

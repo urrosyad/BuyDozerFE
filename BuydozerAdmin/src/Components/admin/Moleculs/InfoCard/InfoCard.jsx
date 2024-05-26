@@ -1,8 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
 import gradientCard from "@assets/admin/gradientCard.png"
-import theme from '@themes/theme';
-
+ 
 const InfoCard = ({ title, subTitle, qty, icon }) => {
   return (
     <Box sx={{
@@ -43,5 +42,5 @@ const InfoCard = ({ title, subTitle, qty, icon }) => {
     </Box>
   )
 }
-
+ 
 export default InfoCard
