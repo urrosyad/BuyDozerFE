@@ -4,89 +4,114 @@ import { useLocation, useNavigate } from "react-router-dom";
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const location = useLocation()
-    const navigate = useNavigate()
+  const location = useLocation()
+  const navigate = useNavigate()
 
-    const [auth, setAuth] = useState({
-        isLoggedIn: !!localStorage.getItem("AccessToken"),
-        accessToken: localStorage.getItem("AccessToken") || null,
-        userRole: localStorage.getItem("UserRole") || null,
-        userName: localStorage.getItem("UserName") || null,
-        userId: localStorage.getItem("UserId") || null,
-      });
+  const [auth, setAuth] = useState({
+    isLoggedIn: !!localStorage.getItem("AccessToken"),
+    accessToken: localStorage.getItem("AccessToken") || null,
+    userRole: localStorage.getItem("UserRole") || null,
+    userName: localStorage.getItem("UserName") || null,
+    userId: localStorage.getItem("UserId") || null,
+    expiresIn: localStorage.getItem("ExpiresIn") || null,
+  });
 
-      const loginAuth = (accessToken, userRole, userName, userId) => {
-        const expiresIn = new Date().getTime() / 1000 + 3600;
-        localStorage.setItem("AccessToken", accessToken);
-        localStorage.setItem("UserRole", userRole); 
-        localStorage.setItem("UserName", userName);
-        localStorage.setItem("UserId", userId);
-        localStorage.setItem("ExpiresIn", expiresIn);
-        
-        setAuth({
-          isLoggedIn: true,
-          accessToken: accessToken,
-          userRole: userRole,
-          userName: userName,
-          userId: userId,
-        });
-      };
+  const loginAuth = (accessToken, userRole, userName, userId, expiresIn) => {
+    const expiryTime = new Date().getTime() + expiresIn * 1000;
+    localStorage.setItem("AccessToken", accessToken);
+    localStorage.setItem("UserRole", userRole);
+    localStorage.setItem("UserName", userName);
+    localStorage.setItem("UserId", userId);
+    localStorage.setItem("ExpiresIn", expiryTime);
 
-      const authData = JSON.stringify(auth);
-      localStorage.setItem("AuthData", authData);
+    setAuth({
+      isLoggedIn: true,
+      accessToken: accessToken,
+      userRole: userRole,
+      userName: userName,
+      userId: userId,
+      expiresIn: expiryTime
+    });
+  };
 
-    
-      // useEffect(() => {
-      //   const expiresIn = localStorage.getItem("ExpiresIn");
-      //   const currentTime = new Date().getTime() / 1000;
-      //   const isLoggedIn = currentTime < expiresIn;
-        
-      //   setAuth(prevAuth => ({ ...prevAuth, isLoggedIn }));
-      // }, []);
+  const authData = JSON.stringify(auth);
+  localStorage.setItem("AuthData", authData);
 
-      
-      useEffect(() => {
-        const from = location.state?.from?.pathname || "/login";
-        // Jika sudah login, maka navigasi langsung ke dashboard
 
-        if (auth.isLoggedIn) {
-          if (auth.userRole === 1999) {
-            navigate('/admin/dashboard', { replace: true });
-        } else if (auth.userRole === 2000) {
-            navigate('/', { replace: true });
+  // useEffect for directing user with different role
+  useEffect(() => {
+    const from = location.state?.from?.pathname || "/login";
+    // Jika sudah login, maka navigasi langsung ke dashboard
+
+    if (auth.isLoggedIn) {
+      if (auth.userRole === 1999) {
+        navigate('/admin/dashboard', { replace: true });
+      } else if (auth.userRole === 2000) {
+        navigate('/', { replace: true });
+      }
+      // Jika belum login, maka navigasi sesuai dengan 'from'
+    } else {
+      if (from === "/register") {
+        navigate('/login', { replace: true });
+      }
+    }
+  }, [auth.isLoggedIn, auth.userRole, location.state]);
+
+  // useEffect for counting the expiresIn end
+  useEffect(() => {
+    const handleLogoutIfExpired = () => {
+      const expiryTime = localStorage.getItem("ExpiresIn");
+      if (expiryTime && new Date().getTime() > expiryTime) {
+        logoutAuth();
+      }
+    };
+    const interval = setInterval(handleLogoutIfExpired, 1000); // Periksa setiap detik
+    return () => clearInterval(interval);
+  }, []);
+
+
+  // useEffect for show the expiresIn time left
+  useEffect(() => {
+    if (auth.isLoggedIn && auth.expiresIn) {
+      const interval = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const timeLeft = Math.max(0, auth.expiresIn - currentTime);
+        const minutesLeft = Math.floor(timeLeft / 60000);
+        console.log(`ExpiresIn end in: ${minutesLeft}m`);
+        if (timeLeft <= 0) {
+          clearInterval(interval);
         }
-        // Jika belum login, maka navigasi sesuai dengan 'from'
-
-        } else {
-          if (from === "/register") {
-            navigate('/login', { replace: true });
-          }
-        }
-      }, [auth.isLoggedIn, auth.userRole, location.state]);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [auth.isLoggedIn, auth.expiresIn]);
 
 
-      const logoutAuth = () => {
-        localStorage.removeItem("AccessToken");
-        localStorage.removeItem("UserRole");
-        localStorage.removeItem("UserName");
-        localStorage.removeItem("UserId");
-        localStorage.removeItem("AuthData");
-        
-        setAuth({
-          isLoggedIn: false,
-          accessToken: null,
-          userRole: null,
-          userName: null,
-          userId: null,
-        });
-      };
+  const logoutAuth = () => {
+    localStorage.removeItem("AccessToken");
+    localStorage.removeItem("UserRole");
+    localStorage.removeItem("UserName");
+    localStorage.removeItem("UserId");
+    localStorage.removeItem("ExpiresIn");
+    localStorage.removeItem("AuthData");
 
+    setAuth({
+      isLoggedIn: false,
+      accessToken: null,
+      userRole: null,
+      userName: null,
+      userId: null,
+      expiresIn: null,
+    });
 
-    return (
-        <AuthContext.Provider value={{ auth, setAuth, loginAuth, logoutAuth }}>
-            {children}
-        </AuthContext.Provider>
-    )
+    navigate('/login', { replace: true });
+  };
+
+  return (
+    <AuthContext.Provider value={{ auth, setAuth, loginAuth, logoutAuth }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export default AuthContext;

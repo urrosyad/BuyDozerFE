@@ -157,7 +157,7 @@ const TablePaymentConfirm = (props) => {
 
   useEffect(() => {
     refetch()
-  }, [data, SearchValue, page, rowsPerPage, sortDate, refetch]);
+  }, [fetchData, data, SearchValue, page, rowsPerPage, sortDate]);
 
   const hiddenAccessorKey = ["id", "paymentConfirmationReceipt"];
   const columns = [

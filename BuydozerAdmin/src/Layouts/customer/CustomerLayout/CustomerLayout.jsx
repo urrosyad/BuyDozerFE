@@ -7,7 +7,6 @@ import Footer from '@layouts/customer/Footer/Footer'
 const CustomerLayout = () => {
   return (
       <>
-
         <Outlet />
       </>
   )

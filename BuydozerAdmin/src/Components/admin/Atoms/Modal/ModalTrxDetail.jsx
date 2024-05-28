@@ -1,13 +1,7 @@
-import React, { Component, useState } from 'react'
-import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
-// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
-import { TextareaAutosize } from '@mui/base'
-import SubmitButton from '../Buttons/SubmitButton'
+import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, FormControl, Box, DialogContent } from '@mui/material'
 import CancelButton from '../Buttons/CancelButton'
-import { formatDateTime } from '@utils/formatDate'
 
-
-const ModalTrxDetail = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik, statusConfig }) => {
+const ModalTrxDetail = ({ typeModal, onClose, onChange, isOpen, labelInput, formik, statusConfig }) => {
 
     const statusIndex = formik.values.statusTransaction;
     let statusContent, statusColor;

@@ -3,7 +3,6 @@ import {Outlet}  from 'react-router-dom'
 import {Sidenav}  from '../Sidenav'
 import {Header} from '../Header'
 import {Box} from '@mui/material'
-import { PrivateRoutes } from '@routers/PrivateRoutes'
 
 const AdminLayout = () => {
   return (

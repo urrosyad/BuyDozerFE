@@ -1,10 +1,11 @@
 /** @format */
 import axios from "axios";
-const authData = localStorage.getItem('AuthData')
+const authData = localStorage.  getItem('AuthData')
 const auth = JSON.parse(authData)
 const accessToken = auth.accessToken
 // const userId = auth.userId
 const userName = localStorage.getItem("UserName");
+// const accessToken = localStorage.getItem("AccessToken");
 
 
 //---------UNIT ENDPOINT---------// 
@@ -64,7 +65,6 @@ export const POST_UNIT = async ({ unitValues }) => {
 
 export const PUT_UNIT = async ({id, unitValues}) => {
 
-  console.log("ID DAN ISI PUT UNIT:",id, unitValues);
   const BASE_URL_PUT_UNIT = `https://localhost:5001/api/HeavyUnits/UpdateHeavyUnit/${id}`
   try {
     const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
@@ -166,10 +166,9 @@ export const PUT_ROLE_ADMIN = async ({ id }) => {
       }
     });
     const dataUser = response.data
-    console.log("Berhasil update data user menjadi admin");
     return dataUser;
   } catch (error) {
-    console.log('Error while updating User to admin:', error);
+    console.error('Error while updating User to admin:', error);
     throw error
   }
 }
@@ -184,7 +183,6 @@ export const DELETE_USER = async ({ id }) => {
       }
     });
     const dataUser = response.data
-    console.log("Berhasil delete data user");
     return dataUser;
   } catch (error) {
     console.error('Error while Delete User:', error);
@@ -210,7 +208,7 @@ export const GET_RENT_LIST = async (props) => {
     return { dataRentList, totalCount };
   } catch (error) {
     console.error('Error fetching RentList:', error);
-    // throw error;
+    // throw   error;
   }
 };
 
@@ -262,7 +260,6 @@ export const DELETE_RENT_LIST = async ({ id }) => {
       }
     });
     const dataRentList = response.data
-    console.log("Berhasil delete DATA");
     return dataRentList;
   } catch (error) {
     console.error('Error while Delete RentList:', error);
@@ -283,7 +280,6 @@ export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
       }
     });
     const data = response.data
-    console.log("INI TRXBUY", data);
     return { data };
   } catch (error) {
     console.error('Error get transaction buy:', error);
@@ -301,7 +297,6 @@ export const PUT_TRANSACTION_STATUS_BUY = async ({ id, statusTransaction }) => {
       }
     });
     const dataTransaksi = response.data
-    console.log("BERHASIL KONFIRMASI");
     return dataTransaksi;
   } catch (error) {
     console.error('Error while Put transaction buy:', error);
@@ -336,7 +331,6 @@ export const PUT_TRANSACTION_STATUS_RENT = async ({ id, statusTransaction }) => 
       }
     });
     const dataTransaksi = response.data
-    console.log("BERHASIL KONFIRMASI");
     return dataTransaksi;
   } catch (error) {
     console.error('Error while Put transaction rent:', error);
@@ -348,7 +342,6 @@ export const PUT_TRANSACTION_STATUS_RENT = async ({ id, statusTransaction }) => 
 export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {
   const BASE_URL_GET_TRANSACTION_ONGOING = `https://localhost:5001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterUserName=${username}&ParameterTransactionNumber=${transactionNum ? transactionNum : "%25%25"}&ParameterStatus=%25%25&SortDate=true&PageNumber=1&PageSize=${transactionNum ? "1" : "50"}`
   try {
-    console.log({ accessToken });
     const response = await axios.get(BASE_URL_GET_TRANSACTION_ONGOING, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,

@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
 import gradientCard from "@assets/admin/gradientCard.png"
  
 const InfoCard = ({ title, subTitle, qty, icon }) => {

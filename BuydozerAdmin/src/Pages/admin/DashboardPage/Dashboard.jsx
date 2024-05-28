@@ -21,11 +21,6 @@ import buydozerLogo from '@assets/customer/buydozerLogo.png'
 import DonutChart from '@components/admin/Moleculs/DonutChart/DonutChart';
 
 
-const authData = localStorage.getItem('AuthData')
-const auth = JSON.parse(authData)
-const accessToken = auth.accessToken
-const userName = auth.userName
-
 const Dashboard = () => {
   const navigate = useNavigate()
 
@@ -58,7 +53,6 @@ const Dashboard = () => {
       pageSize: 1
     }),
   })
-  console.log(userIsSuccess && dataUser);
 
   const { data: dataTransactionBuy = { data: [] }, isFetching: transaksiBuyIsFetching, isSuccess: transaksiBuyIsSuccess, refetch: transactionBuyRefetch } = useQuery({
     queryKey: ["TransactionBuy", {
@@ -111,8 +105,8 @@ const Dashboard = () => {
 
 
   const infoCard = [
-    { title: "Penyewaan", subTitle: "Unit", qty: transaksiRentIsSuccess && dataTransactionRent.data.totalCount, icon: <ShoppingCart sx={{ fontSize: "30px", color: "#193d71" }} /> },
-    { title: "Pembelian", subTitle: "Unit", qty: transaksiBuyIsSuccess && dataTransactionBuy.data.totalCount, icon: <PaidRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
+    { title: "Penyewaan", subTitle: "Transaksi", qty: transaksiRentIsSuccess && dataTransactionRent.data.totalCount, icon: <ShoppingCart sx={{ fontSize: "30px", color: "#193d71" }} /> },
+    { title: "Pembelian", subTitle: "Transaksi", qty: transaksiBuyIsSuccess && dataTransactionBuy.data.totalCount, icon: <PaidRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
     { title: "Unit", subTitle: "Tipe", qty: unitIsSuccess && dataUnit.totalCount, icon: <AgricultureRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
     { title: "Customer", subTitle: "User", qty: userTypeIsSuccess && dataUserType.data[0].userCount, icon: <GroupsRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
   ]
@@ -278,7 +272,7 @@ const Dashboard = () => {
                   <Typography sx={{ fontSize: "30px", color: "#193D71", fontWeight: "medium" }}>
                     Report Unit
                   </Typography>
-                  <img src={tagLineBg} style={{ width: "200px", height: "8px", borderRadius: "10px", marginBottom: 10 }} />
+                  <img src={tagLineBg} style={{ width: "120px", height: "8px", borderRadius: "10px", marginBottom: 10 }} />
                 </Box>
 
                 <Box id="donutChart" sx={{ display: "flex", justifyContent: "center", alignItems: "start", width: "100%", height: "auto" }}>
@@ -357,7 +351,7 @@ const Dashboard = () => {
               <Box sx={{ height: "100%", p: "30px" }}>
                 <Box sx={{ display: "flex", flexDirection: "column", mb: "20px" }}>
                   <Typography sx={{ fontSize: "30px", color: "#193D71", fontWeight: "medium" }}>
-                    Report Unit
+                    Report Transaksi
                   </Typography>
                   <img src={tagLineBg} style={{ width: "200px", height: "8px", borderRadius: "10px", marginBottom: 10 }} />
                 </Box>

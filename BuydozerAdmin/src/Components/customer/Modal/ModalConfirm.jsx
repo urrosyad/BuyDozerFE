@@ -3,8 +3,8 @@ import theme from '@themes/theme';
 import styled from '@emotion/styled';
 import { Button, Dialog, DialogActions, DialogContent, Divider, Typography, DialogTitle } from '@mui/material';
 
-const ModalConfirm = ({ isOpen, onClose, onSubmit, titleModal, messageAsk, messageConfirm, confirmText }) => {
-  
+const ModalConfirm = (props) => {
+  const { isOpen, onClose, onSubmit, titleModal, messageAsk, messageConfirm, confirmText } = props
 
   return (
     <Dialog open={isOpen} onClose={onClose} sx={{ "& .MuiPaper-root": { width: "450px", height: "300px", borderRadius: "10px" } }}>

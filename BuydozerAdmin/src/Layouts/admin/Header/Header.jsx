@@ -12,11 +12,7 @@ const Header = () => {
   const { logoutAuth } = useAuth()
 
   const handleLogout = () => { 
-    const accessToken = localStorage.getItem('AccessToken');
-    const userName = localStorage.getItem('UserName');
-    const userRole = localStorage.getItem('UserRole');
-    logoutAuth(accessToken, userRole, userName)
-    navigate("/login")
+    logoutAuth()
   }
 
   const handleSwitch = () => {

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react';
 import { MenuItem } from "react-pro-sidebar";
 import { Link } from 'react-router-dom';

@@ -1,4 +1,3 @@
-import theme from '@themes/theme'
 import useAuth from '@hooks/useAuth';
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'

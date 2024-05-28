@@ -1,10 +1,4 @@
-import React, { Component, useState } from 'react'
-import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
-import { TextareaAutosize } from '@mui/base'
-import theme from '@themes/theme';
-import SubmitButton from '../Buttons/SubmitButton'
-import CancelButton from '../Buttons/CancelButton'
-
+import { Dialog, DialogTitle,  Divider, DialogContent } from '@mui/material'
 
 const ModalPaymentConfirm
     = ({ typeModal, onClose, isOpen, labelInput, formik, img }) => {

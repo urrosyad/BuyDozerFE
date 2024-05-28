@@ -1,8 +1,7 @@
-import React, { Component, useState } from 'react'
-import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
-import { TextareaAutosize } from '@mui/base'
 import SubmitButton from '../Buttons/SubmitButton'
 import CancelButton from '../Buttons/CancelButton'
+import { TextareaAutosize } from '@mui/base'
+import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
 
 
 const ModalUser = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik }) => {

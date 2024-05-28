@@ -14,9 +14,7 @@ import { GET_TRANSACTION_ONGOING, GET_TRANSACTION_RENT, GET_TRANSACTION_BUY, PUT
 import useAuth from '@hooks/useAuth'
 // '../../../Utils' 
 
-const authData = localStorage.getItem('AuthData')
-const auth = JSON.parse(authData)
-const accessToken = auth.accessToken
+const accessToken = localStorage.getItem("AccessToken");
 
 const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
   const requestBody = {

@@ -1,6 +1,4 @@
-import { Button, Typography } from '@mui/material'
-import { Box, width } from '@mui/system'
-import React from 'react'
+import { Box, Button, Typography } from '@mui/material'
 
 const ButtonCounter = ({formik, onMinus, onPlus}) => {
   return (

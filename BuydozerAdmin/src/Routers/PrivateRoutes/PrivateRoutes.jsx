@@ -32,5 +32,11 @@ if (auth?.isLoggedIn) {
 }
 };
 
+// return (
+//   auth?.isLoggedIn
+//   ? <Outlet/>
+//   : <Navigate to="/" state={{ from: location }} replace/>
+// ) 
+// }
 
 export default PrivateRoutes

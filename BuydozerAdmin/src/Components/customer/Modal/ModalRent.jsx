@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Grid, IconButton, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, Select, InputLabel, MenuItem, FormControl, OutlinedInput, CircularProgress } from '@mui/material';
+import { useEffect, useState } from 'react'
+import { Box, Grid, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, Select, MenuItem, FormControl, OutlinedInput } from '@mui/material';
 import ButtonCounter from '../Atoms/Button/ButtonCounter';
 import ButtonContained from '../Atoms/Button/ButtonContained';
 import formatRupiah from '@utils/formatRupiah';
-import { flexCenter } from '@themes/commonStyles';
 
 
 const termAndConditions = `
@@ -27,9 +26,7 @@ const ModalRent = (props) => {
   const [totalPriceRent, setTotalPriceRent] = useState(0);
   const [tax, setTax] = useState(1);
   const [month, setMonth] = useState(0);
-  // console.log({ tax, month })
 
-  // console.log("ini priceRentUnit", priceRentUnit);
   const handlePlus = () => {
     formik.setValues({ ...formik.values, qtyTransaction: formik.values.qtyTransaction + 1 });
     setPriceRentUnit(prevPrice => prevPrice + priceRent);
@@ -46,13 +43,11 @@ const ModalRent = (props) => {
     const selectedPriceList = dataPricelist.find(item => item.priceRentUnit === selectedValue);
     setTax(e.target.value);
     setMonth(selectedPriceList.months);
-    // console.log(selectedPriceList, selectedPriceList.month);
     formik.setValues({ ...formik.values, priceListRentId: selectedPriceList?.id });
   }
 
   useEffect(() => {
     setTotalPriceRent( priceRentUnit + (tax * priceRentUnit));
-    // console.log("INI TOTAL:",totalPriceRent);
   }, [priceRentUnit, tax])
 
   return (

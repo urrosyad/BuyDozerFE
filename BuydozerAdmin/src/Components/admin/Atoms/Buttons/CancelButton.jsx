@@ -1,6 +1,5 @@
-import React from 'react'
-import { Button, styled } from '@mui/material';
 import theme from '@themes/theme'
+import { Button, styled } from '@mui/material';
 
 const CancelButton = ({ onClose }) => {
       const CancelButton = styled(Button)(({ theme }) => ({

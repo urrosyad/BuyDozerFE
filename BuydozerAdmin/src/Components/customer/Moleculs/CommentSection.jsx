@@ -1,10 +1,8 @@
 import 'react-multi-carousel/lib/styles.css';
-import { Box, Typography } from '@mui/material';
-import React from 'react'
-import { Face, PersonOutlineOutlined } from '@mui/icons-material'
 import Carousel from 'react-multi-carousel';
-import { flexCenter, flexStart} from '@themes/commonStyles';
-
+import { flexCenter} from '@themes/commonStyles';
+import { Box, Typography } from '@mui/material';
+import { PersonOutlineOutlined } from '@mui/icons-material'
 
 const customerComment = [
   { name: "Rakai Wikrama", position: "Project Manager Analyst", comment: "Saya sangat puas dengan pilihan alat berat yang tersedia untuk pembelian di Buydozer. Kualitasnya tidak diragukan lagi, dan layanan purna jualnya sungguh memuaskan" },

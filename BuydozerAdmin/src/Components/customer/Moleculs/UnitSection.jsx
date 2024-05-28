@@ -1,14 +1,11 @@
 import React from 'react'
-import 'react-multi-carousel/lib/styles.css';
 import Carousel from 'react-multi-carousel';
-import { Box, Button, Divider, Link, Skeleton, Typography } from '@mui/material';
-import { ArrowForwardIosRounded, Face, PersonOutlineOutlined } from '@mui/icons-material'
-import { flexCenter, flexStart } from '@themes/commonStyles';
-import { useQuery } from '@tanstack/react-query';
-import { Navigate, useNavigate } from 'react-router-dom'
-import axios from 'axios';
-import formatRupiah from '@utils/formatRupiah';
 import { GET_UNIT } from '@api/api';
+import { useQuery } from '@tanstack/react-query';
+import { flexCenter} from '@themes/commonStyles';
+import { useNavigate } from 'react-router-dom'
+import { Box, Button, Link, Skeleton, Typography } from '@mui/material';
+import 'react-multi-carousel/lib/styles.css';
 
 
 const responsive = {
@@ -46,11 +43,6 @@ const UnitSection = ({ }) => {
   })
   const navigate = useNavigate()
   const skeletonBox = Array.from({ length: 5 });
-
-  { unitIsLoading && console.log("data sedang loading") }
-  { unitIsFetching && console.log("data berhasil difetching") }
-  // { unitIsSuccess && console.log(dataUnit) }
-
 
   return (
     <Box sx={{ height: "auto", padding: "10px 90px", margin: "40px 0" }}>

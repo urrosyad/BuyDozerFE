@@ -85,7 +85,6 @@ const LoginPage = () => {
         Status,
         Data,
         expiresIn } = response.data;
-      localStorage.setItem('ExpiresIn', expiresIn)
 
       if (!Status) {
         loginAuth(
@@ -93,6 +92,7 @@ const LoginPage = () => {
           IsAdmin ? 1999 : 2000,
           UserName,
           UserId,
+          expiresIn
         )
       }
 

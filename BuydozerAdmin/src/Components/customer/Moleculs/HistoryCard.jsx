@@ -1,11 +1,8 @@
-import { Box, Divider, Skeleton, Typography } from '@mui/material'
-import React from 'react'
-import { flexCenter } from '@themes/commonStyles'
 import ButtonContained from '../Atoms/Button/ButtonContained'
-import { dateToMonth, formatRupiah, formatIndoPhone, numToWord, imgConvert } from '@utils'
+import { flexCenter } from '@themes/commonStyles'
 import { useNavigate } from 'react-router-dom'
-
-
+import { Box, Divider, Skeleton, Typography } from '@mui/material'
+import { dateToMonth, formatRupiah, formatIndoPhone, numToWord, imgConvert } from '@utils'
 
 const statusConfig = [
   { content: "DIBATALKAN", color: "#EC3535", message: "Pesanan telah dibatalkan" },

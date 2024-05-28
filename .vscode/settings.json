@@ -1,5 +1,9 @@
 {
         "prettier.insertPragma": true,
         "terminal.integrated.allowMnemonics": false,
-        "workbench.layoutControl.type": "both"
+        "workbench.layoutControl.type": "both",
+        "editor.fontSize": 14,
+        "terminal.integrated.fontSize": 14,
+        "debug.console.fontSize": 14,
+        "window.zoomLevel": -1,
 }

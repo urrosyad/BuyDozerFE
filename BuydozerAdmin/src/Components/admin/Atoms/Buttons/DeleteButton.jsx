@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
+import { styled } from '@mui/material'
+import { useState } from 'react'
+import { DeleteRounded } from '@mui/icons-material'
 import {
   Box, IconButton, Typography,
   Dialog, DialogTitle, DialogContent,
   DialogContentText, DialogActions,
   Divider, TextField, Button,
-       } from '@mui/material'
-import { DeleteRounded } from '@mui/icons-material'
-import { styled } from '@mui/material'
+} from '@mui/material'
 
-const DeleteButton = ({onClick}) => {
+const DeleteButton = ({ onClick }) => {
   return (
     <>
       <Box>
         <IconButton onClick={onClick} color='error'>
-          <DeleteRounded style={{fontSize: "16px"}} />
+          <DeleteRounded style={{ fontSize: "16px" }} />
         </IconButton>
       </Box>
 

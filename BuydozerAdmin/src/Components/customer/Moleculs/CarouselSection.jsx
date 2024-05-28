@@ -1,12 +1,11 @@
-import 'react-multi-carousel/lib/styles.css';
-import { Box, Typography } from '@mui/material';
-import React from 'react'
-import { Face, PersonOutlineOutlined } from '@mui/icons-material'
 import Carousel from 'react-multi-carousel';
-import { flexCenter, flexStart, flexEnd } from '@themes/commonStyles';
+import CAT777GCarousel from '@assets/customer/carouselUnit/CAT777GCarousel.png'
 import KomatsuHD785Carousel from '@assets/customer/carouselUnit/KomatsuHD785Carousel.png'
 import LoaderCAT972MCarousel from '@assets/customer/carouselUnit/LoaderCAT972MCarousel.png'
-import CAT777GCarousel from '@assets/customer/carouselUnit/CAT777GCarousel.png'
+import { Box, Typography } from '@mui/material';
+import { Face, PersonOutlineOutlined } from '@mui/icons-material'
+import { flexCenter, flexStart, flexEnd } from '@themes/commonStyles';
+import 'react-multi-carousel/lib/styles.css';
 
 
 const responsive = {

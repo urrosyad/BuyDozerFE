@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
-import { Box, Grid, IconButton, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, CircularProgress } from '@mui/material';
+import { useState } from 'react'
+import { Box, Grid, Typography, Dialog, DialogTitle, DialogContent, Divider, DialogActions, TextField, Checkbox, CircularProgress } from '@mui/material';
 import ButtonCounter from '../Atoms/Button/ButtonCounter';
 import ButtonContained from '../Atoms/Button/ButtonContained';
 import formatRupiah from '@utils/formatRupiah';
-import { flexCenter } from '@themes/commonStyles';
-
 
 
 const termAndConditions = `
@@ -22,13 +20,10 @@ Dengan menyetujui syarat dan ketentuan ini, Anda mengonfirmasi bahwa Anda telah 
 const checkWarning = `Pastikan anda membaca keseluruhan syarat dan ketentuan!`
 
 
-
 const ModalBuy = (props) => {
   const { isOpen, onClose, onSubmit, onChange, priceBuy, formik, checked, onChecked, labelInput, isPending} = props
 
   const [priceBuyUnit, setPriceBuyUnit] = useState(priceBuy);
-  console.log("ini priceBuyUnit", priceBuyUnit);
-
 
   const handlePlus = () => {
     formik.setValues({ ...formik.values, qtyTransaction: formik.values.qtyTransaction + 1 });
@@ -40,7 +35,6 @@ const ModalBuy = (props) => {
     formik.setValues({ ...formik.values, qtyTransaction: Math.max(0, minusQty) });
     setPriceBuyUnit(prevPrice => Math.max(0, prevPrice - priceBuy));
   }
-
 
   return (
     <Dialog open={isOpen} onClose={onClose} sx={{ "& .MuiPaper-root": { width: "900px", height: "500px", borderRadius: "5px" } }}>

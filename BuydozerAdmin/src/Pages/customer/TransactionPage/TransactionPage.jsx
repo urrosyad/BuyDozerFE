@@ -50,12 +50,6 @@ const TransactionPage = ({ }) => {
   const [tab, setTab] = useState("buyTransaction")
   const [searchValue, setSearchValue] = useState("")
 
-  useEffect(() => {
-    refetch()
-
-  }, [authData, auth]);
-
-
   const { data: dataHistory, isLoading: historyIsLoading, isFetching: historyIsFetching, isSuccess: historyIsSuccess, errorHistory, refetch } = useQuery({
     queryKey: ["TransactionOngoing", {
       username: name,
@@ -86,7 +80,11 @@ const TransactionPage = ({ }) => {
     console.log(searchValue);
   };
 
+  useEffect(() => {
+    refetch()
 
+  }, [authData, auth]);
+  
   useEffect(() => {
     refetch
   }, [searchValue, refetch])

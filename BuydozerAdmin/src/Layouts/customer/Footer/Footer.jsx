@@ -1,12 +1,10 @@
 import React from 'react'
-import footerGradient from '@assets/customer/footerGradient.png'
-import { Box, Button, Divider, Grid, IconButton, Link, Typography } from '@mui/material'
-import theme from '@themes/theme'
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
-import HeaderImg from '@assets/customer/HeaderImg.png'
+import footerGradient from '@assets/customer/footerGradient.png'
 import { flexCenter, flexStart, flexRow } from '@themes/commonStyles'
 import { FacebookRounded, Instagram, LinkedIn, X } from '@mui/icons-material'
+import { Box, Button, Divider, Grid, Link, Typography } from '@mui/material'
 
 const iconSocialMedia = [
   { icon: <FacebookRounded sx={{ fontSize: "20px", color: "#FFFFFF", ":hover": { color: "#E8E6E6" } }} /> },
@@ -32,8 +30,6 @@ const serviceMenu = [
   { menu: "pemeliharaan" },
   { menu: "404" },
 ]
-
-
 
 const Footer = () => {
   return (

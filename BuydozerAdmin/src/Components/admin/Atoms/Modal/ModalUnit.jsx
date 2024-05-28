@@ -1,33 +1,32 @@
-import React, { Component, useState } from 'react'
-import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, styled, FormControl, Box, DialogContent } from '@mui/material'
+import { Typography, Button, Dialog, DialogTitle, DialogContentText, TextField, DialogActions, Divider, Grid, FormControl, Box, DialogContent } from '@mui/material'
 import { TextareaAutosize } from '@mui/base'
 import theme from '@themes/theme'
 import SubmitButton from '../Buttons/SubmitButton'
 import CancelButton from '../Buttons/CancelButton'
 
 
+const textareaStyle = {
+  width: '100%',
+  height: '80px',
+  padding: "10px 5px 50px 15px",
+  border: '1px solid lightgrey',
+  borderRadius: '5px',
+  backgroundColor: theme.palette.primary.contrastText,
+  boxSizing: 'border-box',
+  fontFamily: "Rubik, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
+  '&:hover': {
+    border: '1px solid black',
+  },
+  '&:focus': {
+    border: '2px solid #2A6DD0',
+    outline: 'none',
+  },
+  resize: 'none',
+  fontSize: '16px',
+}
+
+
 const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik,  }) => {
-
-  const textareaStyle = {
-    width: '100%',
-    height: '80px',
-    padding: "10px 5px 50px 15px",
-    border: '1px solid lightgrey',
-    borderRadius: '5px',
-    backgroundColor: theme.palette.primary.contrastText,
-    boxSizing: 'border-box',
-    fontFamily: "Rubik, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
-    '&:hover': {
-      border: '1px solid black',
-    },
-    '&:focus': {
-      border: '2px solid #2A6DD0',
-      outline: 'none',
-    },
-    resize: 'none',
-    fontSize: '16px',
-  }
-
 
   return (
     <Dialog open={isOpen} onClose={onClose} sx={{
