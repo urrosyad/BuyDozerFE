@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { GET_USER } from '@api/api';
+import { useNavigate } from 'react-router-dom';
 import { EditButton, DeleteButton, KeyButton } from '@components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { SwapVertRounded, KeyboardArrowDown, KeyboardArrowUp, KeyRounded, KeyOffRounded } from '@mui/icons-material';
@@ -17,7 +18,7 @@ import {
 
 const TableUser = (props) => {
   const { SearchValue } = props
-  const [openDesc, setOpenDesc] = useState(null);
+  const navigate = useNavigate()
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
@@ -45,6 +46,7 @@ const TableUser = (props) => {
       queryKey: ["User"],
       queryFn: fetchData,
     })
+    {error && navigate("/*")}
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

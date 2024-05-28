@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  const authData = JSON.stringify(auth);
-  localStorage.setItem("AuthData", authData);
+  // const authData = JSON.stringify(auth);
+  // localStorage.setItem("AuthData", authData);
 
 
   // useEffect for directing user with different role

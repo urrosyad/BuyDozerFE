@@ -15,8 +15,10 @@ import {
 } from '@mui/material'
 import theme from '@themes/theme';
 import formatRupiah from '@utils/formatRupiah';
+import { useNavigate } from 'react-router-dom';
 
 const TableUnit = (props) => {
+  const navigate = useNavigate()
   const { SearchValue } = props
   const [openDesc, setOpenDesc] = useState(null);
   const [page, setPage] = useState(1); // Halaman ke
@@ -59,6 +61,7 @@ const TableUnit = (props) => {
       queryKey: ["Unit"],
       queryFn: fetchData,
     })
+    {error && navigate("/*")}
 
   // handle open collapse decs uniit
   const handleCollapseToggle = (rowId) => {

@@ -50,8 +50,4 @@ function numToWord(angka) {
     return result.trim();
 }
 
-// Contoh penggunaan:
-console.log(numToWord(1250000)); // Output: "satu juta dua ratus lima puluh ribu"
-
-
 export default numToWord

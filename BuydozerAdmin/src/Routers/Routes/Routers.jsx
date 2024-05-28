@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { Box } from '@mui/material';
-import { Dashboard, UnitData, UserData, RentListData, TransactionData, PaymentConfirmData } from '@pages/admin';
-import { HomePage, UnitPage, TransactionPage, LoginPage, RegisterPage, ErrorPage, Unauthorized, AllUnitPage, UnitDetailPage, InvoicePage } from '@pages/customer';
-import { PrivateRoutes } from '@routers/PrivateRoutes';
+import React from 'react';
 import { AdminLayout } from '@layouts/admin/AdminLayout';
 import { AuthProvider } from '@context/AuthProvider';
+import { PrivateRoutes } from '@routers/PrivateRoutes';
 import CustomerLayout from '@layouts/customer/CustomerLayout/CustomerLayout';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Dashboard, UnitData, UserData, RentListData, TransactionData, PaymentConfirmData } from '@pages/admin';
+import { HomePage, UnitPage, TransactionPage, LoginPage, RegisterPage, ErrorPage, Unauthorized, AllUnitPage, UnitDetailPage, InvoicePage } from '@pages/customer';
 
 
 const Routers = () => {
-  // const [userRole, setUserRole] = useState('');
-  const userRole = localStorage.getItem("UserRole")
-  console.log(userRole);
 
   return (
     <BrowserRouter>

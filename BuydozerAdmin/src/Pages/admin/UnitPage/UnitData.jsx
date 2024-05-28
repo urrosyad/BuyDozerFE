@@ -6,6 +6,7 @@ import {
 } from '@mui/material'
 import { SearchRounded } from '@mui/icons-material';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import {POST_UNIT, PUT_UNIT, DELETE_UNIT, GET_UNIT_BYNAME } from '@api/api';
 import TableUnit from './TableUnit';
@@ -30,6 +31,7 @@ const initialValues = {
 }
 
 const UnitData = () => {
+  const navigate = useNavigate()
   const [searchValue, setSearchValue] = useState('');
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
@@ -93,6 +95,10 @@ const UnitData = () => {
   })
   // END DELETE UNIT
 
+  if (postError || putError || delError) {
+    navigate("/*")
+  }
+
   const handlePostChange = async (event) => {
     const { name, value, files } = event.target;
 
@@ -109,6 +115,8 @@ const UnitData = () => {
       });
     }
   };
+
+
 
   const handlePostSubmit = async () => {
     formik.handleSubmit()

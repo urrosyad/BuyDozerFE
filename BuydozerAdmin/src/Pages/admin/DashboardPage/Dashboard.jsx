@@ -24,7 +24,7 @@ import DonutChart from '@components/admin/Moleculs/DonutChart/DonutChart';
 const Dashboard = () => {
   const navigate = useNavigate()
 
-  const { data: dataUnit = { data: [] }, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch: unitRefetch } = useQuery({
+  const { data: dataUnit = { data: [] }, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: errorUnit, refetch: unitRefetch } = useQuery({
     queryKey: ["Unit", {
       nameUnit: "",
       sortBuy: true,
@@ -39,22 +39,8 @@ const Dashboard = () => {
     }),
   })
 
-  const { data: dataUser, isLoading: userIsLoading, isFetching: userIsFetching, isSuccess: userIsSuccess, error: userIsError, refetch: userRefetch } = useQuery({
-    queryKey: ["User", {
-      userName: "",
-      sortUserName: true,
-      pageNumber: 1,
-      pageSize: 1
-    }],
-    queryFn: () => GET_USER({
-      userName: "",
-      sortUserName: true,
-      pageNumber: 1,
-      pageSize: 1
-    }),
-  })
 
-  const { data: dataTransactionBuy = { data: [] }, isFetching: transaksiBuyIsFetching, isSuccess: transaksiBuyIsSuccess, refetch: transactionBuyRefetch } = useQuery({
+  const { data: dataTransactionBuy = { data: [] }, isFetching: transaksiBuyIsFetching, isSuccess: transaksiBuyIsSuccess, error: errorTransaksiBuy, refetch: transactionBuyRefetch } = useQuery({
     queryKey: ["TransactionBuy", {
       transactionNum: "%25TRX%25",
     }],
@@ -63,7 +49,7 @@ const Dashboard = () => {
     }),
   })
 
-  const { data: dataTransactionRent = { data: [] }, isFetching: transaksiRentIsFetching, isSuccess: transaksiRentIsSuccess, refetch: transactionRentRefetch } = useQuery({
+  const { data: dataTransactionRent = { data: [] }, isFetching: transaksiRentIsFetching, isSuccess: transaksiRentIsSuccess,  error:errorTransaksiRent,refetch: transactionRentRefetch } = useQuery({
     queryKey: ["TransactionRent", {
       transactionNum: "%25TRX%25",
     }],
@@ -72,32 +58,36 @@ const Dashboard = () => {
     }),
   })
 
-  const { data: dataTransactionReport = { data: [] }, isFetching: transaksiReportIsFetching, isSuccess: transaksiReportIsSuccess, refetch: transactionReportRefetch } = useQuery({
+  const { data: dataTransactionReport = { data: [] }, isFetching: transaksiReportIsFetching, isSuccess: transaksiReportIsSuccess, error:errorTransaksiReport,refetch: transactionReportRefetch } = useQuery({
     queryKey: ["TransactionReport"],
     queryFn: GET_TRANSACTION_REPORT,
   });
 
-  const { data: dataUnitRemaining = { data: [] }, isFetching: unitRemainingIsFetching, isSuccess: unitRemainingIsSuccess, refetch: unitRemainingRefetch } = useQuery({
+  const { data: dataUnitRemaining = { data: [] }, isFetching: unitRemainingIsFetching, isSuccess: unitRemainingIsSuccess, error:errorUnitRemaining, refetch: unitRemainingRefetch } = useQuery({
     queryKey: ["UnitRemaining"],
     queryFn: GET_UNIT_REMAINING,
   });
 
-  const { data: dataUserType = { data: [] }, isFetching: userTypeIsFetching, isSuccess: userTypeIsSuccess, refetch: userTypeRefetch } = useQuery({
+  const { data: dataUserType = { data: [] }, isFetching: userTypeIsFetching, isSuccess: userTypeIsSuccess, error:errorUserType, refetch: userTypeRefetch } = useQuery({
     queryKey: ["UserTransactionType"],
     queryFn: GET_USER_TRANSACTION_TYPE,
   });
 
-  const { data: dataSummaryStatus = { data: [] }, isFetching: summaryStatusIsFetching, isSuccess: summaryStatusIsSuccess, refetch: summaryStatusRefetch } = useQuery({
+  const { data: dataSummaryStatus = { data: [] }, isFetching: summaryStatusIsFetching, isSuccess: summaryStatusIsSuccess, error:errorSummaryStatus, refetch: summaryStatusRefetch } = useQuery({
     queryKey: ["SummaryTransactionStatus"],
     queryFn: GET_SUMMARY_TRANSACTION_STATUS,
   });
 
+  if (errorUnit || errorTransaksiBuy || errorTransaksiRent || errorSummaryStatus || errorTransaksiReport || errorUserType || errorUnitRemaining) {
+    navigate("/*")
+  }
+
   useEffect(() => {
     unitRefetch()
-    userRefetch()
     userTypeRefetch()
     unitRemainingRefetch()
     transactionBuyRefetch()
+    transactionReportRefetch()
     transactionRentRefetch()
     summaryStatusRefetch()
 
@@ -279,6 +269,7 @@ const Dashboard = () => {
                   {unitRemainingIsFetching ? (
                     <CircularProgress size={50} sx={{
                       color: "#8BB9FF",
+                      m:"25% 0"
                     }} />
                   ) :
                     <DonutChart
@@ -290,7 +281,7 @@ const Dashboard = () => {
                   }
                 </Box>
 
-                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 3 }}>
+                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 3, mt:"20px" }}>
                   {unitLabels.map((label, index) => (
                     <Box key={index} sx={{ ...flexCenter, flexDirection: "row", gap: 1 }}>
                       <Box sx={{ bgcolor: unitColor[index], width: "30px", height: "30px", borderRadius: "10px" }} />

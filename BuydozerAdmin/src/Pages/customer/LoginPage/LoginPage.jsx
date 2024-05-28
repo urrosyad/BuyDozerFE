@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import * as yup from 'yup';
-import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase } from '@mui/material'
-import { LocalActivity, Visibility, VisibilityOff } from '@mui/icons-material'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase, CircularProgress } from '@mui/material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
 import { useFormik } from 'formik'
@@ -31,6 +32,7 @@ const styleButton = {
 
 const LoginPage = () => {
   const { loginAuth } = useAuth()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
@@ -44,7 +46,7 @@ const LoginPage = () => {
     }),
     onSubmit: async () => {
       try {
-        const { Data } = await POST_LOGIN()
+        const { Data } = postLogin()
 
         if (Data) {
           const userError = Data.toLowerCase().includes('username');
@@ -60,6 +62,7 @@ const LoginPage = () => {
       }
     }
   })
+
 
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -103,16 +106,28 @@ const LoginPage = () => {
     }
   }
 
+  const { mutate: postLogin, isPending: loginIsPending, isSuccess: loginIsSucces, error: loginError } = useMutation({
+    mutationFn: POST_LOGIN,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['Login'], (oldData) => [...oldData, data]);
+    },
+    onError: (error) => {
+      console.error("Error saat Login:", error);
+      navigate("/*")
+    },
+  })
+  {loginError && navigate("/*")}
+
   return (
     <Box>
       <Box sx={{
-        ...flexCenter,backgroundImage: `url(${image})`, flexDirection: "column",
+        ...flexCenter, backgroundImage: `url(${image})`, flexDirection: "column",
         width: "100%", height: "100vh", backgroundRepeat: 'no-repeat',
       }}>
         <Box sx={{ ...flexCenter, flexDirection: 'column', width: "auto", height: "120px", borderRadius: 2 }}>
-          <Box sx={{...flexCenter}}>
-          <img src={buydozerLogo} style={{ position: "absolute", width: "150px", zIndex: 0, opacity: 0.1 }} />
-          <img src={buydozerFont} style={{ width: "250px", zIndex: 1 }} />
+          <Box sx={{ ...flexCenter }}>
+            <img src={buydozerLogo} style={{ position: "absolute", width: "150px", zIndex: 0, opacity: 0.1 }} />
+            <img src={buydozerFont} style={{ width: "250px", zIndex: 1 }} />
           </Box>
 
         </Box>
@@ -123,9 +138,9 @@ const LoginPage = () => {
             }}>
               Welcome To Buydozer
             </Typography>
-            <Typography sx={{fontSize: "16px", color: '#193D71'}}>
-            Heavy Unit Heavy Profit
-          </Typography>
+            <Typography sx={{ fontSize: "16px", color: '#193D71' }}>
+              Heavy Unit Heavy Profit
+            </Typography>
           </Box>
 
           <Box sx={{ margin: "10px 20px" }}>
@@ -188,7 +203,11 @@ const LoginPage = () => {
             <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
               <Button type='button' onClick={formik.handleSubmit}
                 sx={styleButton}>
-                Login
+                {loginIsPending
+                  ? <CircularProgress size={25} sx={{color: "#D9D630",}} />
+                  :
+                  "Login"
+                }
               </Button>
               <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>
                 Tidak punya akun?

@@ -13,9 +13,6 @@ import { GET_TRANSACTION_ONGOING } from '@api/api'
 import axios from 'axios'
 
 
-const authData = localStorage.getItem('AuthData')
-const auth = JSON.parse(authData)
-const accessToken = auth.accessToken
 
 
 const scrollableBoxStyles = {
@@ -44,13 +41,15 @@ const scrollableBoxStyles = {
 
 const TransactionPage = ({ }) => {
   const auth = useAuth()
-  const name = auth.auth.userName 
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const name = auth.auth.userName
+  const queryClient = useQueryClient()
   const [tab, setTab] = useState("buyTransaction")
   const [searchValue, setSearchValue] = useState("")
+  const accessToken = localStorage.getItem("AccessToken");
 
-  const { data: dataHistory, isLoading: historyIsLoading, isFetching: historyIsFetching, isSuccess: historyIsSuccess, errorHistory, refetch } = useQuery({
+
+  const { data: dataHistory, isLoading: historyIsLoading, isFetching: historyIsFetching, isSuccess: historyIsSuccess, error: errorHistory, refetch } = useQuery({
     queryKey: ["TransactionOngoing", {
       username: name,
       transactionNum: searchValue,
@@ -60,15 +59,23 @@ const TransactionPage = ({ }) => {
       transactionNum: searchValue,
     }),
     enabled: !!name,
-  })
+  }
+  )
+
+  if (errorHistory) {
+    window.location.reload();
+    navigate("/*")
+  }
+
 
   let dataHistoryBuy = [];
   let dataHistoryRent = [];
 
   if (historyIsSuccess && dataHistory) {
-    dataHistoryBuy = dataHistory?.data?.filter(item => item.isBuy === true && name === item.userName) || [];
-    dataHistoryRent = dataHistory?.data?.filter(item => item.isBuy === false && name === item.userName) || [];
+    dataHistoryBuy = dataHistory.data.filter(item => item.isBuy === true && name === item.userName) || [];
+    dataHistoryRent = dataHistory.data.filter(item => item.isBuy === false && name === item.userName) || [];
   }
+
   // const status = statusConfig[statusIndex];
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);
@@ -83,8 +90,8 @@ const TransactionPage = ({ }) => {
   useEffect(() => {
     refetch()
 
-  }, [authData, auth]);
-  
+  }, [auth]);
+
   useEffect(() => {
     refetch
   }, [searchValue, refetch])

@@ -30,6 +30,7 @@ const AllUnitPage = () => {
       pageSize: 100
      }),
   })
+  {unitIsError && navigate("/*")}
 
   const handleSearchUnit = (event) => {
     setSearchValue(event.target.value);

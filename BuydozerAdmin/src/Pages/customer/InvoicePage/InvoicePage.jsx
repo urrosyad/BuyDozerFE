@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { flexCenter } from '@themes/commonStyles'
-import { Box, Button, Dialog, IconButton, Skeleton, TextField, Typography } from '@mui/material'
+import { Box, Button, IconButton, Skeleton, TextField, Typography } from '@mui/material'
+import axios from 'axios'
+import useAuth from '@hooks/useAuth'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
 import buydozerFont from '@assets/customer/buydozerFont.png'
 import ButtonContained from '@components/customer/Atoms/Button/ButtonContained'
+import ModalPaymentConfirm from '@components/admin/Atoms/Modal/ModalPaymentConfirm'
 import { CancelRounded, KeyboardBackspaceRounded, WhatsApp } from '@mui/icons-material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import { dateToMonth, formatRupiah, formatIndoPhone, numToWord, imgConvert } from '@utils'
-import ModalPaymentConfirm from '@components/admin/Atoms/Modal/ModalPaymentConfirm'
 import { GET_TRANSACTION_ONGOING, GET_TRANSACTION_RENT, GET_TRANSACTION_BUY, PUT_TRANSACTION_STATUS_BUY, PUT_TRANSACTION_STATUS_RENT } from '@api/api'
-import useAuth from '@hooks/useAuth'
-// '../../../Utils' 
+
 
 const accessToken = localStorage.getItem("AccessToken");
 
@@ -56,7 +56,7 @@ const InvoicePage = () => {
   console.log({ modalImg, paymentImg });
 
   // GET DATA TRANSACTION BUY
-  const { data: dataBuy, isLoading: buyIsLoading, isFetching: buyIsFetching, isSuccess: buyIsSuccess, errorBuy } = useQuery({
+  const { data: dataBuy, isLoading: buyIsLoading, isFetching: buyIsFetching, isSuccess: buyIsSuccess, error: errorBuy } = useQuery({
     queryKey: ["TransactionBuy", {
       transactionNum: transactionNum,
     }],
@@ -64,10 +64,9 @@ const InvoicePage = () => {
       transactionNum: transactionNum,
     }),
   })
-  // console.log(buyIsSuccess && dataBuy.data.items.length);
 
   // GET DATA TRANSACTION RENT
-  const { data: dataRent, isLoading: rentIsLoading, isFetching: rentIsFetching, isSuccess: rentIsSuccess, errorRent } = useQuery({
+  const { data: dataRent, isLoading: rentIsLoading, isFetching: rentIsFetching, isSuccess: rentIsSuccess, error: errorRent } = useQuery({
     queryKey: ["TransactionRent", {
       transactionNum: transactionNum,
     }],
@@ -78,7 +77,7 @@ const InvoicePage = () => {
   console.log(rentIsSuccess && dataRent?.data?.items.length);
 
   // GET DATA TRANSACTION IMG
-  const { data: dataImg, isLoading: imgIsLoading, isFetching: imgIsFetching, isSuccess: imgIsSuccess } = useQuery({
+  const { data: dataImg, isLoading: imgIsLoading, isFetching: imgIsFetching, isSuccess: imgIsSuccess, error: errorImg } = useQuery({
     queryKey: ["TransactionOngoing", {
       username: name,
       transactionNum: transactionNum,
@@ -90,7 +89,7 @@ const InvoicePage = () => {
   })
 
   // UPDATE PAYMENT IMG
-  const { mutate: putPaymentImg, error: ErrorPaymentImg, isSuccess: paymentImgIsSuccess, isPending: paymentImgIsPending } = useMutation({
+  const { mutate: putPaymentImg, error: errorPaymentImg, isSuccess: paymentImgIsSuccess, isPending: paymentImgIsPending } = useMutation({
     mutationFn: PUT_TRANSACTION_ONGOING,
     onSuccess: (data) => {
       queryClient.invalidateQueries(['TransactionOnGoing'], (oldData) => [...oldData, data]);
@@ -124,7 +123,9 @@ const InvoicePage = () => {
     },
   })
 
-
+  if (errorBuy, errorImg, errorPaymentImg, errorPutBuy, errorPutRent, errorRent) {
+    navigate("/*")
+  }
   const isLoading = buyIsLoading || rentIsLoading;
   const isFetching = buyIsFetching || rentIsFetching;
   const isSuccess = buyIsSuccess || rentIsSuccess;

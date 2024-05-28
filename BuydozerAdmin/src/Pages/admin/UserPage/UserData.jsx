@@ -10,6 +10,7 @@ import TableUser from './TableUser';
 import ModalUser from '@components/admin/Atoms/Modal/ModalUser';
 import ModalConfirm from '@components/admin/Atoms/Modal/ModalConfirm';
 import SeverityAlert from '@components/admin/Atoms/Alert/SeverityAlert';
+import { useNavigate } from 'react-router-dom';
 
 // ubah
 const initialValues = {
@@ -21,6 +22,7 @@ const initialValues = {
 }
 
 const UserData = () => {
+  const navigate = useNavigate()
   const [searchValue, setSearchValue] = useState('');
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const [isModalDelOpen, setIsModalDelOpen] = useState(false)
@@ -141,6 +143,10 @@ const UserData = () => {
     },
   })
 
+  if (putError, delError, putIsAdminError) {
+    navigate("/*")
+  }
+  
   const handlePutChange = async (event) => {
     const { name, value } = event.target;
     formik.setValues({

@@ -27,6 +27,7 @@ const responsive = {
 };
 
 const UnitSection = ({ }) => {
+  const navigate = useNavigate()
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
     queryKey: ["Unit", {
       nameUnit: "",
@@ -41,7 +42,9 @@ const UnitSection = ({ }) => {
       pageSize: 4
     }),
   })
-  const navigate = useNavigate()
+  if (unitIsError) {
+    navigate("/*")
+  }
   const skeletonBox = Array.from({ length: 5 });
 
   return (

@@ -16,11 +16,8 @@ import formatRupiah from '@utils/formatRupiah';
 import GetDateNow from '@utils/GetDateNow';
 import { GET_UNIT } from '@api/api';
 
-const authData = localStorage.getItem('AuthData')
-const auth = JSON.parse(authData)
-const accessToken = auth.accessToken
-const userId = auth.userId
-const userName = auth.userName
+const accessToken = localStorage.getItem("AccessToken");
+
 
 const GET_PRICELIST_RENT = async () => {
   const BASE_URL_GET_PRICELIST_RENT = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
@@ -143,7 +140,7 @@ const UnitDetailPage = () => {
 
 
   // GET DETAIL UNIT
-  const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, refetch } = useQuery({
+  const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: errorUnit, refetch } = useQuery({
     queryKey: ["Unit", {
       nameUnit: nameUnit,
       sortBuy: true,
@@ -160,14 +157,14 @@ const UnitDetailPage = () => {
 
 
   // GET PRICELIST RENT
-  const { data: dataPricelist, isLoading: pricelistIsLoading, isFetching: pricelistIsFetching, isSuccess: pricelistIsSuccess, error: pricelistIsError, } = useQuery({
+  const { data: dataPricelist, isLoading: pricelistIsLoading, isFetching: pricelistIsFetching, isSuccess: pricelistIsSuccess, error: errorPricelist, } = useQuery({
     queryKey: ["PricelistRent"],
     queryFn: GET_PRICELIST_RENT,
   })
 
 
   // CREATE TRANSACTION BUY
-  const { mutate: postBuy, error: ErrorBuy, isSuccess: BuyIsSuccess, isPending: BuyIsPending } = useMutation({
+  const { mutate: postBuy, error: errorBuy, isSuccess: BuyIsSuccess, isPending: BuyIsPending } = useMutation({
     mutationFn: POST_TRANSACTION_BUY,
     onSuccess: (data) => {
       setTransactionNumBuy(data.Data.TransactionNum);
@@ -186,7 +183,7 @@ const UnitDetailPage = () => {
 
 
   // CREATE TRANSACTION RENT
-  const { mutate: postRent, error: ErrorRent, isSuccess: RentIsSuccess, isPending: RentIsPending } = useMutation({
+  const { mutate: postRent, error: errorRent, isSuccess: RentIsSuccess, isPending: RentIsPending } = useMutation({
     mutationFn: POST_TRANSACTION_RENT,
     onSuccess: (data) => {
       setTransactionNumRent(data.Data.TransactionNum);
@@ -202,7 +199,9 @@ const UnitDetailPage = () => {
     navigate("/buydozer/invoice/" + transactionNumRent), 
     window.scrollTo(0, 0)
   )}
-
+  if (errorUnit, errorBuy, errorRent, errorPricelist) {
+    navigate("/*")
+  }
 
   const handleModalBuy = () => {
     setIsModalBuy(true)

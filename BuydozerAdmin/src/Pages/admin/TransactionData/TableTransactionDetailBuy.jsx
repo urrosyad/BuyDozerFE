@@ -1,6 +1,7 @@
 import axios from 'axios';
 import formatRupiah from '@utils/formatRupiah';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import { formatDate, formatDateTime } from '@utils/formatDate';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
@@ -35,6 +36,7 @@ const GET_TRANSACTION_BUY = async (props) => {
 
 
 const TableTransactionDetailBuy = (props) => {
+  const navigate = useNavigate()
   const { SearchValue, sortDate, statusConfig } = props
   const [page, setPage] = useState(1); // Halaman ke
   const [totalData, setTotalData] = useState(0)
@@ -72,6 +74,7 @@ const TableTransactionDetailBuy = (props) => {
     queryKey: ["TransactionBuy"],
     queryFn: fetchData,
   })
+  {error && navigate("/*")}
 
 
   const handleChangePage = (event, newPage) => {

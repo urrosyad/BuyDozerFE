@@ -40,7 +40,7 @@ const RegisterButton = styled(Button)(({ }) => ({
 
 const Navbar = () => {
   const [currentPage, setCurrentPage] = useState("/buydozer/beranda");
-  const [profilDropdown, setProfilDropdown] = useState(false);
+  const [profilDropdown, setProfilDropdown] = useState(null);
   const { logoutAuth } = useAuth()
   const navigate = useNavigate()
   const userName = localStorage.getItem("UserName");
@@ -49,14 +49,11 @@ const Navbar = () => {
     setProfilDropdown(event.currentTarget);
   };
   const handleCloseProfil = () => {
-    setProfilDropdown();
+    setProfilDropdown(null);
   };
 
   const handleLogout = () => {
-    const accessToken = localStorage.getItem('AccessToken');
-    const userName = localStorage.getItem('UserName');
-    const userRole = localStorage.getItem('UserRole');
-    logoutAuth(accessToken, userRole, userName)
+    logoutAuth()
     navigate("/login")
   }
 
@@ -128,7 +125,7 @@ const Navbar = () => {
       </Box>
       <Menu
         anchorEl={profilDropdown}
-        open={profilDropdown}
+        open={Boolean(profilDropdown)}
         onClose={handleCloseProfil}
         PaperProps={{
           elevation: 0,

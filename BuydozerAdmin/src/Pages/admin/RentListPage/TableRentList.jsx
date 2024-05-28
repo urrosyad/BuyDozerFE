@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { GET_RENT_LIST } from '@api/api';
-import { useEffect, useState } from 'react'
 import { SwapVertRounded } from '@mui/icons-material';
+import { useEffect, useState } from 'react'
 import { EditButton, DeleteButton } from '@components/admin/Atoms/Buttons';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import {
@@ -14,7 +15,8 @@ import {
   CircularProgress
 } from '@mui/material'
 
-const TableRentList = ( props ) => {
+const TableRentList = (props) => {
+  const navigate = useNavigate()
   const { SearchValue } = props
   const [page, setPage] = useState(1); // Halaman ke
   const [rowsPerPage, setRowsPerPage] = useState(5); // Jumlah data setiap halaman 
@@ -43,6 +45,9 @@ const TableRentList = ( props ) => {
     queryFn: fetchData,
   })
 
+  if (error) {
+    navigate("/*")
+  }
   // handle when move to the next page
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

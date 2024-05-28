@@ -6,9 +6,9 @@ import {
 } from '@mui/material'
 import { SearchRounded } from '@mui/icons-material';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { rentListSchema } from '@schemas';
-import axios from 'axios';
 import theme from '@themes/theme';
 import AddButton from '@components/admin/Atoms/Buttons/AddButton';
 import ModalPriceListRent from '@components/admin/Atoms/Modal/ModalPriceListRent';
@@ -30,6 +30,7 @@ const initialValues = {
 }
 
 const RentListData = () => {
+  const navigate = useNavigate()
   const [searchValue, setSearchValue] = useState('');
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
@@ -74,7 +75,6 @@ const RentListData = () => {
       console.log("Data successfully UPDATE", data)
       setIsModalEditOpen(false)
       console.log("Hasil submitan update", formik.values);
-      // formik.handleReset(formik.values)
       queryClient.invalidateQueries(['RentList'], (oldData) => [...oldData, data]);
     },
     onError: (error) => {
@@ -94,6 +94,10 @@ const RentListData = () => {
       console.error("Error saat menghapus data:", error);
     },
   })
+
+  if (postError || putError || delError) {
+    navigate("/*")
+  }
 
   const handlePostChange = async (event) => {
     const { name, value } = event.target;

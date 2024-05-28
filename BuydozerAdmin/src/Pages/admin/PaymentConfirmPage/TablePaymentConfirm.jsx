@@ -18,6 +18,7 @@ import {
 import Swal from 'sweetalert2'
 import axios from 'axios';
 import formatRupiah from '@utils/formatRupiah';
+import { useNavigate } from 'react-router-dom';
 
 
 const GET_TRANSACTION = async (props) => {
@@ -41,6 +42,7 @@ const GET_TRANSACTION = async (props) => {
 };
 
 const TablePaymentConfirm = (props) => {
+  const navigate = useNavigate()
   const { SearchValue, sortDate, statusConfig } = props
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1); // Halaman ke
@@ -83,6 +85,7 @@ const TablePaymentConfirm = (props) => {
     data,
     isPending,
     isFetching,
+    error: errorTransaction,
     refetch } = useQuery
       ({
         queryKey: ["Transaction"],
@@ -110,6 +113,10 @@ const TablePaymentConfirm = (props) => {
       console.error("Error saat melakukan update:", error);
     },
   })
+
+  if (errorTransaction || errorConfirmBuy || errorConfirmRent) {
+    navigate("/*")
+  }
 
   // Handle Modal for Confirmation and Cancel Transaction
   const handleApproval = (isConfirm, trxnum, trxData, trxType) => {
