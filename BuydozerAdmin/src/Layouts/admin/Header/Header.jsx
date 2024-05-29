@@ -20,8 +20,7 @@ const Header = () => {
   }
 
   const headerIcon = [
-    { icon: <SupportAgentRounded fontSize='small' sx={{fontSize: "16px" ,color: theme.palette.primary.dark }} />, tooltip: "Switch to Customer", onclick: handleSwitch },
-    { icon: <Notifications fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Notifications" },
+    { icon: <SupportAgentRounded fontSize='small' sx={{fontSize: "16px" ,color: theme.palette.primary.dark }} />, tooltip: "Customer Page", onclick: handleSwitch },
     { icon: <ExitToApp fontSize='small' sx={{ fontSize: "16px", color: theme.palette.primary.dark }} />, tooltip: "Logout", onclick: handleLogout },
   ]
 

@@ -204,7 +204,7 @@ const LoginPage = () => {
               <Button type='button' onClick={formik.handleSubmit}
                 sx={styleButton}>
                 {loginIsPending
-                  ? <CircularProgress size={25} sx={{color: "#D9D630",}} />
+                  ? <CircularProgress size={26} sx={{color: "#D9D630",}} />
                   :
                   "Login"
                 }

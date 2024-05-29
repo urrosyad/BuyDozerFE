@@ -9,8 +9,6 @@ import error404 from '@assets/error404.png'
 const ErrorPage = () => {
   const navigate = useNavigate()
   const role = localStorage.getItem("UserRole")
-  console.log({role});
-
   const handleNavigate = () => {
     {role === "1999" 
       ? navigate("/admin/dashboard") 
@@ -20,9 +18,9 @@ const ErrorPage = () => {
 
 
   return (
-    <Box sx={{...flexCenter, flexDirection: "column", width:"100%", height:"100%", }}>
-      <img src={error404} style={{width:"80%", height:"100%"}} />
-      <Box sx={{...flexCenter, width:"15%", mr:"30px",mt:-18}}>
+    <Box sx={{...flexCenter, flexDirection: "column", width:"100%", height:"100%" }}>
+      <img src={error404} style={{display:"flex",position:"absolute",width:"75%", height:"100%", top:50}} />
+      <Box sx={{...flexCenter, width:"100%", padding:"0 45% 0 40%" ,bottom:110, position:"absolute" }}>
       <ButtonContained
         onClick={handleNavigate}
         text={
