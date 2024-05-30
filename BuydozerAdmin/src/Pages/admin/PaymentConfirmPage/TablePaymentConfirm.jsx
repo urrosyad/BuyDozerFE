@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react'
 import { formatDate, formatDateTime } from '@utils/formatDate';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
-import {Clear, ImageSearch, CheckCircleOutline } from '@mui/icons-material';
+import { Clear, ImageSearch, CheckCircleOutline } from '@mui/icons-material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { PUT_TRANSACTION_STATUS_BUY, PUT_TRANSACTION_STATUS_RENT } from '../../../api/api';
 import {
@@ -22,8 +22,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 const GET_TRANSACTION = async (props) => {
-  const { SearchValue, PageNumber, PageSize, SortDate} = props
-  const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=%25${SearchValue}%25&ParameterUserName=%25${SearchValue}%25&ParameterStatus=2&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const { SearchValue, PageNumber, PageSize, SortDate } = props
+  const BASE_URL_TRANSACTION = `https://localhost:3001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=%25${SearchValue}%25&ParameterUserName=%25${SearchValue}%25&ParameterStatus=2&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_TRANSACTION, {
@@ -75,7 +75,7 @@ const TablePaymentConfirm = (props) => {
       totalPriceTransaction: formatRupiah(data.totalPriceTransaction),
       dateTransaction: formatDate(data.dateTransaction),
       statusTransaction: data.statusTransaction,
-      isBuy: data.isBuy ? "Pembelian": "Penyewaan",
+      isBuy: data.isBuy ? "Pembelian" : "Penyewaan",
       paymentConfirmationReceipt: data.paymentConfirmationReceipt
     }));
     return formattedData;
@@ -90,7 +90,7 @@ const TablePaymentConfirm = (props) => {
       ({
         queryKey: ["Transaction"],
         queryFn: fetchData,
-  })
+      })
 
   // Update Status of Transaction Buy
   const { mutate: putConfirmBuy, error: errorConfirmBuy, isSuccess: ConfirmBuyIsSuccess } = useMutation({
@@ -133,9 +133,11 @@ const TablePaymentConfirm = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         console.log("data trxNum: ", trxnum, "\nData trxData:", trxData);
-        { trxType === "Pembelian" 
-        ? putConfirmBuy(formik.values) 
-        : putConfirmRent(formik.values) }
+        {
+          trxType === "Pembelian"
+            ? putConfirmBuy(formik.values)
+            : putConfirmRent(formik.values)
+        }
         Swal.fire({
           title: `Ter${action.toLowerCase()}!`,
           text: `Data berhasil di${action.toLowerCase()}!`,
@@ -164,7 +166,7 @@ const TablePaymentConfirm = (props) => {
 
   useEffect(() => {
     refetch()
-  }, [fetchData, data, SearchValue, page, rowsPerPage, sortDate]);
+  }, [refetch, data, SearchValue, page, rowsPerPage, sortDate]);
 
   const hiddenAccessorKey = ["id", "paymentConfirmationReceipt"];
   const columns = [

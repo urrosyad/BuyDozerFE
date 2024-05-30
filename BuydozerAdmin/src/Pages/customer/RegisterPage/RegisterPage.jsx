@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 
-const BASE_URL_REGISTER = "https://localhost:5001/api/LoginRegisters/Register"
+const BASE_URL_REGISTER = "https://localhost:3001/api/LoginRegisters/Register"
 
 const initialValuesRegister = {
     email: "",
@@ -37,7 +37,7 @@ const POST_REGISTER = async (VALUES) => {
         } else {
             return ["Semua validasi berhasil."];
         }
-        
+
     } catch (error) {
         console.error('Error while register:', error);
         throw error;
@@ -66,15 +66,15 @@ const RegisterPage = () => {
     const { mutate: register, error: registError, isSuccess: registSuccess } = useMutation({
         mutationFn: POST_REGISTER,
         onSuccess: (data) => {
-          console.log("User successfully registered", data)
-          console.log("Hasil register", formik.values);
-          formik.handleReset(formik.values)
-          setOpenSnack(true)
+            console.log("User successfully registered", data)
+            console.log("Hasil register", formik.values);
+            formik.handleReset(formik.values)
+            setOpenSnack(true)
         },
         onError: (error) => {
-          console.error("Error saat menambahkan data:", error);
+            console.error("Error saat menambahkan data:", error);
         },
-      })
+    })
 
     const handleClickShowPassword = (name) => {
         if (name === 'password') {
@@ -106,7 +106,7 @@ const RegisterPage = () => {
                 navigate("/login");
             }, 1500); // Waktu penutupan snackbar
             return () => clearTimeout(timer);
-        }   
+        }
     }, [openSnack, navigate]);
 
     // useEffect(() => {
@@ -119,14 +119,14 @@ const RegisterPage = () => {
     // console.log(formik.errors);
     return (
         <Box>
-        <Snackbar open={openSnack}>
-        <Alert
-          variant="filled"
-          sx={{ width: '400px', height: "80px", pt: "20px", fontSize: "16px", color: "#FFFFFF", boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", borderRadius: "10px", backgroundColor: "#193D71" }}
-        >
-          Register Berhasil!!
-        </Alert>
-      </Snackbar>
+            <Snackbar open={openSnack}>
+                <Alert
+                    variant="filled"
+                    sx={{ width: '400px', height: "80px", pt: "20px", fontSize: "16px", color: "#FFFFFF", boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", borderRadius: "10px", backgroundColor: "#193D71" }}
+                >
+                    Register Berhasil!!
+                </Alert>
+            </Snackbar>
 
             <Box sx={{
                 display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: `url(${image})`,
@@ -144,7 +144,7 @@ const RegisterPage = () => {
                                 <Box sx={{ margin: "10px 20px" }}>
                                     {data.type === "password"
                                         ?
-                                        <FormControl sx={{ width: "100%", height: "90px"}}>
+                                        <FormControl sx={{ width: "100%", height: "90px" }}>
                                             <Typography sx={{ fontSize: '18px', color: '#193D71' }}>{data.label}</Typography>
                                             <Box sx={{ height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px" }}>
                                                 {data.label === "Password"
@@ -171,16 +171,16 @@ const RegisterPage = () => {
                                                 }
                                             </Box>
                                             {/* Validation */}
-                                            {formik.errors[data.name] && 
-                                            <Box sx={{height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"}}>
-                                                <Typography sx={{ fontSize: "12px", color: "red", pl: "10px" }}>
-                                                    {formik.errors[data.name]}
-                                                </Typography>
-                                            </Box>
+                                            {formik.errors[data.name] &&
+                                                <Box sx={{ height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px" }}>
+                                                    <Typography sx={{ fontSize: "12px", color: "red", pl: "10px" }}>
+                                                        {formik.errors[data.name]}
+                                                    </Typography>
+                                                </Box>
                                             }
                                         </FormControl>
                                         :
-                                        <FormControl sx={{ width: "100%", height: "90px"}}>
+                                        <FormControl sx={{ width: "100%", height: "90px" }}>
                                             <Typography sx={{ fontSize: "18px", color: '#193D71' }}>{data.label}</Typography>
                                             <Box sx={{ height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px", }}>
                                                 <InputBase
@@ -190,12 +190,12 @@ const RegisterPage = () => {
                                                 />
                                             </Box>
                                             {/* Validation */}
-                                            {formik.errors[data.name] && 
-                                            <Box sx={{height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"}}>
-                                                <Typography sx={{ fontSize: "12px", color: "red", pl: "10px" }}>
-                                                    {formik.errors[data.name]}
-                                                </Typography>
-                                            </Box>
+                                            {formik.errors[data.name] &&
+                                                <Box sx={{ height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px" }}>
+                                                    <Typography sx={{ fontSize: "12px", color: "red", pl: "10px" }}>
+                                                        {formik.errors[data.name]}
+                                                    </Typography>
+                                                </Box>
                                             }
                                         </FormControl>
                                     }
@@ -212,17 +212,17 @@ const RegisterPage = () => {
                                             <Box sx={{ height: "40px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1.5px solid #2A6DD0`, bgcolor: "#F9FAFF", borderRadius: "5px", }}>
                                                 <InputBase
                                                     type={data.type} name={data.name} value={data.value}
-                                                    sx={{width: "100%", height: "100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl: '10px'}}
+                                                    sx={{ width: "100%", height: "100%", fontWeight: "medium", fontSize: "14px", color: "#193D71", pl: '10px' }}
                                                     onChange={handleOnChangeRegister}
                                                 />
                                             </Box>
                                             {/* Validation */}
-                                            {formik.errors[data.name] && 
-                                            <Box sx={{height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px"}}>
-                                                <Typography sx={{ fontSize: "12px", color: "red", pl: "10px" }}>
-                                                    {formik.errors[data.name]}
-                                                </Typography>
-                                            </Box>
+                                            {formik.errors[data.name] &&
+                                                <Box sx={{ height: "25px", display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "#F9FAFF", borderRadius: "5px" }}>
+                                                    <Typography sx={{ fontSize: "12px", color: "red", pl: "10px" }}>
+                                                        {formik.errors[data.name]}
+                                                    </Typography>
+                                                </Box>
                                             }
                                         </FormControl>
                                     </Box>
@@ -245,8 +245,8 @@ const RegisterPage = () => {
                                     color: "#193D71",
                                     border: "2px solid #D9D630"
                                 }
-                        }}
-                        onClick={formik.handleSubmit}>
+                            }}
+                            onClick={formik.handleSubmit}>
                             Register
                         </Button>
                         <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>

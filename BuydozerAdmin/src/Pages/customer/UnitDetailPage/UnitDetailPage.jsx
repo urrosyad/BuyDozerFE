@@ -20,7 +20,7 @@ const accessToken = localStorage.getItem("AccessToken");
 
 
 const GET_PRICELIST_RENT = async () => {
-  const BASE_URL_GET_PRICELIST_RENT = `https://localhost:5001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
+  const BASE_URL_GET_PRICELIST_RENT = `https://localhost:3001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
   try {
     const response = await axios.get(BASE_URL_GET_PRICELIST_RENT, {
       headers: {
@@ -43,7 +43,7 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
     transactionDate: GetDateNow()
   }
   // console.log("LOG REQ BODY", requestBody);
-  const BASE_URL_POST_TRANSACTION_BUY = "https://localhost:5001/api/TransactionDetailBuy/CreateTransactionDetailBuy"
+  const BASE_URL_POST_TRANSACTION_BUY = "https://localhost:3001/api/TransactionDetailBuy/CreateTransactionDetailBuy"
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_BUY, requestBody, {
       headers: {
@@ -52,7 +52,7 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
       }
     });
     const trxBuyData = response.data
-    console.log("TRXBUYDATA:",trxBuyData);
+    console.log("TRXBUYDATA:", trxBuyData);
     return trxBuyData;
   } catch (error) {
     console.error('Error while Post Trx Rent:', error);
@@ -68,7 +68,7 @@ const POST_TRANSACTION_RENT = async ({ rentForm }) => {
     dateRent: GetDateNow()
   }
   console.log("LOG REQ BODY RENT", requestBody);
-  const BASE_URL_POST_TRANSACTION_RENT = "https://localhost:5001/api/TransactionDetailRents/CreateTransactionDetailRent"
+  const BASE_URL_POST_TRANSACTION_RENT = "https://localhost:3001/api/TransactionDetailRents/CreateTransactionDetailRent"
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_RENT, requestBody, {
       headers: {
@@ -176,10 +176,12 @@ const UnitDetailPage = () => {
       console.error("Error saat melakukan pembelian:", error);
     },
   })
-  {!BuyIsPending && BuyIsSuccess && (
-    navigate("/buydozer/invoice/" + transactionNumBuy),
-    window.scrollTo(0, 0)
-    )}
+  {
+    !BuyIsPending && BuyIsSuccess && (
+      navigate("/buydozer/invoice/" + transactionNumBuy),
+      window.scrollTo(0, 0)
+    )
+  }
 
 
   // CREATE TRANSACTION RENT
@@ -195,10 +197,12 @@ const UnitDetailPage = () => {
       console.error("Error saat melakukan penyewaan:", error);
     },
   })
-  {!RentIsPending && RentIsSuccess && (
-    navigate("/buydozer/invoice/" + transactionNumRent), 
-    window.scrollTo(0, 0)
-  )}
+  {
+    !RentIsPending && RentIsSuccess && (
+      navigate("/buydozer/invoice/" + transactionNumRent),
+      window.scrollTo(0, 0)
+    )
+  }
   if (errorUnit, errorBuy, errorRent, errorPricelist) {
     navigate("/*")
   }
@@ -223,7 +227,7 @@ const UnitDetailPage = () => {
 
   const handleModalClose = () => {
     setIsModalBuy(false),
-    setIsModalRent(false);
+      setIsModalRent(false);
   }
 
   const handleChangeBuyForm = async (event) => {

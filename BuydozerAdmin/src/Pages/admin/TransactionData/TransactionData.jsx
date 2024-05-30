@@ -8,7 +8,8 @@ import { useFormik } from 'formik';
 import { SearchRounded } from '@mui/icons-material';
 import { formatDateTime } from '@utils/formatDate';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Card, Box, Typography, Grid, InputBase, Tab, Select, MenuItem
+import {
+  Card, Box, Typography, Grid, InputBase, Tab, Select, MenuItem
 } from '@mui/material'
 
 const initialValues = {
@@ -28,7 +29,7 @@ const initialValues = {
 const GET_TRANSACTION_RENT = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
   console.log('nomor transaksi: ', transactionNum);
-  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:3001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -48,7 +49,7 @@ const GET_TRANSACTION_RENT = async (props) => {
 const GET_TRANSACTION_BUY = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
   console.log('nomor transaksi: ', transactionNum);
-  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:5001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:3001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {

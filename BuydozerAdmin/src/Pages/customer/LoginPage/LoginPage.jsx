@@ -14,7 +14,7 @@ import theme from '../../../Themes/theme';
 import useAuth from '@hooks/useAuth'
 
 
-const BASE_URL_LOGIN = "https://localhost:5001/api/LoginRegisters/Login"
+const BASE_URL_LOGIN = "https://localhost:3001/api/LoginRegisters/Login"
 
 const styleButton = {
   width: "150px",
@@ -34,6 +34,7 @@ const LoginPage = () => {
   const { loginAuth } = useAuth()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -64,7 +65,6 @@ const LoginPage = () => {
   })
 
 
-  const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleOnChangeLogin = (e) => {
@@ -116,7 +116,7 @@ const LoginPage = () => {
       navigate("/*")
     },
   })
-  {loginError && navigate("/*")}
+  { loginError && navigate("/*") }
 
   return (
     <Box>
@@ -204,7 +204,7 @@ const LoginPage = () => {
               <Button type='button' onClick={formik.handleSubmit}
                 sx={styleButton}>
                 {loginIsPending
-                  ? <CircularProgress size={26} sx={{color: "#D9D630",}} />
+                  ? <CircularProgress size={26} sx={{ color: "#D9D630", }} />
                   :
                   "Login"
                 }

@@ -42,17 +42,18 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const from = location.state?.from?.pathname || "/login";
     // Jika sudah login, maka navigasi langsung ke dashboard
-
+    
+    // Jika sudah login, maka navigasi langsung ke dashboard
     if (auth.isLoggedIn) {
       if (auth.userRole === 1999) {
-        navigate('/admin/dashboard', { replace: true });
+        window.location.href = '/admin/dashboard';
       } else if (auth.userRole === 2000) {
-        navigate('/', { replace: true });
+        window.location.href = '/';
       }
       // Jika belum login, maka navigasi sesuai dengan 'from'
     } else {
       if (from === "/register") {
-        navigate('/login', { replace: true });
+        window.location.href = '/login';
       }
     }
   }, [auth.isLoggedIn, auth.userRole, location.state]);

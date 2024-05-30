@@ -16,7 +16,7 @@ import {
 
 const GET_TRANSACTION = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
-  const BASE_URL_TRANSACTION = `https://localhost:5001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_TRANSACTION = `https://localhost:3001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_TRANSACTION, {
@@ -81,7 +81,7 @@ const TableTransactionDetailRent = (props) => {
         queryKey: ["TransactionRent"],
         queryFn: fetchData,
       })
-    {error && navigate("/*")}
+  { error && navigate("/*") }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

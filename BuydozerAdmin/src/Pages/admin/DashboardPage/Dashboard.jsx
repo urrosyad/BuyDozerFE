@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react'
 import { Box, CircularProgress, Grid, Skeleton, Typography } from '@mui/material'
 import {
   GET_UNIT,
-  GET_USER,
   GET_UNIT_REMAINING,
   GET_TRANSACTION_BUY,
   GET_TRANSACTION_RENT,
   GET_TRANSACTION_REPORT,
   GET_USER_TRANSACTION_TYPE,
   GET_SUMMARY_TRANSACTION_STATUS,
+  GET_REPORT_CARD
 } from '@api/api'
 import { AgricultureRounded, GroupsRounded, PaidRounded, ShoppingCart, } from '@mui/icons-material';
 import Chart from 'react-apexcharts'
@@ -19,6 +19,7 @@ import InfoCard from '@components/admin/Moleculs/InfoCard/InfoCard';
 import tagLineBg from '@assets/admin/tagLineBg.png'
 import buydozerLogo from '@assets/customer/buydozerLogo.png'
 import DonutChart from '@components/admin/Moleculs/DonutChart/DonutChart';
+
 
 
 const Dashboard = () => {
@@ -49,7 +50,7 @@ const Dashboard = () => {
     }),
   })
 
-  const { data: dataTransactionRent = { data: [] }, isFetching: transaksiRentIsFetching, isSuccess: transaksiRentIsSuccess,  error:errorTransaksiRent,refetch: transactionRentRefetch } = useQuery({
+  const { data: dataTransactionRent = { data: [] }, isFetching: transaksiRentIsFetching, isSuccess: transaksiRentIsSuccess, error: errorTransaksiRent, refetch: transactionRentRefetch } = useQuery({
     queryKey: ["TransactionRent", {
       transactionNum: "%25TRX%25",
     }],
@@ -58,27 +59,36 @@ const Dashboard = () => {
     }),
   })
 
-  const { data: dataTransactionReport = { data: [] }, isFetching: transaksiReportIsFetching, isSuccess: transaksiReportIsSuccess, error:errorTransaksiReport,refetch: transactionReportRefetch } = useQuery({
+  const { data: dataReportCard = { data: [] }, isFetching: reportCardIsFetching, isSuccess: reportCardIsSuccess, error: errorReportCard, refetch: reportCardRefetch } = useQuery({
+    queryKey: ["Report"],
+    queryFn: GET_REPORT_CARD,
+  });
+  {
+    reportCardIsSuccess &&
+      console.log(dataReportCard.data[0].rentTransactionCount);
+  }
+
+  const { data: dataTransactionReport = { data: [] }, isFetching: transaksiReportIsFetching, isSuccess: transaksiReportIsSuccess, error: errorTransaksiReport, refetch: transactionReportRefetch } = useQuery({
     queryKey: ["TransactionReport"],
     queryFn: GET_TRANSACTION_REPORT,
   });
 
-  const { data: dataUnitRemaining = { data: [] }, isFetching: unitRemainingIsFetching, isSuccess: unitRemainingIsSuccess, error:errorUnitRemaining, refetch: unitRemainingRefetch } = useQuery({
+  const { data: dataUnitRemaining = { data: [] }, isFetching: unitRemainingIsFetching, isSuccess: unitRemainingIsSuccess, error: errorUnitRemaining, refetch: unitRemainingRefetch } = useQuery({
     queryKey: ["UnitRemaining"],
     queryFn: GET_UNIT_REMAINING,
   });
 
-  const { data: dataUserType = { data: [] }, isFetching: userTypeIsFetching, isSuccess: userTypeIsSuccess, error:errorUserType, refetch: userTypeRefetch } = useQuery({
+  const { data: dataUserType = { data: [] }, isFetching: userTypeIsFetching, isSuccess: userTypeIsSuccess, error: errorUserType, refetch: userTypeRefetch } = useQuery({
     queryKey: ["UserTransactionType"],
     queryFn: GET_USER_TRANSACTION_TYPE,
   });
 
-  const { data: dataSummaryStatus = { data: [] }, isFetching: summaryStatusIsFetching, isSuccess: summaryStatusIsSuccess, error:errorSummaryStatus, refetch: summaryStatusRefetch } = useQuery({
+  const { data: dataSummaryStatus = { data: [] }, isFetching: summaryStatusIsFetching, isSuccess: summaryStatusIsSuccess, error: errorSummaryStatus, refetch: summaryStatusRefetch } = useQuery({
     queryKey: ["SummaryTransactionStatus"],
     queryFn: GET_SUMMARY_TRANSACTION_STATUS,
   });
 
-  if (errorUnit || errorTransaksiBuy || errorTransaksiRent || errorSummaryStatus || errorTransaksiReport || errorUserType || errorUnitRemaining) {
+  if (errorUnit || errorTransaksiBuy || errorTransaksiRent || errorSummaryStatus || errorTransaksiReport || errorUserType || errorUnitRemaining || errorReportCard) {
     navigate("/*")
   }
 
@@ -90,15 +100,18 @@ const Dashboard = () => {
     transactionReportRefetch()
     transactionRentRefetch()
     summaryStatusRefetch()
+    reportCardRefetch()
 
-  }, [dataUnit, dataTransactionBuy, dataTransactionRent, dataTransactionReport, dataUnitRemaining, dataUserType, dataSummaryStatus])
+  }, [dataUnit, dataTransactionBuy, dataTransactionRent, dataTransactionReport, dataUnitRemaining, dataUserType, dataSummaryStatus, dataReportCard])
 
 
   const infoCard = [
-    { title: "Penyewaan", subTitle: "Transaksi", qty: transaksiRentIsSuccess && dataTransactionRent.data.totalCount, icon: <ShoppingCart sx={{ fontSize: "30px", color: "#193d71" }} /> },
-    { title: "Pembelian", subTitle: "Transaksi", qty: transaksiBuyIsSuccess && dataTransactionBuy.data.totalCount, icon: <PaidRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
-    { title: "Unit", subTitle: "Tipe", qty: unitIsSuccess && dataUnit.totalCount, icon: <AgricultureRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
-    { title: "Customer", subTitle: "User", qty: userTypeIsSuccess && dataUserType.data[0].userCount, icon: <GroupsRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
+    {
+      title: "Penyewaan", subTitle: "Transaksi", qty: reportCardIsSuccess && dataReportCard.data[0].rentTransactionCount, icon: <ShoppingCart sx={{ fontSize: "30px", color: "#193d71" }} />
+    },
+    { title: "Pembelian", subTitle: "Transaksi", qty: reportCardIsSuccess && dataReportCard.data[0].buyTransactionCount, icon: <PaidRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
+    { title: "Unit", subTitle: "Tipe", qty: reportCardIsSuccess && dataReportCard.data[0].unitCount, icon: <AgricultureRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
+    { title: "Customer", subTitle: "User", qty: reportCardIsSuccess && dataReportCard.data[0].userCount, icon: <GroupsRounded sx={{ fontSize: "30px", color: "#193d71" }} /> },
   ]
 
   const namaBulan = [
@@ -140,10 +153,10 @@ const Dashboard = () => {
   const unitLabels = ["Unit Disewa", "Unit Dibeli", "Unit Free"]
   const userLabels = ["User Penyewa", "User Pembeli", "User Sewa dan Beli"]
   const statusLabels = ["Finish", "Unpaid", "Paid", "Rejected"]
-  
+
   const unitSeries = [
-  unitRemainingIsSuccess && dataUnitRemaining.data[0].unitRented,
-  unitRemainingIsSuccess && dataUnitRemaining.data[0].unitBuyed,
+    unitRemainingIsSuccess && dataUnitRemaining.data[0].unitRented,
+    unitRemainingIsSuccess && dataUnitRemaining.data[0].unitBuyed,
     unitRemainingIsSuccess && dataUnitRemaining.data[0].unitFree,
   ];
   const userSeries = [
@@ -269,7 +282,7 @@ const Dashboard = () => {
                   {unitRemainingIsFetching ? (
                     <CircularProgress size={50} sx={{
                       color: "#8BB9FF",
-                      m:"25% 0"
+                      m: "25% 0"
                     }} />
                   ) :
                     <DonutChart
@@ -281,7 +294,7 @@ const Dashboard = () => {
                   }
                 </Box>
 
-                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 3, mt:"20px" }}>
+                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 3, mt: "20px" }}>
                   {unitLabels.map((label, index) => (
                     <Box key={index} sx={{ ...flexCenter, flexDirection: "row", gap: 1 }}>
                       <Box sx={{ bgcolor: unitColor[index], width: "30px", height: "30px", borderRadius: "10px" }} />
