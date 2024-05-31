@@ -120,7 +120,6 @@ const TablePaymentConfirm = (props) => {
 
   // Handle Modal for Confirmation and Cancel Transaction
   const handleApproval = (isConfirm, trxnum, trxData, trxType) => {
-    console.log(isConfirm, trxnum, trxData, trxType);
     const action = isConfirm ? "Konfirmasi" : "Tolak";
     Swal.fire({
       title: `Apakah kamu yakin untuk ${action.toLowerCase()} transaksi ${trxnum}?`,
@@ -132,7 +131,6 @@ const TablePaymentConfirm = (props) => {
       confirmButtonText: `${action}!`
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("data trxNum: ", trxnum, "\nData trxData:", trxData);
         {
           trxType === "Pembelian"
             ? putConfirmBuy(formik.values)

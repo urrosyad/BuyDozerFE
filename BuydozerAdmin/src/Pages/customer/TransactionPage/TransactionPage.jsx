@@ -84,7 +84,6 @@ const TransactionPage = ({ }) => {
 
   const handleSearchTransaction = (event) => {
     setSearchValue(event.target.value);
-    console.log(searchValue);
   };
 
   useEffect(() => {

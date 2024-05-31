@@ -230,7 +230,6 @@ export const POST_RENT_LIST = async ({ requestBody }) => {
 };
 
 export const PUT_RENT_LIST = async ({ id, requestBody }) => {
-  console.table(id, requestBody);
 
   const BASE_URL_PUT = `https://localhost:3001/api/PriceListRents/UpdatePriceListRent/${id}`;
   try {

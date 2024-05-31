@@ -6,7 +6,6 @@ const PrivateRoutes = ({ allowedRoles }) => {
 const { auth } = useAuth()
 const location = useLocation()
 const userRole = auth?.userRole
-console.log(userRole);
 
 // if (!auth?.isLoggedIn) {
 //   // Jika pengguna belum masuk, arahkan ke halaman login

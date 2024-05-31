@@ -63,10 +63,7 @@ const Dashboard = () => {
     queryKey: ["Report"],
     queryFn: GET_REPORT_CARD,
   });
-  {
-    reportCardIsSuccess &&
-      console.log(dataReportCard.data[0].rentTransactionCount);
-  }
+
 
   const { data: dataTransactionReport = { data: [] }, isFetching: transaksiReportIsFetching, isSuccess: transaksiReportIsSuccess, error: errorTransaksiReport, refetch: transactionReportRefetch } = useQuery({
     queryKey: ["TransactionReport"],

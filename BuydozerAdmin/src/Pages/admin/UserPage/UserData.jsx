@@ -102,7 +102,6 @@ const UserData = () => {
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
-    console.log(searchValue);
   };
 
   // Function for update data

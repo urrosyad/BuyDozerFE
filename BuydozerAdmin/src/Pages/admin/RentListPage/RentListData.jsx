@@ -59,7 +59,6 @@ const RentListData = () => {
     onSuccess: (data) => {
       console.log("Data successfully POSTED", data)
       setIsModalAddOpen(false)
-      console.log("Hasil submitan add", formik.values);
       formik.handleReset(formik.values)
       queryClient.invalidateQueries(['RentList'], (oldData) => [...oldData, data]);
     },
@@ -74,7 +73,6 @@ const RentListData = () => {
     onSuccess: (data) => {
       console.log("Data successfully UPDATE", data)
       setIsModalEditOpen(false)
-      console.log("Hasil submitan update", formik.values);
       queryClient.invalidateQueries(['RentList'], (oldData) => [...oldData, data]);
     },
     onError: (error) => {
@@ -132,7 +130,6 @@ const RentListData = () => {
     setIsEdit(true)
     setIsModalEditOpen(true)
     const fetchData = await GET_RENT_LIST({ searchValue: searchValue })
-    { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
     formik.setValues({
       ...formik.values,
       ...fetchData[0],
@@ -150,7 +147,6 @@ const RentListData = () => {
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
-    console.log(searchValue);
   };
 
 

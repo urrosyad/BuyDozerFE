@@ -28,7 +28,6 @@ const initialValues = {
 
 const GET_TRANSACTION_RENT = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
-  console.log('nomor transaksi: ', transactionNum);
   const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:3001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
@@ -48,7 +47,6 @@ const GET_TRANSACTION_RENT = async (props) => {
 
 const GET_TRANSACTION_BUY = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
-  console.log('nomor transaksi: ', transactionNum);
   const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:3001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
@@ -69,7 +67,6 @@ const GET_TRANSACTION_BUY = async (props) => {
 const TransactionData = () => {
   const [searchValue, setSearchValue] = useState('');
   const [sortDate, setSortDate] = useState(false);
-  console.log(sortDate);
   const [tab, setTab] = useState('buy');
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const formik = useFormik({
@@ -125,7 +122,6 @@ const TransactionData = () => {
 
   const handleSearch = (event) => {
     setSearchValue(event.target.value);
-    console.log(searchValue);
   };
 
   const handleSortDate = () => {

@@ -61,13 +61,11 @@ const RegisterPage = () => {
             }
         }
     })
-    console.table(formik.values);
 
     const { mutate: register, error: registError, isSuccess: registSuccess } = useMutation({
         mutationFn: POST_REGISTER,
         onSuccess: (data) => {
             console.log("User successfully registered", data)
-            console.log("Hasil register", formik.values);
             formik.handleReset(formik.values)
             setOpenSnack(true)
         },
@@ -109,14 +107,6 @@ const RegisterPage = () => {
         }
     }, [openSnack, navigate]);
 
-    // useEffect(() => {
-    //     if (registSuccess) {
-    //         setOpenSnack(true);
-    //         console.log("RegistSuccess berhasil keluar");
-    //     }
-    // }, [registSuccess]);
-
-    // console.log(formik.errors);
     return (
         <Box>
             <Snackbar open={openSnack}>

@@ -10,9 +10,7 @@ const ModalTrxDetail = ({ typeModal, onClose, onChange, isOpen, labelInput, form
         statusColor = statusConfig[statusIndex].color;
 
     } else {
-        console.log("Status not found in statusConfig"); // Tampilkan pesan jika index tidak ada di statusConfig
     }
-    console.log("ini status ke", statusIndex, "dengan warna", statusColor, statusContent);
 
 
     return (

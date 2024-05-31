@@ -143,7 +143,6 @@ const UnitData = () => {
     setIsEdit(true)
     setIsModalEditOpen(true)
     const fetchData = await GET_UNIT_BYNAME({ nameUnit: nameUnit })
-    { !fetchData ? console.log("data sedang loading") : console.log("data berhasil di fetching") }
     formik.setValues({
       ...formik.values,
       ...fetchData[0],

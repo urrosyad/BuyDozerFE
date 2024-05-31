@@ -34,7 +34,6 @@ const AllUnitPage = () => {
 
   const handleSearchUnit = (event) => {
     setSearchValue(event.target.value);
-    console.log(searchValue);
   };
 
 

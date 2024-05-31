@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import Navbar from '@layouts/customer/Navbar/Navbar'
 import Footer from '@layouts/customer/Footer/Footer'
-import { Box, Grid, IconButton, Typography, Dialog, Skeleton } from '@mui/material';
+import { Box, Grid, IconButton, Typography, Skeleton } from '@mui/material';
 import { useFormik } from 'formik';
 import { flexCenter } from '@themes/commonStyles'
 import { buySchema, rentSchema } from '@schemas';
@@ -17,6 +17,7 @@ import GetDateNow from '@utils/GetDateNow';
 import { GET_UNIT } from '@api/api';
 
 const accessToken = localStorage.getItem("AccessToken");
+const userId = localStorage.getItem("UserId");
 
 
 const GET_PRICELIST_RENT = async () => {
@@ -42,7 +43,6 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
     statusTransaction: 1,
     transactionDate: GetDateNow()
   }
-  // console.log("LOG REQ BODY", requestBody);
   const BASE_URL_POST_TRANSACTION_BUY = "https://localhost:3001/api/TransactionDetailBuy/CreateTransactionDetailBuy"
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_BUY, requestBody, {
@@ -52,7 +52,6 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
       }
     });
     const trxBuyData = response.data
-    console.log("TRXBUYDATA:", trxBuyData);
     return trxBuyData;
   } catch (error) {
     console.error('Error while Post Trx Rent:', error);
@@ -67,7 +66,6 @@ const POST_TRANSACTION_RENT = async ({ rentForm }) => {
     statusTransaction: 1,
     dateRent: GetDateNow()
   }
-  console.log("LOG REQ BODY RENT", requestBody);
   const BASE_URL_POST_TRANSACTION_RENT = "https://localhost:3001/api/TransactionDetailRents/CreateTransactionDetailRent"
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_RENT, requestBody, {
@@ -96,7 +94,6 @@ const UnitDetailPage = () => {
   const [priceBuy, setPriceBuy] = useState(0)
   const [priceRent, setPriceRent] = useState(0)
   const [checked, setChecked] = useState(false);
-  // console.log({priceRent});
 
 
   // FORMIK FOR BUY TRANSACTION
@@ -114,7 +111,6 @@ const UnitDetailPage = () => {
     validateOnBlur: false,
     onSubmit: () => {
       postBuy({ buyForm: formikBuy.values })
-      // console.log("button diklik");
     }
   })
 
@@ -134,7 +130,6 @@ const UnitDetailPage = () => {
     validateOnBlur: false,
     onSubmit: () => {
       postRent({ rentForm: formikRent.values })
-      console.log("button diklik");
     }
   })
 
@@ -168,7 +163,6 @@ const UnitDetailPage = () => {
     mutationFn: POST_TRANSACTION_BUY,
     onSuccess: (data) => {
       setTransactionNumBuy(data.Data.TransactionNum);
-      console.log("Hasil Pembelian", formikBuy.values);
       formikBuy.handleReset(formikBuy.values)
       queryClient.invalidateQueries(['TransactionBuy'], (oldData) => [...oldData, data]);
     },
@@ -189,7 +183,6 @@ const UnitDetailPage = () => {
     mutationFn: POST_TRANSACTION_RENT,
     onSuccess: (data) => {
       setTransactionNumRent(data.Data.TransactionNum);
-      console.log("HASIL PENYEWAAN", formikRent.values);
       formikRent.handleReset(formikRent.values)
       queryClient.invalidateQueries(['TransactionRent'], (oldData) => [...oldData, data]);
     },
@@ -250,19 +243,17 @@ const UnitDetailPage = () => {
 
   const handleBuySubmit = () => {
     if (checked) {
-      // console.log("YEY SUBMIT BERHASIL");
       formikBuy.handleSubmit()
     } else {
-      console.log("CHECK DULU COY");
+      null
     }
   }
 
   const handleRentSubmit = () => {
     if (checked) {
-      console.log("YEY SUBMIT RENT BERHASIL");
       formikRent.handleSubmit()
     } else {
-      console.log("CHECK DULU COY");
+      null
     }
   }
 
@@ -275,15 +266,6 @@ const UnitDetailPage = () => {
     { label: "No Handphone", name: "receiverHp", value: isModalBuy ? formikBuy.values.receiverHp : formikRent.values.receiverHp, type: "number" },
     { label: "Alamat Penerima", name: "receiverAddress", value: isModalBuy ? formikBuy.values.receiverAddress : formikRent.values.receiverAddress, type: "text" },
   ]
-
-  // console.log("ini adalah data unit", dataUnit);
-  // console.log("ini adalah priceBuy", priceBuy);
-  console.log("FORMIK BUY", formikBuy.values);
-  // console.log("FORMIK RENT:", formikRent.values);
-  { BuyIsSuccess && console.log("BUY BERHASILLLLLLLLLLLL") }
-  { RentIsSuccess && console.log("RENT BERHASILLLLLLLLLLLL") }
-  { postBuy.isLoading && console.log("POST BUY SEDANG LOADING") }
-  { BuyIsPending && console.log("POST BUY SEDANG PENDING") }
 
   return (
     <>

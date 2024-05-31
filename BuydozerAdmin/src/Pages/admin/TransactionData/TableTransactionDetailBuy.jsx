@@ -46,8 +46,6 @@ const TableTransactionDetailBuy = (props) => {
     const { dataTransaksi, totalCount } = await GET_TRANSACTION_BUY({ SearchValue, PageNumber: page, PageSize: rowsPerPage, SortDate: sortDate });
     setTotalData(totalCount);
 
-    console.log("ini adalah data tanggal", dataTransaksi);
-
     if (!dataTransaksi) {
       throw new Error("Failed to fetch data");
     };
@@ -88,7 +86,6 @@ const TableTransactionDetailBuy = (props) => {
 
   const handleDetailOnClick = (index) => {
     const clickedData = data[index].transactionNum;
-    console.log('Data yang diklik:', clickedData);
     props.onSelectRow(clickedData);
   }
 
@@ -108,7 +105,6 @@ const TableTransactionDetailBuy = (props) => {
     {
       accessorKey: "statusTransaction", header: "Status", width: "5%", cell: (props) => {
         const status = statusConfig[props.getValue()] || { content: "Unknown", color: "" };
-        console.log(data);
         return (
           <Button variant="contained" sx={{
             width: "100px", color: "white", bgcolor: status.color, borderRadius: "10px", boxShadow: 'unset', ":hover": {

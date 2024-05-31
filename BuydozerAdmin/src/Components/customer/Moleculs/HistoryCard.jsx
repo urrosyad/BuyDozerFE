@@ -23,7 +23,7 @@ const HistoryCard = ({ dataHistory, isSuccess, isLoading, isFetching }) => {
 
   return (
     <>
-      <Box sx={{ ...flexCenter, width: "100%", height: "auto", boxShadow: "0px 2px 3px 1px rgba(0, 0, 0, 0.1)", borderRadius: "40px", padding: "20px" }}>
+      <Box sx={{ ...flexCenter, width: "100%", height: "auto", boxShadow: "0px 2px 3px 1px rgba(0, 0, 0, 0.1)", borderRadius: "40px", padding: "20px", backgroundColor:"#FFFFFF" }}>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Typography sx={{ fontSize: "28px", fontWeight: "medium", color: "#193D71" }}>

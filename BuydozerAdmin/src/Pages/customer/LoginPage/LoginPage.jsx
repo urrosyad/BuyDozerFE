@@ -79,7 +79,7 @@ const LoginPage = () => {
           'Content-Type': 'application/json',
         }
       });
-      console.log(response);
+      
       const {
         UserName,
         UserId,

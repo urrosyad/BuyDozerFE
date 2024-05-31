@@ -53,7 +53,6 @@ const InvoicePage = () => {
   const [paymentImg, setPaymentImg] = useState('')
   const [isPayment, setIsPayemnt] = useState(false)
   const [modalImg, setModalImg] = useState(false)
-  console.log({ modalImg, paymentImg });
 
   // GET DATA TRANSACTION BUY
   const { data: dataBuy, isLoading: buyIsLoading, isFetching: buyIsFetching, isSuccess: buyIsSuccess, error: errorBuy } = useQuery({
@@ -74,7 +73,6 @@ const InvoicePage = () => {
       transactionNum: transactionNum,
     }),
   })
-  console.log(rentIsSuccess && dataRent?.data?.items.length);
 
   // GET DATA TRANSACTION IMG
   const { data: dataImg, isLoading: imgIsLoading, isFetching: imgIsFetching, isSuccess: imgIsSuccess, error: errorImg } = useQuery({
@@ -116,7 +114,6 @@ const InvoicePage = () => {
     mutationFn: PUT_TRANSACTION_STATUS_RENT,
     onSuccess: (data) => {
       queryClient.invalidateQueries(['TransactionRent'], (oldData) => [...oldData, data]);
-      console.log("RENT DIBATALKANNN IS WORK");
     },
     onError: (error) => {
       console.error("Error saat mengupdate data penyewaan:", error);
@@ -133,7 +130,6 @@ const InvoicePage = () => {
   const transactionData = rentIsSuccess && dataRent?.data?.items.length ? dataRent.data.items[0] : buyIsSuccess && dataBuy?.data?.items.length ? dataBuy.data.items[0] : {};
   const statusIndex = transactionData.statusTransaction;
   const status = statusConfig[statusIndex];
-  console.log({ dataRent });
 
   const handleWhatsAppClick = () => {
     const phoneNumber = "+6285748382270";

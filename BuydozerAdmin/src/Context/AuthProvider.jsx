@@ -34,9 +34,6 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  // const authData = JSON.stringify(auth);
-  // localStorage.setItem("AuthData", authData);
-
 
   // useEffect for directing user with different role
   useEffect(() => {
@@ -69,7 +66,6 @@ export const AuthProvider = ({ children }) => {
     const interval = setInterval(handleLogoutIfExpired, 1000); // Periksa setiap detik
     return () => clearInterval(interval);
   }, []);
-
 
   // useEffect for show the expiresIn time left
   useEffect(() => {
