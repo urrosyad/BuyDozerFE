@@ -102,14 +102,14 @@ const TableTransactionDetailRent = (props) => {
   }, [SearchValue, page, rowsPerPage, sortDate, refetch]);
 
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
-    { accessorKey: "transactionNum", header: "Nomor Transaksi", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "nameUnit", header: "Name Unit", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceRentUnit", header: "Harga Sewa Unit", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "qtyTransaction", header: "Kuantitas Barang", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "userName", header: "Nama Pengguna", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "dateTransaction", header: "Tanggal Transaksi", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "created", header: "Tanggal Dibuat", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <span>{props.row.index + 1}</span> },
+    { accessorKey: "transactionNum", header: "Nomor Transaksi", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "nameUnit", header: "Name Unit", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "priceRentUnit", header: "Harga Sewa Unit", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "qtyTransaction", header: "Kuantitas Barang", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "userName", header: "Nama Pengguna", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "dateTransaction", header: "Tanggal Transaksi", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "created", header: "Tanggal Dibuat", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
     {
       accessorKey: "statusTransaction", header: "Status", width: "5%", cell: (props) => {
         const status = statusConfig[props.getValue()] || { content: "Unknown", color: "" };

@@ -88,12 +88,12 @@ const TableUser = (props) => {
     refetch()
   }, [SearchValue, page, rowsPerPage, sortUserName, refetch]);
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
-    { accessorKey: "userName", header: "Nama Pengguna", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "email", header: "Email", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "companyUser", header: "Perusahaan Pengguna", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "positionUser", header: "Jabatan Pengguna", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "isAdmin", header: "Role", width: "10%", cell: (props) => <p>{props.getValue() ? "Administrator" : "Customer"}</p> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <span>{props.row.index + 1}</span> },
+    { accessorKey: "userName", header: "Nama Pengguna", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "email", header: "Email", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "companyUser", header: "Perusahaan Pengguna", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "positionUser", header: "Jabatan Pengguna", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "isAdmin", header: "Role", width: "10%", cell: (props) => <span>{props.getValue() ? "Administrator" : "Customer"}</span> },
     {
       accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'space-around', flexDirection: "row" }}>

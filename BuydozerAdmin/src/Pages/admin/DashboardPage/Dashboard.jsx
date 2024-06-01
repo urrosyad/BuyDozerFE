@@ -321,6 +321,7 @@ const Dashboard = () => {
                   {userTypeIsFetching ? (
                     <CircularProgress size={50} sx={{
                       color: "#8BB9FF",
+                      m: "25% 0"
                     }} />
                   ) :
                     <DonutChart
@@ -331,7 +332,7 @@ const Dashboard = () => {
                     />
                   }
                 </Box>
-                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 3 }}>
+                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 3, mt: "20px" }}>
                   {userLabels.map((label, index) => (
                     <Box key={index} sx={{ ...flexCenter, flexDirection: "row", gap: 1 }}>
                       <Box sx={{ bgcolor: userColor[index], width: "40px", height: "30px", borderRadius: "10px" }} />
@@ -360,6 +361,7 @@ const Dashboard = () => {
                   {summaryStatusIsFetching ? (
                     <CircularProgress size={50} sx={{
                       color: "#8BB9FF",
+                      m: "25% 0"
                     }} />
                   ) :
                     <DonutChart
@@ -370,7 +372,7 @@ const Dashboard = () => {
                     />
                   }
                 </Box>
-                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 2 }}>
+                <Box sx={{ ...flexCenter, flexDirection: "row", gap: 2, mt: "20px" }}>
                   {statusLabels.map((label, index) => (
                     <Box key={index} sx={{ ...flexCenter, flexDirection: "row", gap: 1 }}>
                       <Box sx={{ bgcolor: statusColor[index], width: "30px", height: "30px", borderRadius: "10px" }} />

@@ -83,10 +83,10 @@ const TableRentList = (props) => {
 
   const skipAccessorKeys = ["imgRentList", "imgBrand"];
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
-    { accessorKey: "nameRent", header: "Nama Opsi Sewa", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "priceRentUnit", header: "Pajak Sewa", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "months", header: "Bulan Sewa", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <span>{props.row.index + 1}</span> },
+    { accessorKey: "nameRent", header: "Nama Opsi Sewa", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "priceRentUnit", header: "Pajak Sewa", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "months", header: "Bulan Sewa", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
     {
       accessorKey: "actions", header: "Aksi", width: "5%", cell: (props) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>

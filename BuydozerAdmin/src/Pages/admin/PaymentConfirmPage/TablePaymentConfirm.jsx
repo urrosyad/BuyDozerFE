@@ -4,7 +4,7 @@ import { formatDate, formatDateTime } from '@utils/formatDate';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import { Clear, ImageSearch, CheckCircleOutline } from '@mui/icons-material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { PUT_TRANSACTION_STATUS_BUY, PUT_TRANSACTION_STATUS_RENT } from '../../../api/api';
+import { PUT_TRANSACTION_STATUS_BUY, PUT_TRANSACTION_STATUS_RENT } from '@api/api';
 import {
   Box, Typography,
   Table, TableContainer,
@@ -52,7 +52,9 @@ const TablePaymentConfirm = (props) => {
   const formik = useFormik({
     initialValues: {
       id: null,
-      statusTransaction: 0
+      statusTransaction: 0,
+      transactionNum: "",
+      isBuy: false
     }
   })
 
@@ -114,15 +116,39 @@ const TablePaymentConfirm = (props) => {
     },
   })
 
+
+  useEffect(() => {
+    if (formik.values.id !== null) {
+      {
+        formik.values.isBuy === "Pembelian"
+          ?
+          (handleApproval(
+            true,
+            formik.values.transactionNum,
+            formik.values.id,
+            formik.values.statusTransaction,
+            formik.values.isBuy))
+          :
+          (handleApproval(
+            false,
+            formik.values.transactionNum,
+            formik.values.id,
+            formik.values.statusTransaction,
+            formik.values.isBuy))
+      }
+    }
+  }, [formik.values.id, formik.values.statusTransaction]);
+
+
   if (errorTransaction || errorConfirmBuy || errorConfirmRent) {
     navigate("/*")
   }
 
   // Handle Modal for Confirmation and Cancel Transaction
-  const handleApproval = (isConfirm, trxnum, trxData, trxType) => {
+  const handleApproval = (isConfirm, trxNum, trxId, trxStatus, trxType) => {
     const action = isConfirm ? "Konfirmasi" : "Tolak";
     Swal.fire({
-      title: `Apakah kamu yakin untuk ${action.toLowerCase()} transaksi ${trxnum}?`,
+      title: `Apakah kamu yakin untuk ${action.toLowerCase()} transaksi ${trxNum}?`,
       text: "Jika masih ragu check datanya sekali lagi!",
       icon: "warning",
       showCancelButton: true,
@@ -133,8 +159,8 @@ const TablePaymentConfirm = (props) => {
       if (result.isConfirmed) {
         {
           trxType === "Pembelian"
-            ? putConfirmBuy(formik.values)
-            : putConfirmRent(formik.values)
+            ? putConfirmBuy({id: trxId, statusTransaction: trxStatus})
+            : putConfirmRent({id: trxId, statusTransaction: trxStatus})
         }
         Swal.fire({
           title: `Ter${action.toLowerCase()}!`,
@@ -168,17 +194,17 @@ const TablePaymentConfirm = (props) => {
 
   const hiddenAccessorKey = ["id", "paymentConfirmationReceipt"];
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <p>{props.row.index + 1}</p> },
-    { accessorKey: "id", header: "Id", width: "0%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "paymentConfirmationReceipt", header: "Bukti Pembayaran", width: "0%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "isBuy", header: "Transaksi", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "transactionNum", header: "Nomor Transaksi", width: "10%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "userName", header: "Nama Pengguna", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "receiverName", header: "Nama Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "receiverHp", header: "Telepon Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "receiverAddress", header: "Alamat Penerima", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "qtyTransaction", header: "Kuantitas Barang", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
-    { accessorKey: "dateTransaction", header: "Tanggal Transaksi", width: "5%", cell: (props) => <p>{props.getValue()}</p> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <span>{props.row.index + 1}</span> },
+    { accessorKey: "id", header: "Id", width: "0%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "paymentConfirmationReceipt", header: "Bukti Pembayaran", width: "0%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "isBuy", header: "Transaksi", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "transactionNum", header: "Nomor Transaksi", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "userName", header: "Nama Pengguna", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "receiverName", header: "Nama Penerima", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "receiverHp", header: "Telepon Penerima", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "receiverAddress", header: "Alamat Penerima", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "qtyTransaction", header: "Kuantitas Barang", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "dateTransaction", header: "Tanggal Transaksi", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
     {
       accessorKey: "statusTransaction", header: "Status", width: "5%", cell: (props) => {
         const status = statusConfig[props.getValue()] || { content: "Unknown", color: "" };
@@ -204,10 +230,10 @@ const TablePaymentConfirm = (props) => {
                 <IconButton onClick={() => {
                   formik.setValues({
                     id: props.row.original.id,
-                    statusTransaction: 3
-                  })
-                  handleApproval(true, props.row.original.transactionNum, formik, props.row.original.isBuy)
-
+                    statusTransaction: 3,
+                    transactionNum: props.row.original.transactionNum,
+                    isBuy: props.row.original.isBuy
+                  });
                 }}>
                   <CheckCircleOutline color='success'></CheckCircleOutline>
                 </IconButton>
@@ -221,9 +247,10 @@ const TablePaymentConfirm = (props) => {
                 <IconButton onClick={() => {
                   formik.setValues({
                     id: props.row.original.id,
-                    statusTransaction: 0
-                  })
-                  handleApproval(false, props.row.original.transactionNum, formik, props.row.original.isBuy)
+                    statusTransaction: 0,
+                    transactionNum: props.row.original.transactionNum,
+                    isBuy: props.row.original.isBuy
+                  });
                 }}>
                   <Clear color='error'></Clear>
                 </IconButton>
@@ -285,7 +312,7 @@ const TablePaymentConfirm = (props) => {
                   {isPending || isFetching ? (
                     <CircularProgress sx={{ color: "#2A6DD0" }} />
                   ) : (
-                    "Transaksi pembelian tidak ditemukan"
+                    "Transaksi pembelian dan penyewaan tidak ditemukan"
                   )}
 
                 </Typography>

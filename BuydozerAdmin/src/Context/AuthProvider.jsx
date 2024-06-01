@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
+  
   // useEffect for show the expiresIn time left
   useEffect(() => {
     if (auth.isLoggedIn && auth.expiresIn) {

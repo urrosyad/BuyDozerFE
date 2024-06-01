@@ -20,7 +20,7 @@ Dengan menyetujui syarat dan ketentuan ini, Anda mengonfirmasi bahwa Anda telah 
 const checkWarning = `Pastikan anda membaca keseluruhan syarat dan ketentuan!`
 
 const ModalRent = (props) => {
-  const { isOpen, onClose, onSubmit, onChange, priceRent, formik, checked, onChecked, labelInput, dataPricelist, isPending } = props
+  const { isOpen, onClose, onSubmit, onChange, priceRent, formik, checked, onChecked, labelInput, dataPricelist, isPending, pricelistIsFetching } = props
 
   const [priceRentUnit, setPriceRentUnit] = useState(priceRent);
   const [totalPriceRent, setTotalPriceRent] = useState(0);
@@ -47,7 +47,7 @@ const ModalRent = (props) => {
   }
 
   useEffect(() => {
-    setTotalPriceRent( priceRentUnit + (tax * priceRentUnit));
+    setTotalPriceRent(priceRentUnit + (tax * priceRentUnit));
   }, [priceRentUnit, tax])
 
   return (
@@ -94,14 +94,21 @@ const ModalRent = (props) => {
                 onChange={handlePricelist}
                 value={tax}
               >
-                {dataPricelist.map((item, index) => (
-                  <MenuItem
-                    key={index}
-                    value={item.priceRentUnit}
+                {pricelistIsFetching
+                  ? <MenuItem
+                    value={0}
                   >
-                    {item.nameRent}
+                    0
                   </MenuItem>
-                ))}
+                  : dataPricelist.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      value={item.priceRentUnit}
+                    >
+                      {item.nameRent}
+                    </MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
 
@@ -153,16 +160,16 @@ const ModalRent = (props) => {
       <Divider sx={{ width: "90%", alignSelf: "center" }} />
       <DialogActions>
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-end", flexDirection: "column", gap: 0, width: "100%", margin: "5px 20px", borderRadius: "5px" }}>
-          
+
           <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1 }}>
             <Typography sx={{ fontSize: "12px", fontWeight: "medium", color: "#193D71" }}>
               Harga Sewa:
             </Typography>
             <Typography sx={{ fontSize: "13px", fontWeight: "medium", color: "#193D71" }}>
-              {month 
-              ? formatRupiah(priceRentUnit)+"x"+month+" Bulan"
-              : formatRupiah(priceRentUnit)
-            }
+              {month
+                ? formatRupiah(priceRentUnit) + "x" + month + " Bulan"
+                : formatRupiah(priceRentUnit)
+              }
             </Typography>
           </Box>
 
@@ -175,7 +182,7 @@ const ModalRent = (props) => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1 , m: "5px 0px "}}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: 1, m: "5px 0px " }}>
             <Typography sx={{ fontSize: "12px", fontWeight: "medium", color: "#193D71" }}>
               TOTAL:
             </Typography>
@@ -183,40 +190,40 @@ const ModalRent = (props) => {
               {formatRupiah(totalPriceRent)}
             </Typography>
           </Box>
-          
+
           <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
-            {checked && priceRentUnit 
-            ? (
-              <ButtonContained
-                onClick={onSubmit}
-                text={
-                  isPending
-                  ? "REQUESTING..."
-                  : "REQUEST A QUOTE"
-                }
-                primaryColor={"#193D71"}
-                secondColor={"#D9D630"}
-                hoverColor={"#F5E94C"}
-                width={"100%"}
-                height={"40px"}
-                fz={"16px"}
-              />
-            ) : (
-              <Box sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "40px",
-                borderRadius: "10px",
-                color: "#193D71",
-                border: `2px solid ${"#ECEBB2"}`,
-                backgroundColor: "#ECEBB2",
-                fontSize: "16px",
-              }}>
-                REQUEST A QUOTE
-              </Box>
-            )}
+            {checked && priceRentUnit
+              ? (
+                <ButtonContained
+                  onClick={onSubmit}
+                  text={
+                    isPending
+                      ? "REQUESTING..."
+                      : "REQUEST A QUOTE"
+                  }
+                  primaryColor={"#193D71"}
+                  secondColor={"#D9D630"}
+                  hoverColor={"#F5E94C"}
+                  width={"100%"}
+                  height={"40px"}
+                  fz={"16px"}
+                />
+              ) : (
+                <Box sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "40px",
+                  borderRadius: "10px",
+                  color: "#193D71",
+                  border: `2px solid ${"#ECEBB2"}`,
+                  backgroundColor: "#ECEBB2",
+                  fontSize: "16px",
+                }}>
+                  REQUEST A QUOTE
+                </Box>
+              )}
           </Box>
         </Box>
       </DialogActions>

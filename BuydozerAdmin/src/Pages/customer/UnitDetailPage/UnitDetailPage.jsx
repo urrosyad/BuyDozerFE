@@ -398,6 +398,7 @@ const UnitDetailPage = () => {
                           priceRent={priceRent}
                           labelInput={labelInput}
                           isPending={RentIsPending}
+                          pricelistIsFetching={pricelistIsFetching}
                           dataPricelist={pricelistIsSuccess && dataPricelist.data}
                           onChecked={handleChecked}
                           onChange={handleChangeRentForm}

@@ -103,14 +103,14 @@ const TableUnit = (props) => {
 
   const skipAccessorKeys = ["imgUnit", "imgBrand"];
   const columns = [
-    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <div>{props.row.index + 1}</div> },
-    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "priceBuyUnit", header: "Harga Beli", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
-    { accessorKey: "priceRentUnit", header: "Harga Sewa", width: "5%", cell: (props) => <div>{props.getValue()}</div> },
+    { accessorKey: "no", header: "No", width: "0%", cell: (props) => <span>{props.row.index + 1}</span> },
+    { accessorKey: "imgUnit", header: "Foto Unit", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "imgBrand", header: "Logo Brand", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "nameUnit", header: "Nama Unit", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "typeUnit", header: "Tipe Unit", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "qtyUnit", header: "Ketersediaan Unit", width: "10%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "priceBuyUnit", header: "Harga Beli", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
+    { accessorKey: "priceRentUnit", header: "Harga Sewa", width: "5%", cell: (props) => <span>{props.getValue()}</span> },
     {
       accessorKey: "descUnit", header: "", width: "0%", cell: (props) => {
         const rowId = props.row.id;

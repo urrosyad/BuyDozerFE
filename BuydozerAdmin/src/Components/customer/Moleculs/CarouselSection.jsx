@@ -34,7 +34,7 @@ const CarouselItems = () => [
 ]
 const CarouselSection = () => {
   return (
-    <Box border={1}>
+    <Box>
       <Carousel
         responsive={responsive}
         swipeable={true}
