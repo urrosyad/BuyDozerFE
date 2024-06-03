@@ -5,7 +5,6 @@ import CancelButton from '../Buttons/CancelButton'
 
 
 const ModalPriceListRent = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik }) => {
-    console.log(formik.values);
     return (
         <Dialog open={isOpen} onClose={onClose} sx={{
             "& .MuiPaper-root": { borderRadius: "20px", width:"450px" }

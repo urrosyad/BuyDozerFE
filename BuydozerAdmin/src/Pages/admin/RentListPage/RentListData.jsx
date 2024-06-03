@@ -51,7 +51,6 @@ const RentListData = () => {
       }
     }
   })
-  console.log(formik.values);
 
 
   // CREATE DATA RENT LIST
@@ -128,11 +127,9 @@ const RentListData = () => {
   }
 
   const handleSelectRow = async (searchValue) => {
-    console.log({searchValue});
     setIsEdit(true)
     setIsModalEditOpen(true)
     const fetchData = await GET_RENT_LIST({ SearchValue: searchValue })
-    console.log({fetchData});
     formik.setValues({
       ...formik.values,
       ...fetchData.dataRentList[0],

@@ -148,7 +148,6 @@ const TablePaymentConfirm = (props) => {
   // Handle Modal for Confirmation and Cancel Transaction
   const handleApproval = (isConfirm, trxNum, trxId, trxStatus, trxType) => {
     const action = isConfirm ? "Konfirmasi" : "Tolak";
-    console.log(action);
     Swal.fire({
       title: `Apakah kamu yakin untuk ${action.toLowerCase()} transaksi ${trxNum}?`,
       text: "Jika masih ragu check datanya sekali lagi!",
