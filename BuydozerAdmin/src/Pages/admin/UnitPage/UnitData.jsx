@@ -228,6 +228,10 @@ const UnitData = () => {
               onClose={handleCancelForm}
             />
             <ModalConfirm
+              titleModal={"Hapus Unit"}
+              messageAsk={"Apakah anda yakin untuk menghapus unit?"}
+              messageConfirm={"Menghapus unit akan mengakibatkan data transaksi unit tersebut hilang!"} 
+              submitText={"Hapus"}
               isOpen={isModalDelOpen}
               onSubmit={handleDelSubmit}
               onClose={handleCancelForm}

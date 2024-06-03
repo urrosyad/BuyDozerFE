@@ -68,6 +68,7 @@ const TransactionData = () => {
   const [searchValue, setSearchValue] = useState('');
   const [sortDate, setSortDate] = useState(false);
   const [tab, setTab] = useState('buy');
+  const [isEdit, setIsEdit] = useState(false)
   const [isModalEditOpen, setIsModalEditOpen] = useState(false)
   const formik = useFormik({
     initialValues: initialValues,
@@ -100,7 +101,7 @@ const TransactionData = () => {
       totalPriceTransaction: fetchData[0].totalPriceTransaction
     };
     if (tab != 'buy') {
-      // Jika tab bukan "buy", maka Anda perlu mengatur dateRent dan dateReturn
+      // Jika tab bukan "buy", maka perlu mengatur dateRent dan dateReturn
       valuesToSet.dateRent = fetchData[0].dateRent;
       valuesToSet.dateReturn = fetchData[0].dateReturn;
       valuesToSet.priceRentUnit = fetchData[0].priceRentUnit;
@@ -129,6 +130,7 @@ const TransactionData = () => {
   };
 
   const handleTabsChange = (event, newTab) => {
+    setSearchValue("")
     setTab(newTab);
   };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import image from '../../../assets/bgLogin.png'
-import { Grid, Paper, Box, Typography, Button, FormControl, IconButton, InputBase, Snackbar, Alert } from '@mui/material'
+import { Grid, Paper, Box, Typography, Button, FormControl, IconButton, InputBase, Snackbar, Alert, CircularProgress } from '@mui/material'
 import { Description, Visibility, VisibilityOff } from '@mui/icons-material'
 import theme from '../../../Themes/theme'
 import axios from 'axios'
@@ -62,7 +62,7 @@ const RegisterPage = () => {
         }
     })
 
-    const { mutate: register, error: registError, isSuccess: registSuccess } = useMutation({
+    const { mutate: register, error: registError, isSuccess: registSuccess, isPending: registIsPending } = useMutation({
         mutationFn: POST_REGISTER,
         onSuccess: (data) => {
             console.log("User successfully registered", data)
@@ -237,7 +237,11 @@ const RegisterPage = () => {
                                 }
                             }}
                             onClick={formik.handleSubmit}>
-                            Register
+                            {registIsPending
+                                ? <CircularProgress size={26} sx={{ color: "#D9D630", }} />
+                                :
+                                "Register"
+                            }
                         </Button>
                         <Typography sx={{ color: '#193D71', textDecoration: 'none', fontSize: '12px', mt: "10px" }}>
                             Sudah punya akun?

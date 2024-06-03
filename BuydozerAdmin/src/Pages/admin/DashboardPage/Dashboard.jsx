@@ -145,11 +145,11 @@ const Dashboard = () => {
 
   const unitColor = ["#F3F304", "#2A6DD0", "#8BB9FF"];
   const statusColor = ["#193D71", "#D9D630", "#28D156", "#EC3535"];
-  const userColor = ['#193D71', "#D9D630", '#2A6DD0',];
+  const userColor = ["#D9D630", '#193D71', '#2A6DD0',];
 
   const unitLabels = ["Unit Disewa", "Unit Dibeli", "Unit Free"]
   const userLabels = ["User Penyewa", "User Pembeli", "User Sewa dan Beli"]
-  const statusLabels = ["Finish", "Unpaid", "Paid", "Rejected"]
+  const statusLabels = ["Finish", "Ongoing", "Paid", "Rejected"]
 
   const unitSeries = [
     unitRemainingIsSuccess && dataUnitRemaining.data[0].unitRented,

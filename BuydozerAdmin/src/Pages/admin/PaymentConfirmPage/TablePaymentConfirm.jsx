@@ -54,7 +54,8 @@ const TablePaymentConfirm = (props) => {
       id: null,
       statusTransaction: 0,
       transactionNum: "",
-      isBuy: false
+      isBuy: false,
+      actionType: ""
     }
   })
 
@@ -120,7 +121,7 @@ const TablePaymentConfirm = (props) => {
   useEffect(() => {
     if (formik.values.id !== null) {
       {
-        formik.values.isBuy === "Pembelian"
+        formik.values.actionType
           ?
           (handleApproval(
             true,
@@ -147,6 +148,7 @@ const TablePaymentConfirm = (props) => {
   // Handle Modal for Confirmation and Cancel Transaction
   const handleApproval = (isConfirm, trxNum, trxId, trxStatus, trxType) => {
     const action = isConfirm ? "Konfirmasi" : "Tolak";
+    console.log(action);
     Swal.fire({
       title: `Apakah kamu yakin untuk ${action.toLowerCase()} transaksi ${trxNum}?`,
       text: "Jika masih ragu check datanya sekali lagi!",
@@ -232,7 +234,8 @@ const TablePaymentConfirm = (props) => {
                     id: props.row.original.id,
                     statusTransaction: 3,
                     transactionNum: props.row.original.transactionNum,
-                    isBuy: props.row.original.isBuy
+                    isBuy: props.row.original.isBuy,
+                    actionType: true
                   });
                 }}>
                   <CheckCircleOutline color='success'></CheckCircleOutline>
@@ -249,7 +252,8 @@ const TablePaymentConfirm = (props) => {
                     id: props.row.original.id,
                     statusTransaction: 0,
                     transactionNum: props.row.original.transactionNum,
-                    isBuy: props.row.original.isBuy
+                    isBuy: props.row.original.isBuy,
+                    actionType: false
                   });
                 }}>
                   <Clear color='error'></Clear>
