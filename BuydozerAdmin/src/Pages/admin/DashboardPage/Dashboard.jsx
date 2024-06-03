@@ -313,7 +313,7 @@ const Dashboard = () => {
               <Box sx={{ height: "100%", p: "30px" }}>
                 <Box sx={{ display: "flex", flexDirection: "column", mb: "20px" }}>
                   <Typography sx={{ fontSize: "30px", color: "#193D71", fontWeight: "medium" }}>
-                    Report Customer
+                    Report Transaction Customer
                   </Typography>
                   <img src={tagLineBg} style={{ width: "200px", height: "8px", borderRadius: "10px", marginBottom: 10 }} />
                 </Box>
