@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 
 const GET_TRANSACTION = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
-  const BASE_URL_TRANSACTION = `https://localhost:3001/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=%25${SearchValue}%25&ParameterUserName=%25${SearchValue}%25&ParameterStatus=2&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_TRANSACTION = `https://buydozermain-api.azurewebsites.net/api/TransactionOnGoing/GetTransactionOnGoing?ParameterTransactionNumber=%25${SearchValue}%25&ParameterUserName=%25${SearchValue}%25&ParameterStatus=2&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_TRANSACTION, {

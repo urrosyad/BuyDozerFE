@@ -21,7 +21,7 @@ const userId = localStorage.getItem("UserId");
 
 
 const GET_PRICELIST_RENT = async () => {
-  const BASE_URL_GET_PRICELIST_RENT = `https://localhost:3001/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
+  const BASE_URL_GET_PRICELIST_RENT = `https://buydozermain-api.azurewebsites.net/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
   try {
     const response = await axios.get(BASE_URL_GET_PRICELIST_RENT, {
       headers: {
@@ -43,7 +43,7 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
     statusTransaction: 1,
     transactionDate: GetDateNow()
   }
-  const BASE_URL_POST_TRANSACTION_BUY = "https://localhost:3001/api/TransactionDetailBuy/CreateTransactionDetailBuy"
+  const BASE_URL_POST_TRANSACTION_BUY = "https://buydozermain-api.azurewebsites.net/api/TransactionDetailBuy/CreateTransactionDetailBuy"
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_BUY, requestBody, {
       headers: {
@@ -66,7 +66,7 @@ const POST_TRANSACTION_RENT = async ({ rentForm }) => {
     statusTransaction: 1,
     dateRent: GetDateNow()
   }
-  const BASE_URL_POST_TRANSACTION_RENT = "https://localhost:3001/api/TransactionDetailRents/CreateTransactionDetailRent"
+  const BASE_URL_POST_TRANSACTION_RENT = "https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/CreateTransactionDetailRent"
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_RENT, requestBody, {
       headers: {

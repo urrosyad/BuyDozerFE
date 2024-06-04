@@ -54,7 +54,7 @@ const UnitData = () => {
   })
 
   // CREATE UNIT
-  const { mutate: postUnit, error: postError, isSuccess: postIsSuccess,} = useMutation({
+  const { mutate: postUnit, error: postError, isSuccess: postIsSuccess, isPending: postIsPending} = useMutation({
     mutationFn: POST_UNIT,
     onSuccess: (data) => {
       setIsModalAddOpen(false)
@@ -69,7 +69,7 @@ const UnitData = () => {
   // END CREATE UNIT
 
   // UPDATE UNIT
-  const { mutate: putUnit, error: putError  , isSuccess: putIsSuccess } = useMutation({
+  const { mutate: putUnit, error: putError  , isSuccess: putIsSuccess, isPending: putIsPending } = useMutation({
     mutationFn: PUT_UNIT,
     onSuccess: (data) => {
       setIsModalEditOpen(false)
@@ -83,7 +83,7 @@ const UnitData = () => {
   // END UPDATE UNIT
 
   // DELETE UNIT
-  const { mutate: delUnit, error: delError, isSuccess: delIsSuccess } = useMutation({
+  const { mutate: delUnit, error: delError, isSuccess: delIsSuccess, isPending: deleteIsPending } = useMutation({
     mutationFn: DELETE_UNIT,
     onSuccess: (data) => {
       setIsModalDelOpen(false)
@@ -98,6 +98,8 @@ const UnitData = () => {
   if (postError || putError || delError) {
     navigate("/*")
   }
+
+  const isPending = postIsPending || putIsPending || deleteIsPending
 
   const handlePostChange = async (event) => {
     const { name, value, files } = event.target;
@@ -214,6 +216,7 @@ const UnitData = () => {
               formik={formik}
               isOpen={isModalAddOpen}
               labelInput={labelInput}
+              isPending={isPending}
               onChange={handlePostChange}
               onSubmit={handlePostSubmit}
               onClose={handleCancelForm}
@@ -223,6 +226,7 @@ const UnitData = () => {
               formik={formik}
               isOpen={isModalEditOpen}
               labelInput={labelInput}
+              isPending={isPending}
               onChange={handlePostChange}
               onSubmit={handlePutSubmit}
               onClose={handleCancelForm}
@@ -236,7 +240,9 @@ const UnitData = () => {
               onSubmit={handleDelSubmit}
               onClose={handleCancelForm}
               nameUnit={formik.values.nameUnit}
+              isPending={isPending}
             />
+
 
           </Box>
         </Box>

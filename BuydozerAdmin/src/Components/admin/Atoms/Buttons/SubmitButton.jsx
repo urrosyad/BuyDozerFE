@@ -1,8 +1,8 @@
 import theme from '@themes/theme'
 import styled from '@emotion/styled';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 
-const SubmitButton = ({onSubmit, isLoading}) => {
+const SubmitButton = ({onSubmit, isPending}) => {
 
   const SubmitButton = styled(Button)(({ theme }) => ({
     width: "20%",
@@ -20,7 +20,11 @@ const SubmitButton = ({onSubmit, isLoading}) => {
 
   return (
           <SubmitButton type="button" onClick={onSubmit} variant='outlined'>
-            Submit
+            {isPending 
+            ?
+            <CircularProgress size={26} sx={{ color: "#2A6DD0", }} />
+            : "Submit"
+            }
           </SubmitButton>
   )
 }

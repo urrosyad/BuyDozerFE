@@ -31,15 +31,15 @@ const UnitSection = ({ }) => {
   const { data: dataUnit, isLoading: unitIsLoading, isFetching: unitIsFetching, isSuccess: unitIsSuccess, error: unitIsError, refetch } = useQuery({
     queryKey: ["Unit", {
       nameUnit: "",
-      sortBuy: true,
+      sortBuy: false,
       pageNumber: 1,
-      pageSize: 4
+      pageSize: 5
     }],
     queryFn: () => GET_UNIT({
       nameUnit: "",
-      sortBuy: true,
+      sortBuy: false,
       pageNumber: 1,
-      pageSize: 4
+      pageSize: 5
     }),
   })
   if (unitIsError) {

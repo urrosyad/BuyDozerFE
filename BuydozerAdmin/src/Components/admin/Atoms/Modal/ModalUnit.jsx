@@ -26,7 +26,7 @@ const textareaStyle = {
 }
 
 
-const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik,  }) => {
+const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput, formik, isPending  }) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose} sx={{
@@ -91,7 +91,7 @@ const ModalUnit = ({ typeModal, onClose, onSubmit, onChange, isOpen, labelInput,
       </DialogContent>
       <Divider sx={{ width: "93%", alignSelf: "center", marginTop: "20px" }} />
       <DialogActions sx={{ margin: "10px 20px", gap: "2px" }}>
-        <SubmitButton onSubmit={onSubmit}/>
+        <SubmitButton onSubmit={onSubmit} isPending={isPending}/>
         <CancelButton onClose={onClose} />
       </DialogActions>
     </Dialog>

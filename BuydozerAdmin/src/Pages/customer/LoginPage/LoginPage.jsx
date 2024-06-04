@@ -14,7 +14,7 @@ import theme from '../../../Themes/theme';
 import useAuth from '@hooks/useAuth'
 
 
-const BASE_URL_LOGIN = "https://localhost:3001/api/LoginRegisters/Login"
+const BASE_URL_LOGIN = "https://buydozermain-api.azurewebsites.net/api/LoginRegisters/Login"
 
 const styleButton = {
   width: "150px",
@@ -47,16 +47,16 @@ const LoginPage = () => {
     }),
     onSubmit: async () => {
       try {
-        const { Data } = postLogin()
-
-        if (Data) {
-          const userError = Data.toLowerCase().includes('username');
-          {
-            userError
-              ? formik.setFieldError('username', Data)
-              : formik.setFieldError('password', Data)
-          }
-        }
+        postLogin()
+        // console.log(Data);
+        // if (Data) {
+        //   const userError = Data.toLowerCase().includes('username');
+        //   {
+        //     userError
+        //       ? formik.setFieldError('username', Data)
+        //       : formik.setFieldError('password', Data)
+        //   }
+        // }
 
       } catch (error) {
         throw error
@@ -79,7 +79,6 @@ const LoginPage = () => {
           'Content-Type': 'application/json',
         }
       });
-      
       const {
         UserName,
         UserId,
@@ -98,8 +97,7 @@ const LoginPage = () => {
           expiresIn
         )
       }
-
-      return { accessToken, Data };
+      return { accessToken, Data }
     } catch (error) {
       console.error('Error while login:', error);
       throw error;
@@ -107,8 +105,13 @@ const LoginPage = () => {
   }
 
   const { mutate: postLogin, isPending: loginIsPending, isSuccess: loginIsSucces, error: loginError } = useMutation({
-    mutationFn: POST_LOGIN,
+    mutationFn: () => POST_LOGIN(),
     onSuccess: (data) => {
+      const { Data } = data;
+      if (Data) {
+        const userError = Data.toLowerCase().includes('username');
+        userError ? formik.setFieldError('username', Data) : formik.setFieldError('password', Data);
+      }
       queryClient.invalidateQueries(['Login'], (oldData) => [...oldData, data]);
     },
     onError: (error) => {

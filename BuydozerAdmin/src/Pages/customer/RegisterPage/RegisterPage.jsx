@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 
-const BASE_URL_REGISTER = "https://localhost:3001/api/LoginRegisters/Register"
+const BASE_URL_REGISTER = "https://buydozermain-api.azurewebsites.net/api/LoginRegisters/Register"
 
 const initialValuesRegister = {
     email: "",

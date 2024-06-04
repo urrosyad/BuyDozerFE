@@ -27,7 +27,7 @@ const TableUnit = (props) => {
   const [buySort, setBuySort] = useState(false)
 
   const fetchData = async () => {
-    const { data, totalCount } = await GET_UNIT({ nameUnit: SearchValue, sortBuy: buySort, PageNumber: page, PageSize: rowsPerPage });
+    const { data, totalCount } = await GET_UNIT({ nameUnit: SearchValue, sortBuy: buySort, pageNumber: page, pageSize: rowsPerPage });
     setTotalData(totalCount)
 
     if (!data) {

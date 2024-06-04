@@ -22,7 +22,7 @@ const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
     paymentConfirmationReceiptTransaction: paymentImg,
   }
 
-  const BASE_URL_PUT_TRANSACTION_ONGOING = `https://localhost:3001/api/TransactionOnGoing/UpdateTransactionOnGoing/${idTransaction}`
+  const BASE_URL_PUT_TRANSACTION_ONGOING = `https://buydozermain-api.azurewebsites.net/api/TransactionOnGoing/UpdateTransactionOnGoing/${idTransaction}`
   try {
     const response = await axios.put(BASE_URL_PUT_TRANSACTION_ONGOING, requestBody, {
       headers: {

@@ -28,7 +28,7 @@ const initialValues = {
 
 const GET_TRANSACTION_RENT = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
-  const BASE_URL_GET_TRANSACTION_RENT = `https://localhost:3001/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_RENT = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -47,7 +47,7 @@ const GET_TRANSACTION_RENT = async (props) => {
 
 const GET_TRANSACTION_BUY = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
-  const BASE_URL_GET_TRANSACTION_BUY = `https://localhost:3001/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_BUY = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
