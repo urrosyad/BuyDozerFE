@@ -1,13 +1,13 @@
 /** @format */
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 const userName = localStorage.getItem("UserName");
 const accessToken = localStorage.getItem("AccessToken");
 
 //---------UNIT ENDPOINT---------//
 export const GET_UNIT = async (props = {}) => {
   const { nameUnit = "", sortBuy = "", pageNumber = 1, pageSize = 10 } = props;
-  const BASE_URL_GET_UNIT = `https://buydozermain-api.azurewebsites.net/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceBuy=${sortBuy}&PageNumber=${pageNumber}&PageSize=${pageSize}`;
+  const BASE_URL_GET_UNIT = `${API_BASE_URL}/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceBuy=${sortBuy}&PageNumber=${pageNumber}&PageSize=${pageSize}`;
   try {
     const response = await axios.get(BASE_URL_GET_UNIT, {
       headers: {
@@ -26,7 +26,7 @@ export const GET_UNIT = async (props = {}) => {
 };
 
 export const GET_UNIT_BYNAME = async ({ nameUnit }) => {
-  const BASE_URL_GET_UNIT = `https://buydozermain-api.azurewebsites.net/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_UNIT = `${API_BASE_URL}/api/HeavyUnits/GetHeavyUnit?ParameterUnit=%25${nameUnit}%25&PriceRent=false&PriceBuy=false&PageNumber=1&PageSize=1`;
   try {
     const response = await axios.get(BASE_URL_GET_UNIT, {
       headers: {
@@ -42,8 +42,7 @@ export const GET_UNIT_BYNAME = async ({ nameUnit }) => {
 };
 
 export const POST_UNIT = async ({ unitValues }) => {
-  const BASE_URL_POST_UNIT =
-    "https://buydozermain-api.azurewebsites.net/api/HeavyUnits/CreateHeavyUnit";
+  const BASE_URL_POST_UNIT =`${API_BASE_URL}/api/HeavyUnits/CreateHeavyUnit`;
   try {
     const response = await axios.post(BASE_URL_POST_UNIT, unitValues, {
       headers: {
@@ -60,7 +59,7 @@ export const POST_UNIT = async ({ unitValues }) => {
 };
 
 export const PUT_UNIT = async ({ id, unitValues }) => {
-  const BASE_URL_PUT_UNIT = `https://buydozermain-api.azurewebsites.net/api/HeavyUnits/UpdateHeavyUnit/${id}`;
+  const BASE_URL_PUT_UNIT = `${API_BASE_URL}/api/HeavyUnits/UpdateHeavyUnit/${id}`;
   try {
     const response = await axios.put(BASE_URL_PUT_UNIT, unitValues, {
       headers: {
@@ -77,7 +76,7 @@ export const PUT_UNIT = async ({ id, unitValues }) => {
 };
 
 export const DELETE_UNIT = async ({ id }) => {
-  const BASE_URL_DELETE_UNIT = `https://buydozermain-api.azurewebsites.net/api/HeavyUnits/DeleteHeavyUnit/${id}`;
+  const BASE_URL_DELETE_UNIT = `${API_BASE_URL}/api/HeavyUnits/DeleteHeavyUnit/${id}`;
   try {
     const response = await axios.delete(BASE_URL_DELETE_UNIT, {
       headers: {
@@ -103,7 +102,7 @@ export const GET_USER = async (props) => {
     SortUserName = true,
   } = props;
 
-  const BASE_URL_USER = `https://buydozermain-api.azurewebsites.net/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=${SortUserName}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_USER = `${API_BASE_URL}/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=${SortUserName}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
 
   try {
     const response = await axios.get(BASE_URL_USER, {
@@ -122,7 +121,7 @@ export const GET_USER = async (props) => {
 };
 
 export const GET_USER_BYNAME = async ({ Username }) => {
-  const BASE_URL_GET_USER = `https://buydozermain-api.azurewebsites.net/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=true&PageNumber=1&PageSize=1
+  const BASE_URL_GET_USER = `${API_BASE_URL}/api/UserEntitys/GetUserEntity?ParameterName=%25${Username}%25&SortUserName=true&PageNumber=1&PageSize=1
 `;
   try {
     const response = await axios.get(BASE_URL_GET_USER, {
@@ -139,7 +138,7 @@ export const GET_USER_BYNAME = async ({ Username }) => {
 };
 
 export const PUT_USER = async ({ id, userValues }) => {
-  const BASE_URL_PUT_USER = `https://buydozermain-api.azurewebsites.net/api/UserEntitys/UpdateUserEntity/${id}`;
+  const BASE_URL_PUT_USER = `${API_BASE_URL}/api/UserEntitys/UpdateUserEntity/${id}`;
   try {
     const response = await axios.put(BASE_URL_PUT_USER, userValues, {
       headers: {
@@ -156,7 +155,7 @@ export const PUT_USER = async ({ id, userValues }) => {
 };
 
 export const PUT_ROLE_ADMIN = async ({ id }) => {
-  const BASE_URL_PUT_ROLE_ADMIN = `https://buydozermain-api.azurewebsites.net/api/UserEntitys/CreateAdmin?id=${id}`;
+  const BASE_URL_PUT_ROLE_ADMIN = `${API_BASE_URL}/api/UserEntitys/CreateAdmin?id=${id}`;
   try {
     const response = await axios.post(BASE_URL_PUT_ROLE_ADMIN, null, {
       headers: {
@@ -173,7 +172,7 @@ export const PUT_ROLE_ADMIN = async ({ id }) => {
 };
 
 export const DELETE_USER = async ({ id }) => {
-  const BASE_URL_DELETE_USER = `https://buydozermain-api.azurewebsites.net/api/UserEntitys/DeleteUserEntity/${id}`;
+  const BASE_URL_DELETE_USER = `${API_BASE_URL}/api/UserEntitys/DeleteUserEntity/${id}`;
   try {
     const response = await axios.delete(BASE_URL_DELETE_USER, {
       headers: {
@@ -193,7 +192,7 @@ export const DELETE_USER = async ({ id }) => {
 //---------RENT LIST ENDPOINT---------//
 export const GET_RENT_LIST = async (props) => {
   const { SearchValue } = props;
-  const BASE_URL_GET_RentList = `https://buydozermain-api.azurewebsites.net/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${SearchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
+  const BASE_URL_GET_RentList = `${API_BASE_URL}/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25${SearchValue}%25&SortPrice=true&PageNumber=1&PageSize=5`;
   try {
     const response = await axios.get(BASE_URL_GET_RentList, {
       headers: {
@@ -211,8 +210,7 @@ export const GET_RENT_LIST = async (props) => {
 };
 
 export const POST_RENT_LIST = async ({ requestBody }) => {
-  const BASE_URL_POST_RentList =
-    "https://buydozermain-api.azurewebsites.net/api/PriceListRents/CreatePriceListRent";
+  const BASE_URL_POST_RentList = `${API_BASE_URL}/api/PriceListRents/CreatePriceListRent`;
 
   try {
     const response = await axios.post(BASE_URL_POST_RentList, requestBody, {
@@ -231,7 +229,7 @@ export const POST_RENT_LIST = async ({ requestBody }) => {
 
 export const PUT_RENT_LIST = async ({ id, requestBody }) => {
 
-  const BASE_URL_PUT = `https://buydozermain-api.azurewebsites.net/api/PriceListRents/UpdatePriceListRent/${id}`;
+  const BASE_URL_PUT = `${API_BASE_URL}/api/PriceListRents/UpdatePriceListRent/${id}`;
   try {
     const response = await axios.put(BASE_URL_PUT, requestBody, {
       headers: {
@@ -248,7 +246,7 @@ export const PUT_RENT_LIST = async ({ id, requestBody }) => {
 };
 
 export const DELETE_RENT_LIST = async ({ id }) => {
-  const BASE_URL_DELETE = `https://buydozermain-api.azurewebsites.net/api/PriceListRents/DeletePriceListRent/${id}`;
+  const BASE_URL_DELETE = `${API_BASE_URL}/api/PriceListRents/DeletePriceListRent/${id}`;
   try {
     const response = await axios.delete(BASE_URL_DELETE, {
       headers: {
@@ -267,7 +265,7 @@ export const DELETE_RENT_LIST = async ({ id }) => {
 
 //---------TRANSACTION ENDPOINT---------//
 export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
-  const BASE_URL_GET_TRANSACTION_BUY = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=100`;
+  const BASE_URL_GET_TRANSACTION_BUY = `${API_BASE_URL}/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=100`;
   try {
     const response = await axios.get(BASE_URL_GET_TRANSACTION_BUY, {
       headers: {
@@ -285,7 +283,7 @@ export const GET_TRANSACTION_BUY = async ({ transactionNum }) => {
 
 export const PUT_TRANSACTION_STATUS_BUY = async ({ id, statusTransaction }) => {
   const requestBody = { id, statusTransaction };
-  const BASE_URL_PUT_TRANSACTION_STATUS_BUY = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailBuy/UpdateTransactionDetailBuy/${id}`;
+  const BASE_URL_PUT_TRANSACTION_STATUS_BUY = `${API_BASE_URL}/api/TransactionDetailBuy/UpdateTransactionDetailBuy/${id}`;
   try {
     const response = await axios.put(
       BASE_URL_PUT_TRANSACTION_STATUS_BUY,
@@ -306,7 +304,7 @@ export const PUT_TRANSACTION_STATUS_BUY = async ({ id, statusTransaction }) => {
 };
 
 export const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
-  const BASE_URL_GET_TRANSACTION_RENT = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/GetTransactionDetailRent?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_RENT = `${API_BASE_URL}/api/TransactionDetailRents/GetTransactionDetailRent?ParameterTransactionNumber=${transactionNum}&SortDate=true&PageNumber=1&PageSize=1`;
   try {
     const response = await axios.get(BASE_URL_GET_TRANSACTION_RENT, {
       headers: {
@@ -322,12 +320,9 @@ export const GET_TRANSACTION_RENT = async ({ transactionNum }) => {
   }
 };
 
-export const PUT_TRANSACTION_STATUS_RENT = async ({
-  id,
-  statusTransaction,
-}) => {
+export const PUT_TRANSACTION_STATUS_RENT = async ({id, statusTransaction}) => {
   const requestBody = { id, statusTransaction };
-  const BASE_URL_PUT_TRANSACTION_STATUS_RENT = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/UpdateTransactionDetailRent/${id}`;
+  const BASE_URL_PUT_TRANSACTION_STATUS_RENT = `${API_BASE_URL}/api/TransactionDetailRents/UpdateTransactionDetailRent/${id}`;
   try {
     const response = await axios.put(
       BASE_URL_PUT_TRANSACTION_STATUS_RENT,
@@ -348,9 +343,7 @@ export const PUT_TRANSACTION_STATUS_RENT = async ({
 };
 
 export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {
-  const BASE_URL_GET_TRANSACTION_ONGOING = `https://buydozermain-api.azurewebsites.net/api/TransactionOnGoing/GetTransactionOnGoing?ParameterUserName=${username}&ParameterTransactionNumber=${transactionNum ? transactionNum : "%25%25"
-    }&ParameterStatus=%25%25&SortDate=true&PageNumber=1&PageSize=${transactionNum ? "1" : "50"
-    }`;
+  const BASE_URL_GET_TRANSACTION_ONGOING = `${API_BASE_URL}/api/TransactionOnGoing/GetTransactionOnGoing?ParameterUserName=${username}&ParameterTransactionNumber=${transactionNum ? transactionNum : "%25%25" }&ParameterStatus=%25%25&SortDate=true&PageNumber=1&PageSize=${transactionNum ? "1" : "50"}`;
   try {
     const response = await axios.get(BASE_URL_GET_TRANSACTION_ONGOING, {
       headers: {
@@ -372,7 +365,7 @@ export const GET_TRANSACTION_ONGOING = async ({ username, transactionNum }) => {
 
 //---------REPORT ENDPOINT---------//
 export const GET_TRANSACTION_REPORT = async () => {
-  const BASE_URL_TRANSACTION_REPORT = `https://buydozermain-api.azurewebsites.net/api/TransactionReport/GetTransactionReport`;
+  const BASE_URL_TRANSACTION_REPORT = `${API_BASE_URL}/api/TransactionReport/GetTransactionReport`;
   try {
     const response = await axios.get(BASE_URL_TRANSACTION_REPORT, {
       headers: {
@@ -389,7 +382,7 @@ export const GET_TRANSACTION_REPORT = async () => {
 };
 
 export const GET_REPORT_CARD = async () => {
-  const BASE_URL_REPORT_CARD = `https://buydozermain-api.azurewebsites.net/api/TransactionReport/GetReportCard`;
+  const BASE_URL_REPORT_CARD = `${API_BASE_URL}/api/TransactionReport/GetReportCard`;
   try {
     const response = await axios.get(BASE_URL_REPORT_CARD, {
       headers: {
@@ -406,7 +399,7 @@ export const GET_REPORT_CARD = async () => {
 };
 
 export const GET_USER_TRANSACTION_TYPE = async () => {
-  const BASE_URL_USER_TRANSACTION_TYPE = `https://buydozermain-api.azurewebsites.net/api/TransactionReport/GetUserTransactionType`;
+  const BASE_URL_USER_TRANSACTION_TYPE = `${API_BASE_URL}/api/TransactionReport/GetUserTransactionType`;
   try {
     const response = await axios.get(BASE_URL_USER_TRANSACTION_TYPE, {
       headers: {
@@ -423,7 +416,7 @@ export const GET_USER_TRANSACTION_TYPE = async () => {
 };
 
 export const GET_SUMMARY_TRANSACTION_STATUS = async () => {
-  const BASE_URL_SUMMARY_TRANSACTION = `https://buydozermain-api.azurewebsites.net/api/TransactionReport/GetSummaryTransactionStatus`;
+  const BASE_URL_SUMMARY_TRANSACTION = `${API_BASE_URL}/api/TransactionReport/GetSummaryTransactionStatus`;
   try {
     const response = await axios.get(BASE_URL_SUMMARY_TRANSACTION, {
       headers: {
@@ -440,7 +433,7 @@ export const GET_SUMMARY_TRANSACTION_STATUS = async () => {
 };
 
 export const GET_UNIT_REMAINING = async () => {
-  const BASE_URL_UNIT_REMAINING = `https://buydozermain-api.azurewebsites.net/api/TransactionReport/GetUnitRemaining`;
+  const BASE_URL_UNIT_REMAINING = `${API_BASE_URL}/api/TransactionReport/GetUnitRemaining`;
   try {
     const response = await axios.get(BASE_URL_UNIT_REMAINING, {
       headers: {

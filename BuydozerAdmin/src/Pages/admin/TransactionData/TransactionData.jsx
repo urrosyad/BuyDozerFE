@@ -5,6 +5,7 @@ import TableTransactionDetailBuy from './TableTransactionDetailBuy';
 import TableTransactionDetailRent from './TableTransactionDetailRent';
 import { useState } from 'react'
 import { useFormik } from 'formik';
+import { API_BASE_URL } from '../../../config';
 import { SearchRounded } from '@mui/icons-material';
 import { formatDateTime } from '@utils/formatDate';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -25,10 +26,9 @@ const initialValues = {
   dateTransaction: "",
   statusTransaction: "",
 }
-
 const GET_TRANSACTION_RENT = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
-  const BASE_URL_GET_TRANSACTION_RENT = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_RENT = `${API_BASE_URL}/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {
@@ -47,7 +47,7 @@ const GET_TRANSACTION_RENT = async (props) => {
 
 const GET_TRANSACTION_BUY = async (props) => {
   const { SortDate, searchValue, transactionNum } = props
-  const BASE_URL_GET_TRANSACTION_BUY = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
+  const BASE_URL_GET_TRANSACTION_BUY = `${API_BASE_URL}/api/TransactionDetailBuy/GetTransactionDetailBuy?ParameterUserName=%25${searchValue}%25&ParameterTransactionNumber=%25${searchValue}%25&SortDate=${SortDate}&PageNumber=1&PageSize=1`;
 
   const accessToken = localStorage.getItem('AccessToken');
   try {

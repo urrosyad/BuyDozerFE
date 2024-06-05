@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { flexCenter } from '@themes/commonStyles'
+import { API_BASE_URL } from '../../../config'
 import { Box, Button, IconButton, Skeleton, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import useAuth from '@hooks/useAuth'
@@ -22,7 +23,7 @@ const PUT_TRANSACTION_ONGOING = async ({ idTransaction, paymentImg }) => {
     paymentConfirmationReceiptTransaction: paymentImg,
   }
 
-  const BASE_URL_PUT_TRANSACTION_ONGOING = `https://buydozermain-api.azurewebsites.net/api/TransactionOnGoing/UpdateTransactionOnGoing/${idTransaction}`
+  const BASE_URL_PUT_TRANSACTION_ONGOING = `${API_BASE_URL}/api/TransactionOnGoing/UpdateTransactionOnGoing/${idTransaction}`
   try {
     const response = await axios.put(BASE_URL_PUT_TRANSACTION_ONGOING, requestBody, {
       headers: {
@@ -98,7 +99,7 @@ const InvoicePage = () => {
   })
 
   // BATALKAN PESANAN || UPDATE STATUS TRANSACTION TO REJECTED
-  // MUTATE TRANSACTION BUY TU PUT STATUS
+  // MUTATE TRANSACTION BUY TO PUT STATUS TRANSACTION
   const { mutate: putStatusBuy, error: errorPutBuy, isSuccess: putBuyIsSuccess, isPending: putBuyIsPending } = useMutation({
     mutationFn: PUT_TRANSACTION_STATUS_BUY,
     onSuccess: (data) => {

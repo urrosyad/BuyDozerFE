@@ -1,27 +1,28 @@
 import axios from 'axios';
-import React, { useState } from 'react'
 import Navbar from '@layouts/customer/Navbar/Navbar'
 import Footer from '@layouts/customer/Footer/Footer'
-import { Box, Grid, IconButton, Typography, Skeleton } from '@mui/material';
-import { useFormik } from 'formik';
-import { flexCenter } from '@themes/commonStyles'
-import { buySchema, rentSchema } from '@schemas';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { KeyboardBackspaceRounded } from '@mui/icons-material';
-import ButtonOutlined from '@components/customer/Atoms/Button/ButtonOutlined'
 import ModalBuy from '@components/customer/Modal/ModalBuy';
 import ModalRent from '@components/customer/Modal/ModalRent';
-import formatRupiah from '@utils/formatRupiah';
 import GetDateNow from '@utils/GetDateNow';
+import formatRupiah from '@utils/formatRupiah';
+import ButtonOutlined from '@components/customer/Atoms/Button/ButtonOutlined'
+import { useState } from 'react'
 import { GET_UNIT } from '@api/api';
+import { useFormik } from 'formik';
+import { flexCenter } from '@themes/commonStyles'
+import { API_BASE_URL } from '../../../config';
+import { buySchema, rentSchema } from '@schemas';
+import { useNavigate, useParams } from 'react-router-dom';
+import { KeyboardBackspaceRounded } from '@mui/icons-material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Box, Grid, IconButton, Typography, Skeleton } from '@mui/material';
 
 const accessToken = localStorage.getItem("AccessToken");
 const userId = localStorage.getItem("UserId");
 
 
 const GET_PRICELIST_RENT = async () => {
-  const BASE_URL_GET_PRICELIST_RENT = `https://buydozermain-api.azurewebsites.net/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
+  const BASE_URL_GET_PRICELIST_RENT = `${API_BASE_URL}/api/PriceListRents/GetPriceListRent?ParameterNameRent=%25%25&SortPrice=true&PageNumber=1&PageSize=10`;
   try {
     const response = await axios.get(BASE_URL_GET_PRICELIST_RENT, {
       headers: {
@@ -43,7 +44,7 @@ const POST_TRANSACTION_BUY = async ({ buyForm }) => {
     statusTransaction: 1,
     transactionDate: GetDateNow()
   }
-  const BASE_URL_POST_TRANSACTION_BUY = "https://buydozermain-api.azurewebsites.net/api/TransactionDetailBuy/CreateTransactionDetailBuy"
+  const BASE_URL_POST_TRANSACTION_BUY = `${API_BASE_URL}/api/TransactionDetailBuy/CreateTransactionDetailBuy`
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_BUY, requestBody, {
       headers: {
@@ -66,7 +67,7 @@ const POST_TRANSACTION_RENT = async ({ rentForm }) => {
     statusTransaction: 1,
     dateRent: GetDateNow()
   }
-  const BASE_URL_POST_TRANSACTION_RENT = "https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/CreateTransactionDetailRent"
+  const BASE_URL_POST_TRANSACTION_RENT = `${API_BASE_URL}/api/TransactionDetailRents/CreateTransactionDetailRent`
   try {
     const response = await axios.post(BASE_URL_POST_TRANSACTION_RENT, requestBody, {
       headers: {

@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
 import * as yup from 'yup';
-import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase, CircularProgress } from '@mui/material'
-import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import buydozerFont from '@assets/customer/buydozerFont.png'
-import buydozerLogo from '@assets/customer/buydozerLogo.png'
-import { useFormik } from 'formik'
-import { flexCenter } from '@themes/commonStyles'
 import axios from 'axios'
 import image from '@assets/bgLogin.png'
 import theme from '../../../Themes/theme';
 import useAuth from '@hooks/useAuth'
+import buydozerFont from '@assets/customer/buydozerFont.png'
+import buydozerLogo from '@assets/customer/buydozerLogo.png'
+import { useState } from 'react'
+import { useFormik } from 'formik'
+import { flexCenter } from '@themes/commonStyles'
+import { useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../../../config';
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Paper, Box, Typography, Button, FormControl, IconButton, InputBase, CircularProgress } from '@mui/material'
 
 
-const BASE_URL_LOGIN = "https://buydozermain-api.azurewebsites.net/api/LoginRegisters/Login"
+const BASE_URL_LOGIN = `${API_BASE_URL}/api/LoginRegisters/Login`
 
 const styleButton = {
   width: "150px",

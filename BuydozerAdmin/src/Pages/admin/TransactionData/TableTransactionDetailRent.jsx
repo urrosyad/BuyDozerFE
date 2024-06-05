@@ -1,9 +1,10 @@
 import axios from 'axios';
 import formatRupiah from '@utils/formatRupiah';
-import { formatDate, formatDateTime } from '@utils/formatDate';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../../config';
 import { useEffect, useState } from 'react'
+import { formatDate, formatDateTime } from '@utils/formatDate';
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
 import {
   Box, Typography,
@@ -16,7 +17,7 @@ import {
 
 const GET_TRANSACTION = async (props) => {
   const { SearchValue, PageNumber, PageSize, SortDate } = props
-  const BASE_URL_TRANSACTION = `https://buydozermain-api.azurewebsites.net/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
+  const BASE_URL_TRANSACTION = `${API_BASE_URL}/api/TransactionDetailRents/GetTransactionDetailRent?ParameterUserName=%25${SearchValue}%25&ParameterTransactionNumber=%25${SearchValue}%25&SortDate=${SortDate}&PageNumber=${PageNumber}&PageSize=${PageSize}`;
   const accessToken = localStorage.getItem('AccessToken');
   try {
     const response = await axios.get(BASE_URL_TRANSACTION, {

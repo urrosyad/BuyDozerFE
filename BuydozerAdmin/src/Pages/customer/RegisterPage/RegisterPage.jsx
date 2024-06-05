@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import image from '../../../assets/bgLogin.png'
-import { Grid, Paper, Box, Typography, Button, FormControl, IconButton, InputBase, Snackbar, Alert, CircularProgress } from '@mui/material'
-import { Description, Visibility, VisibilityOff } from '@mui/icons-material'
-import theme from '../../../Themes/theme'
 import axios from 'axios'
+import theme from '../../../Themes/theme'
+import image from '../../../assets/bgLogin.png'
 import { useFormik } from 'formik'
-import * as yup from 'yup';
-import { registerSchema } from '@schemas'
-import { QueryClient, useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { API_BASE_URL } from '../../../config'
+import { registerSchema } from '@schemas'
+import { useEffect, useState } from 'react'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { Grid, Paper, Box, Typography, Button, FormControl, IconButton, InputBase, Snackbar, Alert, CircularProgress } from '@mui/material'
 
 
 
-const BASE_URL_REGISTER = "https://buydozermain-api.azurewebsites.net/api/LoginRegisters/Register"
+const BASE_URL_REGISTER = `${API_BASE_URL}/api/LoginRegisters/Register`
 
 const initialValuesRegister = {
     email: "",
